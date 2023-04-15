@@ -20,9 +20,11 @@
   },
   "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
+    "prettier/prettier": ["error", { "endOfLine": "auto" }],
     "import/prefer-default-export": "off",
     "@typescript-eslint/quotes": [
       "error",
+      "single",
       {
         "avoidEscape": true
       }
