@@ -1,11 +1,21 @@
-import React from "react";
-import Home from "./views/Home/Home";
+import React from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+import Home from './views/Home/Home';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const App = () => {
   return (
-    <div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
       <Home />
-    </div>
+    </ThemeProvider>
   );
 };
 
