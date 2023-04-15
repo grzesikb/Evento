@@ -1,12 +1,12 @@
 import React from "react";
-import Button from "@mui/material/Button";
+import Home from "./views/Home/Home";
 
-function App() {
+const App = () => {
   return (
     <div>
-      <Button variant="contained">Hello World</Button>
+      <Home />
     </div>
   );
-}
+};
 
 export default App;
