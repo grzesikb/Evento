@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import Home from './views/Home/Home';
-
-const darkTheme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-});
+// import { settingsContext } from './context/settingsContext';
 
 const App = () => {
+  // const settings = useContext(SettingsContext);
+  // const { theme } = settings;
+
+  const Theme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+  });
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={Theme}>
       <CssBaseline />
       <Home />
     </ThemeProvider>

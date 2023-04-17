@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -7,10 +7,12 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { Switch } from '@mui/material';
+import { SettingsContext } from '../context/settingsContext';
 
 const Navbar = () => {
-  //  const [auth, setAuth] = useState(true);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  // const { theme, setTheme } = useContext(settingsContext);
 
   // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setAuth(event.target.checked);
@@ -24,6 +26,10 @@ const Navbar = () => {
     setAnchorEl(null);
   };
 
+  const handleThemeChange = () => {
+    // setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -33,9 +39,14 @@ const Navbar = () => {
             component="div"
             sx={{ flexGrow: 1, fontWeight: 600, marginLeft: 1 }}
           >
-            Evento
+            💃🏽 Evento
           </Typography>
           <div>
+            <Switch
+              onChange={() => {
+                handleThemeChange();
+              }}
+            />
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -70,4 +81,5 @@ const Navbar = () => {
     </Box>
   );
 };
+
 export default Navbar;
