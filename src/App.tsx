@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-import Home from './views/Home/Home';
+import UserPanel from './views/UserPanel/UserPanel';
 import { SettingsContext } from './context/SettingsContext';
 
 const App = () => {
@@ -19,7 +19,7 @@ const App = () => {
   return (
     <ThemeProvider theme={Theme}>
       <CssBaseline />
-      <Home />
+      <UserPanel />
     </ThemeProvider>
   );
 };
