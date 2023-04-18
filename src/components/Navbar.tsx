@@ -8,11 +8,12 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Switch } from '@mui/material';
-import { SettingsContext } from '../context/settingsContext';
+import { grey } from '@mui/material/colors';
+import { SettingsContext } from '../context/SettingsContext';
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  // const { theme, setTheme } = useContext(settingsContext);
+  const { theme, dispatch } = useContext(SettingsContext);
 
   // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   setAuth(event.target.checked);
@@ -27,7 +28,10 @@ const Navbar = () => {
   };
 
   const handleThemeChange = () => {
-    // setTheme(theme === 'light' ? 'dark' : 'light');
+    dispatch({
+      type: 'SET_THEME',
+      payload: theme === 'light' ? 'dark' : 'light',
+    });
   };
 
   return (
@@ -45,6 +49,20 @@ const Navbar = () => {
             <Switch
               onChange={() => {
                 handleThemeChange();
+              }}
+              sx={{
+                '& .MuiSwitch-track': {
+                  bgcolor: grey[50], // kolor tła ścieżki, gdy Switch jest niezaznaczony
+                },
+                '& .MuiSwitch-thumb': {
+                  bgcolor: grey[200], // kolor kciuka, gdy Switch jest zaznaczony
+                  '&:hover': {
+                    bgcolor: grey[200], // kolor kciuka, gdy najedziesz na niego myszką
+                  },
+                },
+                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                  bgcolor: grey[50], // kolor tła ścieżki, gdy Switch jest zaznaczony
+                },
               }}
             />
             <IconButton
