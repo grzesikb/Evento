@@ -8,7 +8,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { Switch } from '@mui/material';
-import { grey } from '@mui/material/colors';
+import LightModeIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeIcon from '@mui/icons-material/DarkModeOutlined';
+
 import { SettingsContext } from '../context/SettingsContext';
 
 const Navbar = () => {
@@ -36,35 +38,28 @@ const Navbar = () => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Typography
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1, fontWeight: 600, marginLeft: 1 }}
+            sx={{
+              flexGrow: 1,
+              fontWeight: 700,
+              marginLeft: 1,
+              letterSpacing: -0.8,
+            }}
           >
-            💃🏽 Evento
+            Evento
           </Typography>
           <div>
-            <Switch
-              onChange={() => {
-                handleThemeChange();
-              }}
-              sx={{
-                '& .MuiSwitch-track': {
-                  bgcolor: grey[50], // kolor tła ścieżki, gdy Switch jest niezaznaczony
-                },
-                '& .MuiSwitch-thumb': {
-                  bgcolor: grey[200], // kolor kciuka, gdy Switch jest zaznaczony
-                  '&:hover': {
-                    bgcolor: grey[200], // kolor kciuka, gdy najedziesz na niego myszką
-                  },
-                },
-                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                  bgcolor: grey[50], // kolor tła ścieżki, gdy Switch jest zaznaczony
-                },
-              }}
-            />
+            <IconButton onClick={() => handleThemeChange()}>
+              {theme === 'dark' ? (
+                <LightModeIcon />
+              ) : (
+                <DarkModeIcon sx={{ color: 'white' }} />
+              )}
+            </IconButton>
             <IconButton
               size="large"
               aria-label="account of current user"

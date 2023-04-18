@@ -12,7 +12,7 @@ const App = () => {
     palette: {
       mode: theme,
       primary: {
-        main: theme === 'light' ? '#2e7d32' : '#272727',
+        main: theme === 'light' ? '#081a2d' : '#272727',
       },
     },
   });

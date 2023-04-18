@@ -7,10 +7,10 @@ const OrderEvents = () => {
     <Container>
       <Paper
         variant="outlined"
-        sx={{ display: 'flex', padding: 6, marginTop: 5, borderRadius: 4 }}
+        sx={{ display: 'flex', padding: 6, marginTop: 10, borderRadius: 4 }}
       >
         <Grid container>
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <Typography
               gutterBottom
               variant="h5"
@@ -20,21 +20,21 @@ const OrderEvents = () => {
               Order an event. Choose a package
             </Typography>
           </Grid>
-          <Grid xs>
+          <Grid item xs>
             <EventTypeCard
               src="./assets/Card-PublicParty.jpg"
               header="Public Event"
               additional="Dance parties, Concerts, Club events"
             />
           </Grid>
-          <Grid xs>
+          <Grid item xs>
             <EventTypeCard
               src="./assets/Card-PrivateParty.jpg"
               header="Private Event"
               additional="Presentation, Conference for companies"
             />
           </Grid>
-          <Grid xs>
+          <Grid item xs>
             <EventTypeCard
               src="./assets/Card-CelebrationParty.jpg"
               header="Celebration Event"
