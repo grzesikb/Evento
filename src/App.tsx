@@ -3,15 +3,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 import Home from './views/Home/Home';
-// import { settingsContext } from './context/settingsContext';
+import { SettingsContext } from './context/SettingsContext';
 
 const App = () => {
-  // const settings = useContext(SettingsContext);
-  // const { theme } = settings;
+  const { theme } = useContext(SettingsContext);
 
   const Theme = createTheme({
     palette: {
-      mode: 'dark',
+      mode: theme,
+      primary: {
+        main: theme === 'light' ? '#2e7d32' : '#272727',
+      },
     },
   });
   return (
