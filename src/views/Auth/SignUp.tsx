@@ -34,15 +34,15 @@ const SignUp = () => {
   return (
     <Form
       handleClick={() => onSubmit()}
-      text="Utwórz konto"
-      navigateText="Posiadasz konto? Zaloguj się!"
+      text="Sign Up"
+      navigateText="Do you have an account? Login now!"
     >
       <TextField
         margin="normal"
         required
         fullWidth
         id="email"
-        label="Adres email"
+        label="Email address"
         name="email"
         autoComplete="email"
         autoFocus
@@ -55,7 +55,7 @@ const SignUp = () => {
         required
         fullWidth
         name="password"
-        label="Hasło"
+        label="Password"
         type="password"
         id="password"
         autoComplete="current-password"
@@ -68,7 +68,7 @@ const SignUp = () => {
         required
         fullWidth
         name="password"
-        label="Powtórz hasło"
+        label="Repeat your password"
         type="password"
         id="password"
         autoComplete="current-password"

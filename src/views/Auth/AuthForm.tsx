@@ -30,7 +30,7 @@ const Form = ({ children, handleClick, text, navigateText }: SignFormProps) => {
           mt: 1,
           display: 'flex',
           flexDirection: 'column',
-          minWidth: '400px',
+          minWidth: '350px',
         }}
       >
         {children}
