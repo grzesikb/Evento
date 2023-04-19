@@ -1,8 +1,9 @@
 import * as React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Container, Typography } from '@mui/material';
+import { Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 
 const columns: GridColDef[] = [
   { field: 'lp', headerName: '#', width: 60 },
@@ -21,7 +22,17 @@ const columns: GridColDef[] = [
   {
     field: 'action',
     headerName: 'Actions',
-    renderCell: (params: GridRenderCellParams<any>) => <EditIcon />,
+    sortable: false,
+    renderCell: (params: GridRenderCellParams<any>) => (
+      <div>
+        <IconButton onClick={() => console.log(params.id)}>
+          <ArticleOutlinedIcon />
+        </IconButton>
+        <IconButton onClick={() => console.log(params.id)}>
+          <EditIcon />
+        </IconButton>
+      </div>
+    ),
   },
 ];
 const rows = [
@@ -45,7 +56,7 @@ const rows = [
 
 const UserEvents = () => {
   return (
-    <Container sx={{ height: 400, marginTop: 1, marginBottom: 2 }}>
+    <Container sx={{ height: 400, marginTop: 1, marginBottom: 5 }}>
       <Typography
         gutterBottom
         variant="h5"
