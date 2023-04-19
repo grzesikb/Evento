@@ -7,6 +7,7 @@ import { SettingsContext } from './context/SettingsContext';
 import SignIn from './views/Auth/SignIn';
 import SignUp from './views/Auth/SignUp';
 import Navbar from './components/Navbar';
+import AddUserData from './views/AddUserData/AddUserData';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -25,7 +26,8 @@ const App = () => {
       <Container fixed maxWidth="lg">
         <Navbar />
         {/* <UserPanel /> */}
-        <SignIn />
+        {/* <SignIn /> */}
+        <AddUserData />
       </Container>
     </ThemeProvider>
   );
