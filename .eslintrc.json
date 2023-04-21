@@ -44,6 +44,7 @@
     "react/no-unused-prop-types": "off",
     "react/require-default-props": "off",
     "import/no-extraneous-dependencies": "off",
-    "react/self-closing-comp": "off"
+    "react/self-closing-comp": "off",
+    "eslint-disable-next-line": "off"
   }
 }

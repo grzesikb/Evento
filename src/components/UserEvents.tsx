@@ -62,6 +62,7 @@ const UserEvents = () => {
         variant="h5"
         component="div"
         sx={{ marginTop: 3, marginBottom: 2 }}
+        className="noSelect"
       >
         Your orders
       </Typography>

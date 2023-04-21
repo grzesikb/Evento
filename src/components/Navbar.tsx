@@ -10,6 +10,8 @@ import Menu from '@mui/material/Menu';
 import { Switch } from '@mui/material';
 import LightModeIcon from '@mui/icons-material/LightModeOutlined';
 import DarkModeIcon from '@mui/icons-material/DarkModeOutlined';
+import PersonIcon from '@mui/icons-material/Person';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import { SettingsContext } from '../context/SettingsContext';
 
@@ -37,7 +39,7 @@ const Navbar = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }} className="noSelect">
       <AppBar position="fixed">
         <Toolbar>
           <Typography
@@ -85,8 +87,13 @@ const Navbar = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>Logout</MenuItem>
+              <MenuItem onClick={handleClose}>
+                <PersonIcon sx={{ mr: 1 }} /> Profile
+              </MenuItem>
+              <MenuItem onClick={handleClose}>
+                <LogoutIcon sx={{ mr: 1 }} />
+                Logout
+              </MenuItem>
             </Menu>
           </div>
         </Toolbar>

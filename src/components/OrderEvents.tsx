@@ -4,7 +4,7 @@ import EventTypeCard from './EventTypeCard';
 
 const OrderEvents = () => {
   return (
-    <Container>
+    <Container className="noSelect">
       <Grid container>
         <Grid item xs={12}>
           <Typography

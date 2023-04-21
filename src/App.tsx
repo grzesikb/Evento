@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container } from '@mui/material';
 import UserPanel from './views/UserPanel/UserPanel';
 import { SettingsContext } from './context/SettingsContext';
+
 import SignIn from './views/Auth/SignIn';
 import SignUp from './views/Auth/SignUp';
 import Navbar from './components/Navbar';
@@ -25,9 +26,9 @@ const App = () => {
       <CssBaseline />
       <Container fixed maxWidth="lg">
         <Navbar />
-        {/* <UserPanel /> */}
+        <UserPanel />
         {/* <SignIn /> */}
-        <AddUserData />
+        {/* <AddUserData /> */}
       </Container>
     </ThemeProvider>
   );
