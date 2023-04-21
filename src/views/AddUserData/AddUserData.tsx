@@ -3,8 +3,9 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
+import PostalCodeInput from './PostalCodeInput';
 
 const AddUserData = () => {
   return (
@@ -21,7 +22,7 @@ const AddUserData = () => {
         <Typography component="h1" variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
           Complete your personal details
         </Typography>
-        <Box component="form" noValidate>
+        <Box component="form">
           <Grid container>
             <Grid item sm={5.5}>
               <TextField
@@ -106,6 +107,7 @@ const AddUserData = () => {
             <Grid item sm={5.5}>
               <TextField
                 margin="dense"
+                type="number"
                 required
                 fullWidth
                 id="phone"
@@ -113,6 +115,13 @@ const AddUserData = () => {
                 name="phone"
                 autoComplete="phone"
                 autoFocus
+                sx={{
+                  '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+                    {
+                      '-webkit-appearance': 'none',
+                      margin: 0,
+                    },
+                }}
               />
             </Grid>
             <Grid item sm={1}></Grid>
@@ -127,6 +136,7 @@ const AddUserData = () => {
                 autoComplete="postal-code"
                 autoFocus
               />
+              {/* <PostalCodeInput /> */}
             </Grid>
             <Grid item sm={6.5}></Grid>
             <Grid item sm={5.5}>
