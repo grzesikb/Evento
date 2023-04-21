@@ -14,6 +14,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import { SettingsContext } from '../context/SettingsContext';
+import UserAccountMenu from './UserAccountMenu';
 
 const Navbar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -62,39 +63,7 @@ const Navbar = () => {
                 <DarkModeIcon sx={{ color: 'white' }} />
               )}
             </IconButton>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={handleClose}>
-                <PersonIcon sx={{ mr: 1 }} /> Profile
-              </MenuItem>
-              <MenuItem onClick={handleClose}>
-                <LogoutIcon sx={{ mr: 1 }} />
-                Logout
-              </MenuItem>
-            </Menu>
+            <UserAccountMenu email="pimpek@gmail.com" />
           </div>
         </Toolbar>
       </AppBar>
