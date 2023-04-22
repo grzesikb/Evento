@@ -4,6 +4,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import StatusChip from './StatusChip';
 
 const columns: GridColDef[] = [
   { field: 'lp', headerName: '#', width: 60 },
@@ -15,7 +16,10 @@ const columns: GridColDef[] = [
     field: 'status',
     headerName: 'Status',
     sortable: false,
-    width: 150,
+    width: 160,
+    renderCell: (params: GridRenderCellParams<any>) => (
+      <StatusChip type={params.value} />
+    ),
     // valueGetter: (params: GridValueGetterParams) =>
     //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
   },
@@ -25,10 +29,10 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: (params: GridRenderCellParams<any>) => (
       <div>
-        <IconButton onClick={() => console.log(params.id)}>
+        <IconButton onClick={() => console.log(params.id)} title="Details">
           <ArticleOutlinedIcon />
         </IconButton>
-        <IconButton onClick={() => console.log(params.id)}>
+        <IconButton onClick={() => console.log(params.id)} title="Edit">
           <EditIcon />
         </IconButton>
       </div>
@@ -42,7 +46,7 @@ const rows = [
     name: 'Impreza studencka',
     type: 'Public',
     date: '21:00 08.08.2023',
-    status: 'Realize',
+    status: 'Finished',
   },
   {
     lp: 2,
@@ -50,7 +54,15 @@ const rows = [
     name: 'Wesele Ani i Jakuba',
     type: 'Celebration',
     date: '16:00 31.06.2023',
-    status: 'Accepted',
+    status: 'inProgress',
+  },
+  {
+    lp: 3,
+    id: '9bad2s',
+    name: 'Konferencja ABW',
+    type: 'Privte',
+    date: '18:00 20.06.2023',
+    status: 'Verification',
   },
 ];
 
