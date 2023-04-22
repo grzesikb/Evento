@@ -15,7 +15,10 @@ interface Props {
 const EventTypeCard = (props: Props) => {
   const { header, additional, src } = props;
   return (
-    <Card sx={{ maxWidth: 345, height: '100%', margin: 0.4 }}>
+    <Card
+      sx={{ maxWidth: 345, height: '100%', margin: 0.4 }}
+      variant="outlined"
+    >
       <CardActionArea>
         <CardMedia component="img" height="140" image={src} alt="card-img" />
         <CardContent>
