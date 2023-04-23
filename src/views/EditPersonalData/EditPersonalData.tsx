@@ -24,7 +24,7 @@ export interface IPersonalData {
   country: string;
 }
 
-const EditPersonalData = ({ data }: IProps, back: IProps) => {
+const EditPersonalData = ({ data }: IProps, props: IProps) => {
   return (
     <Box
       sx={{
@@ -36,7 +36,7 @@ const EditPersonalData = ({ data }: IProps, back: IProps) => {
       }}
     >
       <Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
-        <Back onClick={back.onBack} />
+        <Back onClick={props.onBack} />
         <Typography component="h1" variant="h5" sx={{ fontWeight: 600, mb: 2 }}>
           Edit your personal details
         </Typography>
