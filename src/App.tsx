@@ -11,6 +11,8 @@ import SignUp from './views/Auth/SignUp';
 import Navbar from './components/Navbar';
 import AddUserData from './views/AddUserData/AddUserData';
 import EditPersonalData from './views/EditPersonalData/EditPersonalData';
+import PaymentSettings from './views/PaymentSettings/PaymentSettings';
+import AccountSettings from './views/AccountSettings/AccountSettings';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -34,9 +36,9 @@ const App = () => {
       <CssBaseline />
       <Container fixed maxWidth="lg">
         <Navbar />
-
-        <UserPanel />
+        {/* <UserPanel /> */}
         {/* <SignIn /> */}
+        {/* <SignUp /> */}
         {/* <AddUserData /> */}
         {/* <EditPersonalData
           data={{
@@ -53,6 +55,8 @@ const App = () => {
           }}
           onBack={handleClick}
         /> */}
+        {/* <PaymentSettings onBack={handleClick} /> */}
+        {/* <AccountSettings onBack={handleClick} /> */}
       </Container>
     </ThemeProvider>
   );
