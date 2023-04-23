@@ -1,8 +1,8 @@
 import { Container, Grid, Paper, Typography } from '@mui/material';
 
-import EventTypeCard from '../../components/EventTypeCard';
-import OrderEvents from '../../components/OrderEvents';
-import UserEvents from '../../components/UserEvents';
+import EventTypeCard from './EventTypeCard';
+import OrderEvents from './OrderEvents';
+import UserEvents from './UserEvents';
 
 const UserPanel = () => {
   return (

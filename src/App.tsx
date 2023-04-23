@@ -4,15 +4,15 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container } from '@mui/material';
 import dayjs from 'dayjs';
 
-import UserPanel from './views/UserPanel/UserPanel';
-import { SettingsContext } from './context/SettingsContext';
-import SignIn from './views/Auth/SignIn';
-import SignUp from './views/Auth/SignUp';
-import Navbar from './components/Navbar';
-import AddUserData from './views/AddUserData/AddUserData';
-import EditPersonalData from './views/EditPersonalData/EditPersonalData';
-import PaymentSettings from './views/PaymentSettings/PaymentSettings';
-import AccountSettings from './views/AccountSettings/AccountSettings';
+import UserPanel from './components/views/UserPanel/UserPanel';
+import { SettingsContext } from './contexts/context/SettingsContext';
+import SignIn from './components/views/Auth/SignIn';
+import SignUp from './components/views/Auth/SignUp';
+import Navbar from './components/common/Navbar/Navbar';
+import AddUserData from './components/views/AddUserData/AddUserData';
+import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
+import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
+import AccountSettings from './components/views/AccountSettings/AccountSettings';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);

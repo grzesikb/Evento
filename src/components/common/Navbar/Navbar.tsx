@@ -13,7 +13,7 @@ import DarkModeIcon from '@mui/icons-material/DarkModeOutlined';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-import { SettingsContext } from '../context/SettingsContext';
+import { SettingsContext } from '../../../contexts/context/SettingsContext';
 import UserAccountMenu from './UserAccountMenu';
 
 const Navbar = () => {

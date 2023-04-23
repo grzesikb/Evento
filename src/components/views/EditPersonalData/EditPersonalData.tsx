@@ -5,7 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useState } from 'react';
 import dayjs from 'dayjs';
-import Back from '../../components/Back';
+import Back from '../../common/Back';
 
 interface IProps {
   data: IPersonalData;

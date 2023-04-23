@@ -4,7 +4,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import StatusChip from './StatusChip';
+import StatusChip from '../../common/StatusChip';
 
 const columns: GridColDef[] = [
   { field: 'lp', headerName: '#', width: 60 },

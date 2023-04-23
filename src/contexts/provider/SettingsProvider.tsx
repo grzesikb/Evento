@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useReducer } from 'react';
-import { SettingsContext } from './SettingsContext';
+import { SettingsContext } from '../context/SettingsContext';
 
 interface SetThemeAction {
   type: 'SET_THEME';

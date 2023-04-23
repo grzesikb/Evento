@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Link, Typography } from '@mui/material';
 import React, { ReactNode, useContext } from 'react';
-import { SettingsContext } from '../../context/SettingsContext';
+import { SettingsContext } from '../../../contexts/context/SettingsContext';
 
 interface SignFormProps {
   children: ReactNode;

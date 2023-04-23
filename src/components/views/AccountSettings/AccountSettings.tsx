@@ -1,6 +1,6 @@
 import { Button, Grid, Paper, TextField, Typography } from '@mui/material';
 import Box from '@mui/material/Box';
-import Back from '../../components/Back';
+import Back from '../../common/Back';
 
 interface IProps {
   onBack: () => any;
