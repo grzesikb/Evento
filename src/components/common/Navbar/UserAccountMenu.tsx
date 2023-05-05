@@ -16,12 +16,14 @@ import AppsIcon from '@mui/icons-material/Apps';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import { useNavigate } from 'react-router-dom';
 
-interface UserAccountMenuProps {
+interface IUserAccountMenuProps {
   email: string;
 }
 
-const UserAccountMenu = (props: UserAccountMenuProps) => {
+const UserAccountMenu = (props: IUserAccountMenuProps) => {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -89,33 +91,33 @@ const UserAccountMenu = (props: UserAccountMenuProps) => {
           <Typography> {email}</Typography>
         </Box>
         <Divider />
-        <MenuItem onClick={handleClose} sx={{ mt: 1 }}>
+        <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
           <ListItemIcon>
             <AppsIcon fontSize="small" />
           </ListItemIcon>
           Dashboard
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate('/app/edit-personal-data')}>
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
           Edit Personal Data
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate('/app/payments-settings')}>
           <ListItemIcon>
             <CreditCardIcon fontSize="small" />
           </ListItemIcon>
           Payment settings
         </MenuItem>
 
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate('/app/account-settings')}>
           <ListItemIcon>
             <ManageAccountsIcon fontSize="small" />
           </ListItemIcon>
           Account settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => navigate('/auth/signin')}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
