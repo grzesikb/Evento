@@ -93,7 +93,7 @@ const UserAccountMenu = (props: UserAccountMenuProps) => {
           <ListItemIcon>
             <AppsIcon fontSize="small" />
           </ListItemIcon>
-          Panel
+          Dashboard
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleClose}>

@@ -4,7 +4,7 @@ import EventTypeCard from './EventTypeCard';
 import OrderEvents from './OrderEvents';
 import UserEvents from './UserEvents';
 
-const UserPanel = () => {
+const UserDashboard = () => {
   return (
     <Paper
       variant="outlined"
@@ -16,4 +16,4 @@ const UserPanel = () => {
   );
 };
 
-export default UserPanel;
+export default UserDashboard;

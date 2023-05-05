@@ -9,7 +9,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container } from '@mui/material';
 import dayjs from 'dayjs';
 
-import UserPanel from './components/views/UserPanel/UserPanel';
+import UserDashboard from './components/views/UserDashboard/UserDashboard';
 import { SettingsContext } from './contexts/context/SettingsContext';
 import SignIn from './components/views/Auth/SignIn';
 import SignUp from './components/views/Auth/SignUp';
@@ -56,8 +56,8 @@ const App = () => {
       path: '/home',
       children: [
         {
-          path: 'panel',
-          element: <UserPanel />,
+          path: 'dashboard',
+          element: <UserDashboard />,
         },
         {
           path: 'edit-personal-data',
