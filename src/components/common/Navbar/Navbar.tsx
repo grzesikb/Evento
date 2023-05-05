@@ -16,7 +16,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { SettingsContext } from '../../../contexts/context/SettingsContext';
 import UserAccountMenu from './UserAccountMenu';
 
-const Navbar = () => {
+interface INavbar {
+  hideMenu?: boolean;
+}
+
+const Navbar = (props: INavbar) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { theme, dispatch } = useContext(SettingsContext);
 
@@ -63,7 +67,7 @@ const Navbar = () => {
                 <DarkModeIcon sx={{ color: 'white' }} />
               )}
             </IconButton>
-            <UserAccountMenu email="pimpek@gmail.com" />
+            {!props.hideMenu && <UserAccountMenu email="pimpek@gmail.com" />}
           </div>
         </Toolbar>
       </AppBar>

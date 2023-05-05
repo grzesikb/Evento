@@ -7,8 +7,15 @@ interface SignFormProps {
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
   text: string;
   navigateText: string;
+  navigatePath: string;
 }
-const Form = ({ children, handleClick, text, navigateText }: SignFormProps) => {
+const Form = ({
+  children,
+  handleClick,
+  text,
+  navigateText,
+  navigatePath,
+}: SignFormProps) => {
   const { theme } = useContext(SettingsContext);
   return (
     <Box
@@ -54,7 +61,7 @@ const Form = ({ children, handleClick, text, navigateText }: SignFormProps) => {
           </Grid> */}
           <Grid item>
             <Link
-              href="../auth/signup"
+              href={navigatePath}
               color={theme === 'dark' ? '#fff' : '#000'}
               variant="body2"
             >

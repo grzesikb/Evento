@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Box,
   FormControl,
   IconButton,
   InputAdornment,
@@ -9,6 +10,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Form from './AuthForm';
+import Navbar from '../../common/Navbar/Navbar';
 
 const SignIn = () => {
   const [data, setData] = useState<{ email: string; password: string }>({
@@ -49,45 +51,52 @@ const SignIn = () => {
   ) => {
     event.preventDefault();
   };
+
   return (
-    <Form
-      handleClick={() => onSubmit()}
-      text="Sign In"
-      navigateText="Don't have an account? Create account now!"
-    >
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="email"
-        label="Email address"
-        name="email"
-        autoComplete="email"
-        autoFocus
-        value={data.email}
-        onChange={(e) => setData({ ...data, email: e.target.value })}
-      />
-      <FormControl sx={{ mt: 1 }} variant="outlined">
-        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-        <OutlinedInput
-          id="outlined-adornment-password"
-          type={showPassword ? 'text' : 'password'}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
+    <Box>
+      <Navbar hideMenu />
+      <Form
+        handleClick={() => onSubmit()}
+        text="Sign In"
+        navigateText="Don't have an account? Create account now!"
+        navigatePath="../auth/signup"
+      >
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={data.email}
+          onChange={(e) => setData({ ...data, email: e.target.value })}
         />
-      </FormControl>
-    </Form>
+        <FormControl sx={{ mt: 1 }} variant="outlined">
+          <InputLabel htmlFor="outlined-adornment-password">
+            Password
+          </InputLabel>
+          <OutlinedInput
+            id="outlined-adornment-password"
+            type={showPassword ? 'text' : 'password'}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+        </FormControl>
+      </Form>
+    </Box>
   );
 };
 

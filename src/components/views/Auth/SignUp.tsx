@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 import Form from './AuthForm';
+import Navbar from '../../common/Navbar/Navbar';
 
 const SignUp = () => {
   const [data, setData] = useState<{ email: string; password: string }>({
@@ -32,50 +33,54 @@ const SignUp = () => {
   // 	navigate('../../home');
   // }
   return (
-    <Form
-      handleClick={() => onSubmit()}
-      text="Sign Up"
-      navigateText="Do you have an account? Login now!"
-    >
-      <TextField
-        margin="normal"
-        required
-        fullWidth
-        id="email"
-        label="Email address"
-        name="email"
-        autoComplete="email"
-        autoFocus
-        value={data.email}
-        onChange={(e) => setData({ ...data, email: e.target.value })}
-      />
+    <Box>
+      <Navbar hideMenu />
+      <Form
+        handleClick={() => onSubmit()}
+        text="Sign Up"
+        navigateText="Do you have an account? Login now!"
+        navigatePath="../auth/signin"
+      >
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={data.email}
+          onChange={(e) => setData({ ...data, email: e.target.value })}
+        />
 
-      <TextField
-        margin="dense"
-        required
-        fullWidth
-        name="password"
-        label="Password"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-        value={data.password}
-        onChange={(e) => setData({ ...data, password: e.target.value })}
-      />
+        <TextField
+          margin="dense"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={data.password}
+          onChange={(e) => setData({ ...data, password: e.target.value })}
+        />
 
-      <TextField
-        margin="dense"
-        required
-        fullWidth
-        name="password"
-        label="Repeat your password"
-        type="password"
-        id="password"
-        autoComplete="current-password"
-        value={data.password}
-        onChange={(e) => setData({ ...data, password: e.target.value })}
-      />
-    </Form>
+        <TextField
+          margin="dense"
+          required
+          fullWidth
+          name="password"
+          label="Repeat your password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={data.password}
+          onChange={(e) => setData({ ...data, password: e.target.value })}
+        />
+      </Form>
+    </Box>
   );
 };
 
