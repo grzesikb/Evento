@@ -19,7 +19,8 @@ import AddUserData from './components/views/AddUserData/AddUserData';
 import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
 import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
 import AccountSettings from './components/views/AccountSettings/AccountSettings';
-import OrderPublicEvent from './components/views/OrderPublicEvent/OrderPublicEvent';
+import OrderPublicEvent from './components/views/OrderEvents/OrderPublicEvent';
+import OrderEvent from './components/views/OrderEvents/OrderEvents';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -87,8 +88,8 @@ const App = () => {
           element: <AccountSettings onBack={handleBack} />,
         },
         {
-          path: 'order-public-event',
-          element: <OrderPublicEvent />,
+          path: 'order-event',
+          element: <OrderEvent />,
         },
       ],
     },
