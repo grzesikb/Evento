@@ -1,9 +1,12 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
+/* ATTENTION. Older version of @mui/x-date-pickers-pro used because 
+it has a better time picker and the new one doesn't have. Don't upgrade */
+
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import SendIcon from '@mui/icons-material/Send';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
@@ -13,9 +16,8 @@ import Alert from '../../common/Alert';
 import OrderPublicEvent from './OrderPublicEvent';
 
 interface IOrderEvent {
-  startDate: string;
-  finishDate: string;
-  aditionalInfo: string;
+  startDate: string | null | undefined;
+  finishDate: string | null | undefined;
 }
 interface IPropsEvent {
   type: string;
@@ -24,14 +26,18 @@ interface IPropsEvent {
 
 const OrderEvent = () => {
   const navigate = useNavigate();
+
+  const today = new Date();
+  const todayString = today.toDateString();
+
   const [propsEvent, setPropsEvent] = useState<IPropsEvent>({
     type: '',
     isReady: false,
   });
+
   const [eventData, setEventData] = useState<IOrderEvent>({
-    startDate: '',
-    finishDate: '',
-    aditionalInfo: '',
+    startDate: todayString,
+    finishDate: todayString,
   });
 
   const checkAvailability = () => {
@@ -97,37 +103,60 @@ const OrderEvent = () => {
             </Box>
             <Box component="form">
               <Grid container>
-                <Grid item sm={12}>
+                <Grid item sm={5}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DateTimePicker']}>
-                      <DateTimePicker
-                        // value={eventData}
-                        // onChange={(value) =>
-                        //   setEventData({
-                        //     ...eventData,
-                        //     startDate: value ? value.startDate : null,
-                        //   })
-                        // }
-                        ampm={false}
-                        label="Start date *"
-                        format="DD/MM/YYYY HH:mm"
-                        views={['year', 'month', 'day', 'hours', 'minutes']}
-                      />
-                    </DemoContainer>
+                    <DateTimePicker
+                      inputFormat="DD-MM-YYYY HH:mm"
+                      renderInput={(propsTextField) => (
+                        <TextField {...propsTextField} />
+                      )}
+                      label="Start date and time*"
+                      value={eventData.startDate}
+                      onChange={(value) =>
+                        setEventData({
+                          ...eventData,
+                          startDate: value,
+                        })
+                      }
+                      ampm={false}
+                      disablePast
+                    />
                   </LocalizationProvider>
                 </Grid>
-
-                <Grid item sm={12}>
+                <Grid item sm={2}>
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      mt: 0.5,
+                      fontWeight: 500,
+                      textAlign: 'center',
+                      color: 'grey',
+                    }}
+                  >
+                    -
+                  </Typography>
+                </Grid>
+                <Grid item sm={5}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['DateTimePicker']}>
-                      <DateTimePicker
-                        label="Finish date *"
-                        format="DD/MM/YYYY HH:mm"
-                        views={['year', 'month', 'day', 'hours', 'minutes']}
-                      />
-                    </DemoContainer>
+                    <DateTimePicker
+                      inputFormat="DD-MM-YYYY HH:mm"
+                      renderInput={(propsTextField) => (
+                        <TextField {...propsTextField} />
+                      )}
+                      label="Finish date and time*"
+                      value={eventData.finishDate}
+                      onChange={(value) =>
+                        setEventData({
+                          ...eventData,
+                          finishDate: value,
+                        })
+                      }
+                      ampm={false}
+                      disablePast
+                    />
                   </LocalizationProvider>
                 </Grid>
+                {/* <Grid item sm={12}></Grid>
                 <Grid item sm={12}>
                   <TextField
                     margin="dense"
@@ -138,7 +167,7 @@ const OrderEvent = () => {
                     autoFocus
                     multiline
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item sm={6.5}>
                   <Typography
                     component="h5"
