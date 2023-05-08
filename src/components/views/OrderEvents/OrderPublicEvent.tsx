@@ -1,12 +1,17 @@
-import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+  Grid,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import Navbar from '../../common/Navbar/Navbar';
 import Back from '../../common/Back';
 
 interface IPublicEvent {
@@ -52,12 +57,22 @@ const OrderPublicEvent = () => {
           <Grid item sm={12}>
             <TextField
               margin="dense"
+              required
+              fullWidth
+              id="eventName"
+              label="Event Name"
+              name="eventName"
+            />
+          </Grid>
+          <Grid item sm={12}>
+            <TextField
+              margin="dense"
+              required
               fullWidth
               id="artist"
-              label="Artist"
+              label="Artist Names"
               name="artist"
-              autoFocus
-              helperText="Enter artists full names"
+              helperText="If you want to order artists, enter their names and artistic pseudonym"
               multiline
               // value={}
               // onChange={() => {}}
@@ -72,34 +87,44 @@ const OrderPublicEvent = () => {
               id="numberOfPeople"
               label="Maximum number of people"
               name="numberOfPeople"
-              autoFocus
             />
           </Grid>
           <Grid item sm={1}></Grid>
-          <Grid item sm={5.5}>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DemoContainer components={['DateTimePicker']}>
-                <DateTimePicker
-                  label="Finish date"
-                  format="DD/MM/YYYY HH:mm"
-                  views={['year', 'month', 'day', 'hours', 'minutes']}
-                />
-              </DemoContainer>
-            </LocalizationProvider>
-          </Grid>
           <Grid item sm={5.5}>
             <TextField
               margin="dense"
               fullWidth
-              id="additionalInfo"
-              label="Aditional info"
-              name="additionalInfo"
-              autoFocus
+              id="minAge"
+              label="Minimal Age"
+              name="minAge"
+              helperText="Minimum age of a person to let him or her into the party"
             />
           </Grid>
-          <Grid item sm={1}></Grid>
+          <Grid item sm={12}>
+            <TextField
+              margin="dense"
+              fullWidth
+              id="additionalInfo"
+              label="Aditional info / Expectations"
+              name="additionalInfo"
+              multiline
+            />
+          </Grid>
+          <Grid item sm={12}>
+            <FormGroup className="noSelect">
+              <FormControlLabel
+                sx={{ mt: 5 }}
+                control={<Checkbox color="success" />}
+                label="Bar option with bartending service"
+              />
 
-          <Grid item sm={6.5}>
+              <FormControlLabel
+                control={<Checkbox color="success" disabled checked />}
+                label="* Security and bodyguards"
+              />
+            </FormGroup>
+          </Grid>
+          <Grid item sm={12}>
             <Typography component="h5" variant="body2" sx={{ mt: 2, mb: 2 }}>
               * require
             </Typography>
@@ -111,7 +136,7 @@ const OrderPublicEvent = () => {
           endIcon={<SendIcon />}
           sx={{ fontWeight: 600 }}
         >
-          Add personal details
+          Order public event
         </Button>
       </Box>
     </Paper>
