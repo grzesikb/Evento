@@ -5,7 +5,7 @@ import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 it has a better time picker and the new one doesn't have. Don't upgrade */
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import SendIcon from '@mui/icons-material/Send';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -14,6 +14,8 @@ import Navbar from '../../common/Navbar/Navbar';
 import Back from '../../common/Back';
 import Alert from '../../common/Alert';
 import OrderPublicEvent from './OrderPublicEvent';
+import OrderPrivateEvent from './OrderPrivateEvent';
+import OrderCelebrationEvent from './OrderCelebrationEvent';
 
 interface IOrderEvent {
   startDate: string | null | undefined;
@@ -40,27 +42,50 @@ const OrderEvent = () => {
     finishDate: todayString,
   });
 
-  const checkAvailability = () => {
-    // tu sprawdzanie czy data jest dostępna
-    // dodanie danych do state eventData
-    if (true) {
-      const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const typeParam = urlParams.get('type');
-      if (
-        typeParam === 'public' ||
-        typeParam === 'private' ||
-        typeParam === 'celebration'
-      )
-        setPropsEvent({ type: typeParam, isReady: true });
-      else toast.error('Wrong data type ');
+  const checkDateAvailability = async () => {
+    try {
+      // tu sprawdzanie czy data jest dostępna
+      console.log('Sprawdzanie czy data dostępna');
+      // tutaj naprawic to
+      return true;
+    } catch (error) {
+      console.error(error);
+      return Promise.reject(error);
+    }
+  };
+
+  const checkAvailability = async () => {
+    const availability = checkDateAvailability();
+    toast.promise(availability, {
+      loading: 'Availability check...',
+      success: 'Selected date is available',
+      error: 'Selected date is already taken. Please try another date',
+    });
+
+    if (await availability) {
+      setTimeout(() => {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const typeParam = urlParams.get('type');
+        if (
+          typeParam === 'public' ||
+          typeParam === 'private' ||
+          typeParam === 'celebration'
+        ) {
+          setPropsEvent({ type: typeParam, isReady: true });
+        } else {
+          toast.error('Wrong data type ');
+        }
+      }, 1500);
+
       //
       //  POST /order/  (typ wyciągnięty i w state type)
       //
-    } else
-      toast.error(
-        'The selected date is already taken. Please try another date ',
-      );
+    }
+    // } else
+    //   toast.error(
+    //     'The selected date is already taken. Please try another date ',
+    //   );
   };
   return (
     <Box>
@@ -75,7 +100,9 @@ const OrderEvent = () => {
         }}
       >
         {propsEvent.isReady ? (
-          propsEvent.type === 'public' && <OrderPublicEvent />
+          (propsEvent.type === 'public' && <OrderPublicEvent />) ||
+          (propsEvent.type === 'private' && <OrderPrivateEvent />) ||
+          (propsEvent.type === 'celebration' && <OrderCelebrationEvent />)
         ) : (
           <Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
             <Back onClick={() => navigate('/app/dashboard')} />
@@ -181,7 +208,7 @@ const OrderEvent = () => {
               </Grid>
               <Button
                 variant="contained"
-                endIcon={<SendIcon />}
+                endIcon={<CalendarTodayIcon />}
                 sx={{ fontWeight: 600 }}
                 onClick={checkAvailability}
               >
