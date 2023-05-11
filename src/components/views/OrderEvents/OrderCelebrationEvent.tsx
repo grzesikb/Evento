@@ -2,10 +2,14 @@ import {
   Box,
   Button,
   Checkbox,
+  FormControl,
   FormControlLabel,
   FormGroup,
   Grid,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
   TextField,
   Typography,
 } from '@mui/material';
@@ -68,10 +72,26 @@ const OrderCelebrationEvent = () => {
               margin="dense"
               required
               fullWidth
-              id="company"
-              label="Company Name"
-              name="company"
+              id="catering"
+              label="Catering Name"
+              name="catering"
             />
+          </Grid>
+          <Grid item sm={12} sx={{ mt: 1, mb: 1 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                // value={age}
+                label="Type"
+                // onChange={handleChange}
+              >
+                <MenuItem value={1}>Birthdays</MenuItem>
+                <MenuItem value={2}>Name days</MenuItem>
+                <MenuItem value={3}>Bachelorette parties</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
           <Grid item sm={12}>
@@ -91,10 +111,7 @@ const OrderCelebrationEvent = () => {
                 control={<Checkbox color="success" />}
                 label="Bar option with bartending service"
               />
-              <FormControlLabel
-                control={<Checkbox color="success" />}
-                label="Catering package"
-              />
+
               <FormControlLabel
                 control={<Checkbox color="success" />}
                 label="Security and bodyguards"
