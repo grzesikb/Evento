@@ -18,6 +18,7 @@ const EventTypeCard = (props: Props) => {
     <Card
       sx={{ maxWidth: 345, height: '100%', margin: 0.4 }}
       variant="outlined"
+      onClick={props.onClick}
     >
       <CardActionArea>
         <CardMedia component="img" height="140" image={src} alt="card-img" />

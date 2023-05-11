@@ -3,6 +3,7 @@ import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
+  useNavigate,
 } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -18,7 +19,8 @@ import AddUserData from './components/views/AddUserData/AddUserData';
 import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
 import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
 import AccountSettings from './components/views/AccountSettings/AccountSettings';
-import OrderPublicEvent from './components/views/OrderPublicEvent/OrderPublicEvent';
+import OrderPublicEvent from './components/views/OrderEvents/OrderPublicEvent';
+import OrderEvent from './components/views/OrderEvents/OrderEvents';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -34,9 +36,7 @@ const App = () => {
 
   const test = dayjs('12/03/2022');
 
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
-  };
+  const handleBack = () => {};
 
   const router = createBrowserRouter([
     {
@@ -53,7 +53,7 @@ const App = () => {
       ],
     },
     {
-      path: '/home',
+      path: '/app',
       children: [
         {
           path: 'dashboard',
@@ -75,21 +75,21 @@ const App = () => {
                 voivodeship: 'świętokrzyskie',
                 country: 'Polska',
               }}
-              onBack={handleClick}
+              onBack={handleBack}
             />
           ),
         },
         {
           path: 'payments-settings',
-          element: <PaymentSettings onBack={handleClick} />,
+          element: <PaymentSettings onBack={handleBack} />,
         },
         {
-          path: 'payments-settings',
-          element: <AccountSettings onBack={handleClick} />,
+          path: 'account-settings',
+          element: <AccountSettings onBack={handleBack} />,
         },
         {
-          path: 'order-public-event',
-          element: <OrderPublicEvent />,
+          path: 'order-event',
+          element: <OrderEvent />,
         },
       ],
     },
@@ -100,7 +100,6 @@ const App = () => {
     <ThemeProvider theme={Theme}>
       <CssBaseline />
       <Container fixed maxWidth="lg">
-        <Navbar />
         <RouterProvider router={router} />
       </Container>
     </ThemeProvider>
