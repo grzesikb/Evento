@@ -13,6 +13,22 @@ const StatusChip = ({ type }: IProps) => {
       {type === 'Verification' && (
         <Chip label="Waiting for verification" size="small" color="warning" />
       )}
+      {type === 'Payments' && (
+        <Chip
+          label="Pending payment"
+          size="small"
+          color="primary"
+          sx={{ backgroundColor: 'dodgerblue' }}
+        />
+      )}
+      {type === 'Offer' && (
+        <Chip
+          label="Pending Offer Confirmation"
+          size="small"
+          color="primary"
+          sx={{ backgroundColor: 'firebrick' }}
+        />
+      )}
       {type === 'Finished' && <Chip label="Finished" size="small" />}
     </div>
   );
