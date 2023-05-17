@@ -8,41 +8,22 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
   TextField,
   Typography,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 
-import Back from '../../common/Back';
+import AppContainer from '../../common/AppContainer';
 
 const OrderCelebrationEvent = () => {
   return (
-    <Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
-      <Back onClick={() => {}} />
-      <Box style={{ display: 'flex' }}>
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{ fontWeight: 600, mb: 2, mr: 2 }}
-        >
-          Order Celebration Event
-        </Typography>
-        <Typography
-          component="h2"
-          variant="h5"
-          sx={{
-            fontWeight: 400,
-            mb: 2,
-            fontSize: 15,
-            lineHeight: 2.5,
-            color: 'grey',
-          }}
-        >
-          Birthdays, Name days, Bachelorette parties
-        </Typography>
-      </Box>
+    <AppContainer
+      back="/app/dashboard"
+      label="Order Celebration Event"
+      additionalLabel="Birthdays, Name days, Bachelorette parties"
+      navbar
+    >
       <Box component="form">
         <Grid container>
           <Grid item sm={7.5}>
@@ -130,10 +111,10 @@ const OrderCelebrationEvent = () => {
           endIcon={<SendIcon />}
           sx={{ fontWeight: 600 }}
         >
-          Order private event
+          Order celebration event
         </Button>
       </Box>
-    </Paper>
+    </AppContainer>
   );
 };
 
