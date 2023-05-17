@@ -5,6 +5,7 @@ import { Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PaymentIcon from '@mui/icons-material/Payment';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
 
 import StatusChip from '../../common/StatusChip';
@@ -45,11 +46,15 @@ const UserEvents = () => {
           <IconButton onClick={() => console.log(params.id)} title="Edit">
             <EditIcon />
           </IconButton>
-          {params.value === 'Payments' && (
-            <IconButton onClick={() => console.log(params.id)} title="Payment">
-              <PaymentIcon />
-            </IconButton>
-          )}
+
+          {/* tutaj musi być fetch danych bo status jest potrzebny (płatność dostępna po weryfikacji) */}
+          <IconButton onClick={() => console.log(params.id)} title="Payment">
+            <PaymentIcon />
+          </IconButton>
+
+          <IconButton onClick={() => console.log(params.id)} title="Delete">
+            <DeleteIcon color="error" />
+          </IconButton>
         </div>
       ),
     },
