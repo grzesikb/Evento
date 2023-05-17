@@ -13,19 +13,7 @@ import { useState } from 'react';
 
 import AppContainer from '../../common/AppContainer';
 
-interface IPublicEvent {
-  name: string;
-  startDate: string | null;
-  finishDate: string;
-}
-
 const OrderPublicEvent = () => {
-  const [eventData, setEventData] = useState<IPublicEvent>({
-    name: '',
-    startDate: '',
-    finishDate: '',
-  });
-
   return (
     <AppContainer
       back="/app/dashboard"
