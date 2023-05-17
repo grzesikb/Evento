@@ -4,6 +4,7 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
+import PaymentIcon from '@mui/icons-material/Payment';
 import StatusChip from '../../common/StatusChip';
 
 const columns: GridColDef[] = [
@@ -26,6 +27,7 @@ const columns: GridColDef[] = [
   {
     field: 'action',
     headerName: 'Actions',
+    width: 200,
     sortable: false,
     renderCell: (params: GridRenderCellParams<any>) => (
       <div>
@@ -35,6 +37,11 @@ const columns: GridColDef[] = [
         <IconButton onClick={() => console.log(params.id)} title="Edit">
           <EditIcon />
         </IconButton>
+        {params.value === 'Payments' && (
+          <IconButton onClick={() => console.log(params.id)} title="Payment">
+            <PaymentIcon />
+          </IconButton>
+        )}
       </div>
     ),
   },
