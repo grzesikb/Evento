@@ -14,13 +14,12 @@ import UserDashboard from './components/views/UserDashboard/UserDashboard';
 import { SettingsContext } from './contexts/context/SettingsContext';
 import SignIn from './components/views/Auth/SignIn';
 import SignUp from './components/views/Auth/SignUp';
-import Navbar from './components/common/Navbar/Navbar';
 import AddUserData from './components/views/AddUserData/AddUserData';
 import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
 import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
 import AccountSettings from './components/views/AccountSettings/AccountSettings';
-import OrderPublicEvent from './components/views/OrderEvents/OrderPublicEvent';
 import OrderEvent from './components/views/OrderEvents/OrderEvents';
+import OrderDetails from './components/views/UserAcitons/OrderDetails';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -75,21 +74,24 @@ const App = () => {
                 voivodeship: 'świętokrzyskie',
                 country: 'Polska',
               }}
-              onBack={handleBack}
             />
           ),
         },
         {
           path: 'payments-settings',
-          element: <PaymentSettings onBack={handleBack} />,
+          element: <PaymentSettings />,
         },
         {
           path: 'account-settings',
-          element: <AccountSettings onBack={handleBack} />,
+          element: <AccountSettings />,
         },
         {
           path: 'order-event',
           element: <OrderEvent />,
+        },
+        {
+          path: 'order-details',
+          element: <OrderDetails />,
         },
       ],
     },
