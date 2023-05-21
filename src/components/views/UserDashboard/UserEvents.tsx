@@ -1,12 +1,13 @@
 import * as React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Container, IconButton, Typography } from '@mui/material';
+import { Button, Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PaymentIcon from '@mui/icons-material/Payment';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 import StatusChip from '../../common/StatusChip';
 
@@ -55,7 +56,45 @@ const UserEvents = () => {
             <PaymentIcon />
           </IconButton>
 
-          <IconButton onClick={() => console.log(params.id)} title="Delete">
+          <IconButton
+            onClick={() =>
+              toast(
+                // eslint-disable-next-line react/no-unstable-nested-components
+                () => (
+                  <div style={{ width: '90%' }}>
+                    <div style={{ fontWeight: 700, marginBottom: 8 }}>
+                      Are you sure that you want to delete the order:
+                      {` ${params.id}`}
+                    </div>
+                    <div>
+                      <Button
+                        variant="contained"
+                        color="error"
+                        sx={{ fontWeight: 600 }}
+                        onClick={() => toast.dismiss()} // add delete order
+                      >
+                        Delete Order
+                      </Button>
+                      <Button
+                        variant="contained"
+                        onClick={() => toast.dismiss()}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ),
+                {
+                  style: {
+                    background: '#272727',
+                    color: '#fff',
+                  },
+                  duration: 10000,
+                },
+              )
+            }
+            title="Delete"
+          >
             <DeleteIcon color="error" />
           </IconButton>
         </div>
