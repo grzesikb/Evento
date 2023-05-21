@@ -20,6 +20,7 @@ import PaymentSettings from './components/views/PaymentSettings/PaymentSettings'
 import AccountSettings from './components/views/AccountSettings/AccountSettings';
 import OrderEvent from './components/views/OrderEvents/OrderEvents';
 import OrderDetails from './components/views/UserAcitons/OrderDetails';
+import EditOrder from './components/views/UserAcitons/EditOrder';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -92,6 +93,10 @@ const App = () => {
         {
           path: 'order-details',
           element: <OrderDetails />,
+        },
+        {
+          path: 'edit-order',
+          element: <EditOrder />,
         },
       ],
     },
