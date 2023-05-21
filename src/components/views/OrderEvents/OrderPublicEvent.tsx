@@ -5,53 +5,22 @@ import {
   FormControlLabel,
   FormGroup,
   Grid,
-  Paper,
   TextField,
   Typography,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useState } from 'react';
 
-import Back from '../../common/Back';
-
-interface IPublicEvent {
-  name: string;
-  startDate: string | null;
-  finishDate: string;
-}
+import AppContainer from '../../common/AppContainer';
 
 const OrderPublicEvent = () => {
-  const [eventData, setEventData] = useState<IPublicEvent>({
-    name: '',
-    startDate: '',
-    finishDate: '',
-  });
-
   return (
-    <Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
-      <Back onClick={() => {}} />
-      <Box style={{ display: 'flex' }}>
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{ fontWeight: 600, mb: 2, mr: 2 }}
-        >
-          Order Public Event
-        </Typography>
-        <Typography
-          component="h2"
-          variant="h5"
-          sx={{
-            fontWeight: 400,
-            mb: 2,
-            fontSize: 15,
-            lineHeight: 2.5,
-            color: 'grey',
-          }}
-        >
-          Dance parties, Concerts, Club events
-        </Typography>
-      </Box>
+    <AppContainer
+      back="/app/dashboard"
+      label="Order Public Event"
+      additionalLabel="Dance parties, Concerts, Club events"
+      navbar
+    >
       <Box component="form">
         <Grid container>
           <Grid item sm={12}>
@@ -139,7 +108,7 @@ const OrderPublicEvent = () => {
           Order public event
         </Button>
       </Box>
-    </Paper>
+    </AppContainer>
   );
 };
 

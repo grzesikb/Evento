@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 /* ATTENTION. Older version of @mui/x-date-pickers-pro used because 
 it has a better time picker and the new one doesn't have. Don't upgrade */
@@ -10,12 +10,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-import Navbar from '../../common/Navbar/Navbar';
-import Back from '../../common/Back';
 import Alert from '../../common/Alert';
 import OrderPublicEvent from './OrderPublicEvent';
 import OrderPrivateEvent from './OrderPrivateEvent';
 import OrderCelebrationEvent from './OrderCelebrationEvent';
+import AppContainer from '../../common/AppContainer';
 
 interface IOrderEvent {
   startDate: string | null | undefined;
@@ -89,101 +88,73 @@ const OrderEvent = () => {
   };
   return (
     <Box>
-      <Navbar />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mt: 12,
-        }}
-      >
-        {propsEvent.isReady ? (
-          (propsEvent.type === 'public' && <OrderPublicEvent />) ||
-          (propsEvent.type === 'private' && <OrderPrivateEvent />) ||
-          (propsEvent.type === 'celebration' && <OrderCelebrationEvent />)
-        ) : (
-          <Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
-            <Back onClick={() => navigate('/app/dashboard')} />
-            <Box style={{ display: 'flex' }}>
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{ fontWeight: 600, mb: 2, mr: 2 }}
-              >
-                Choose the date of the event
-              </Typography>
-              <Typography
-                component="h2"
-                variant="h5"
-                sx={{
-                  fontWeight: 400,
-                  mb: 2,
-                  fontSize: 15,
-                  lineHeight: 2.5,
-                  color: 'grey',
-                }}
-              >
-                The data you choose may already be taken
-              </Typography>
-            </Box>
-            <Box component="form">
-              <Grid container>
-                <Grid item sm={5}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      inputFormat="DD-MM-YYYY HH:mm"
-                      renderInput={(propsTextField) => (
-                        <TextField {...propsTextField} />
-                      )}
-                      label="Start date and time*"
-                      value={eventData.startDate}
-                      onChange={(value) =>
-                        setEventData({
-                          ...eventData,
-                          startDate: value,
-                        })
-                      }
-                      ampm={false}
-                      disablePast
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                <Grid item sm={2}>
-                  <Typography
-                    variant="h4"
-                    sx={{
-                      mt: 0.5,
-                      fontWeight: 500,
-                      textAlign: 'center',
-                      color: 'grey',
-                    }}
-                  >
-                    -
-                  </Typography>
-                </Grid>
-                <Grid item sm={5}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateTimePicker
-                      inputFormat="DD-MM-YYYY HH:mm"
-                      renderInput={(propsTextField) => (
-                        <TextField {...propsTextField} />
-                      )}
-                      label="Finish date and time*"
-                      value={eventData.finishDate}
-                      onChange={(value) =>
-                        setEventData({
-                          ...eventData,
-                          finishDate: value,
-                        })
-                      }
-                      ampm={false}
-                      disablePast
-                    />
-                  </LocalizationProvider>
-                </Grid>
-                {/* <Grid item sm={12}></Grid>
+      {propsEvent.isReady ? (
+        (propsEvent.type === 'public' && <OrderPublicEvent />) ||
+        (propsEvent.type === 'private' && <OrderPrivateEvent />) ||
+        (propsEvent.type === 'celebration' && <OrderCelebrationEvent />)
+      ) : (
+        <AppContainer
+          back="/app/dashboard"
+          label="Choose the date of the event"
+          additionalLabel="The data you choose may already be taken"
+          navbar
+        >
+          <Box component="form">
+            <Grid container>
+              <Grid item sm={5}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    inputFormat="DD-MM-YYYY HH:mm"
+                    renderInput={(propsTextField) => (
+                      <TextField {...propsTextField} />
+                    )}
+                    label="Start date and time*"
+                    value={eventData.startDate}
+                    onChange={(value) =>
+                      setEventData({
+                        ...eventData,
+                        startDate: value,
+                      })
+                    }
+                    ampm={false}
+                    disablePast
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item sm={2}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    mt: 0.5,
+                    fontWeight: 500,
+                    textAlign: 'center',
+                    color: 'grey',
+                  }}
+                >
+                  -
+                </Typography>
+              </Grid>
+              <Grid item sm={5}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DateTimePicker
+                    inputFormat="DD-MM-YYYY HH:mm"
+                    renderInput={(propsTextField) => (
+                      <TextField {...propsTextField} />
+                    )}
+                    label="Finish date and time*"
+                    value={eventData.finishDate}
+                    onChange={(value) =>
+                      setEventData({
+                        ...eventData,
+                        finishDate: value,
+                      })
+                    }
+                    ampm={false}
+                    disablePast
+                  />
+                </LocalizationProvider>
+              </Grid>
+              {/* <Grid item sm={12}></Grid>
                 <Grid item sm={12}>
                   <TextField
                     margin="dense"
@@ -195,29 +166,28 @@ const OrderEvent = () => {
                     multiline
                   />
                 </Grid> */}
-                <Grid item sm={6.5}>
-                  <Typography
-                    component="h5"
-                    variant="body2"
-                    sx={{ mt: 2, mb: 2 }}
-                  >
-                    * require
-                  </Typography>
-                </Grid>
-                <Grid item sm={5.5}></Grid>
+              <Grid item sm={6.5}>
+                <Typography
+                  component="h5"
+                  variant="body2"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  * require
+                </Typography>
               </Grid>
-              <Button
-                variant="contained"
-                endIcon={<CalendarTodayIcon />}
-                sx={{ fontWeight: 600 }}
-                onClick={checkAvailability}
-              >
-                Check the availability of dates
-              </Button>
-            </Box>
-          </Paper>
-        )}
-      </Box>
+              <Grid item sm={5.5}></Grid>
+            </Grid>
+            <Button
+              variant="contained"
+              endIcon={<CalendarTodayIcon />}
+              sx={{ fontWeight: 600 }}
+              onClick={checkAvailability}
+            >
+              Check the availability of dates
+            </Button>
+          </Box>
+        </AppContainer>
+      )}
       <Alert />
     </Box>
   );
