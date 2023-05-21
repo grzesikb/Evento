@@ -43,7 +43,10 @@ const UserEvents = () => {
           >
             <ArticleOutlinedIcon />
           </IconButton>
-          <IconButton onClick={() => console.log(params.id)} title="Edit">
+          <IconButton
+            onClick={() => navigate(`/app/edit-order?id=${params.id}`)}
+            title="Edit"
+          >
             <EditIcon />
           </IconButton>
 
