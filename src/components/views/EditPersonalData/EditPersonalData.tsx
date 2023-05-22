@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
@@ -7,23 +8,24 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import AppContainer from '../../common/AppContainer';
 
-interface IProps {
-  data: IPersonalData;
-}
-export interface IPersonalData {
-  firstName: string;
-  lastName: string;
-  dateOfBirth: dayjs.Dayjs;
-  phoneNumber: number;
-  street: string;
-  houseNumber: string;
-  city: string;
-  postalCode: string;
-  voivodeship: string;
-  country: string;
-}
+import { IPersonalData } from '../../../shared/interfaces/person.interface';
 
-const EditPersonalData = ({ data }: IProps, props: IProps) => {
+const EditPersonalData = () => {
+  const today = dayjs();
+  const [personalData, setPersonalData] = useState<IPersonalData>({
+    // example
+    firstName: 'Bartek',
+    lastName: 'Gruszka',
+    dateOfBirth: today,
+    phoneNumber: 999999999,
+    street: 'Ala ma kota',
+    houseNumber: '4A',
+    city: 'Kielce',
+    postalCode: '25-561',
+    voivodeship: 'świętokrzyskie',
+    country: 'Polska',
+  });
+
   return (
     <AppContainer
       back="/app/dashboard"
@@ -34,7 +36,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
         <Grid container>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.firstName}
+              defaultValue={personalData.firstName}
               margin="dense"
               required
               fullWidth
@@ -51,7 +53,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           <Grid item sm={1}></Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.street}
+              defaultValue={personalData.street}
               margin="dense"
               required
               fullWidth
@@ -65,7 +67,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
 
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.lastName}
+              defaultValue={personalData.lastName}
               margin="dense"
               required
               fullWidth
@@ -79,7 +81,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           <Grid item sm={1}></Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.houseNumber}
+              defaultValue={personalData.houseNumber}
               margin="dense"
               fullWidth
               id="houseNumber"
@@ -99,7 +101,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
                   label="Date of birth"
                   format="DD/MM/YYYY"
                   views={['year', 'month', 'day']}
-                  defaultValue={data.dateOfBirth}
+                  defaultValue={personalData.dateOfBirth}
                 />
               </DemoContainer>
             </LocalizationProvider>
@@ -107,7 +109,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           <Grid item sm={1}></Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.city}
+              defaultValue={personalData.city}
               margin="dense"
               required
               fullWidth
@@ -120,7 +122,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           </Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.phoneNumber}
+              defaultValue={personalData.phoneNumber}
               margin="dense"
               type="number"
               required
@@ -142,7 +144,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           <Grid item sm={1}></Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.postalCode}
+              defaultValue={personalData.postalCode}
               margin="dense"
               required
               fullWidth
@@ -157,7 +159,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           <Grid item sm={6.5}></Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.voivodeship}
+              defaultValue={personalData.voivodeship}
               margin="dense"
               required
               fullWidth
@@ -175,7 +177,7 @@ const EditPersonalData = ({ data }: IProps, props: IProps) => {
           </Grid>
           <Grid item sm={5.5}>
             <TextField
-              defaultValue={data.country}
+              defaultValue={personalData.country}
               margin="dense"
               required
               fullWidth
