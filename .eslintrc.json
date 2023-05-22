@@ -46,6 +46,7 @@
     "import/no-extraneous-dependencies": "off",
     "react/self-closing-comp": "off",
     "eslint-disable-next-line": "off",
+    "no-nested-ternary": "off",
     "react/destructuring-assignment": "off"
   }
 }

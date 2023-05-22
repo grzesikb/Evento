@@ -19,7 +19,8 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useNavigate } from 'react-router-dom';
 
 interface IUserAccountMenuProps {
-  email: string;
+  email?: string;
+  permission?: 'User' | 'Worker' | 'Manager';
 }
 
 const UserAccountMenu = (props: IUserAccountMenuProps) => {
@@ -32,7 +33,7 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const { email } = props;
+  const { email, permission } = props;
   return (
     <>
       <Tooltip title="Account">
@@ -86,37 +87,57 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
         <Box sx={{ pl: 2, pr: 2, pb: 1, fontSize: 14 }}>
           <ListItemIcon className="noSelect">
             <PersonOutlineIcon fontSize="small" sx={{ mr: 0.5 }} />
-            User:
+            {permission}:
           </ListItemIcon>
           <Typography> {email}</Typography>
         </Box>
         <Divider />
-        <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
-          <ListItemIcon>
-            <AppsIcon fontSize="small" />
-          </ListItemIcon>
-          Dashboard
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={() => navigate('/app/edit-personal-data')}>
-          <ListItemIcon>
-            <EditIcon fontSize="small" />
-          </ListItemIcon>
-          Edit Personal Data
-        </MenuItem>
-        <MenuItem onClick={() => navigate('/app/payments-settings')}>
-          <ListItemIcon>
-            <CreditCardIcon fontSize="small" />
-          </ListItemIcon>
-          Payment settings
-        </MenuItem>
-
-        <MenuItem onClick={() => navigate('/app/account-settings')}>
-          <ListItemIcon>
-            <ManageAccountsIcon fontSize="small" />
-          </ListItemIcon>
-          Account settings
-        </MenuItem>
+        {permission === 'User' && (
+          <>
+            <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
+              <ListItemIcon>
+                <AppsIcon fontSize="small" />
+              </ListItemIcon>
+              Dashboard
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={() => navigate('/app/edit-personal-data')}>
+              <ListItemIcon>
+                <EditIcon fontSize="small" />
+              </ListItemIcon>
+              Edit Personal Data
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/app/payments-settings')}>
+              <ListItemIcon>
+                <CreditCardIcon fontSize="small" />
+              </ListItemIcon>
+              Payment settings
+            </MenuItem>
+            <MenuItem onClick={() => navigate('/app/account-settings')}>
+              <ListItemIcon>
+                <ManageAccountsIcon fontSize="small" />
+              </ListItemIcon>
+              Account settings
+            </MenuItem>
+          </>
+        )}
+        {permission === 'Worker' && (
+          <>
+            <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
+              <ListItemIcon>
+                <AppsIcon fontSize="small" />
+              </ListItemIcon>
+              Dashboard
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={() => navigate('/app/account-settings')}>
+              <ListItemIcon>
+                <ManageAccountsIcon fontSize="small" />
+              </ListItemIcon>
+              Account settings
+            </MenuItem>
+          </>
+        )}
         <MenuItem onClick={() => navigate('/auth/signin')}>
           <ListItemIcon>
             <Logout fontSize="small" />

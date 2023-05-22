@@ -18,6 +18,8 @@ import UserAccountMenu from './UserAccountMenu';
 
 interface INavbar {
   hideMenu?: boolean;
+  email?: string | undefined;
+  permission?: 'User' | 'Worker' | 'Manager';
 }
 
 const Navbar = (props: INavbar) => {
@@ -67,7 +69,12 @@ const Navbar = (props: INavbar) => {
                 <DarkModeIcon sx={{ color: 'white' }} />
               )}
             </IconButton>
-            {!props.hideMenu && <UserAccountMenu email="pimpek@gmail.com" />}
+            {!props.hideMenu && (
+              <UserAccountMenu
+                email={props.email}
+                permission={props.permission}
+              />
+            )}
           </div>
         </Toolbar>
       </AppBar>

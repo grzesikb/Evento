@@ -9,7 +9,7 @@ import Alert from '../../common/Alert';
 const UserDashboard = () => {
   return (
     <Box>
-      <Navbar />
+      <Navbar email="pimpek@gmail.com" permission="User" />
       <Paper
         variant="outlined"
         sx={{ padding: 6, marginTop: 10, borderRadius: 4 }}
