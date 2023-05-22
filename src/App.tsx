@@ -21,6 +21,7 @@ import AccountSettings from './components/views/AccountSettings/AccountSettings'
 import OrderEvent from './components/views/OrderEvents/OrderEvents';
 import OrderDetails from './components/views/UserAcitons/OrderDetails';
 import EditOrder from './components/views/UserAcitons/EditOrder';
+import WorkerDashboard from './components/views/WorkerDashboard/WorkerDashboard';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -34,9 +35,11 @@ const App = () => {
     },
   });
 
-  const test = dayjs('12/03/2022');
-
-  const handleBack = () => {};
+  // Auth Context
+  let role;
+  // tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
+  // eslint-disable-next-line prefer-const
+  role = 'Worker';
 
   const router = createBrowserRouter([
     {
@@ -57,26 +60,18 @@ const App = () => {
       children: [
         {
           path: 'dashboard',
-          element: <UserDashboard />,
+          element:
+            role === 'User' ? (
+              <UserDashboard />
+            ) : role === 'Worker' ? (
+              <WorkerDashboard />
+            ) : (
+              ''
+            ),
         },
         {
           path: 'edit-personal-data',
-          element: (
-            <EditPersonalData
-              data={{
-                firstName: 'Bartek',
-                lastName: 'Gruszka',
-                dateOfBirth: test,
-                phoneNumber: 999999999,
-                street: 'Ala ma kota',
-                houseNumber: '4A',
-                city: 'Kielce',
-                postalCode: '25-561',
-                voivodeship: 'świętokrzyskie',
-                country: 'Polska',
-              }}
-            />
-          ),
+          element: <EditPersonalData />,
         },
         {
           path: 'payments-settings',
