@@ -16,7 +16,6 @@ const AccountSettings = () => {
               id="oldPassword"
               label="Old password"
               name="oldPassword"
-              autoFocus
 
               // helperText="Please enter your name"
               // value={}
@@ -31,7 +30,6 @@ const AccountSettings = () => {
               id="newPassword"
               label="New password"
               name="newPassword"
-              autoFocus
             />
           </Grid>
           <Grid item sm={12}>
@@ -42,7 +40,6 @@ const AccountSettings = () => {
               id="repeatNewPassword"
               label="Repeat new password"
               name="repeatNewPassword"
-              autoFocus
             />
           </Grid>
         </Grid>
