@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Box, TextField } from '@mui/material';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState<{ email: string; password: string }>({
     email: '',
     password: '',
@@ -28,10 +30,10 @@ const SignUp = () => {
   //     })
   //     .catch((err) => console.log(err));
   // };
-  const onSubmit = async () => {};
-  // if (state.user) {
-  // 	navigate('../../home');
-  // }
+  const onSubmit = async () => {
+    navigate('/auth/add-user-data');
+  };
+
   return (
     <Box>
       <Navbar hideMenu />
