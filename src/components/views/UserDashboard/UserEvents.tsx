@@ -1,15 +1,18 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 import * as React from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Container, IconButton, Typography } from '@mui/material';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { Box, Button, Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PaymentIcon from '@mui/icons-material/Payment';
 import DeleteIcon from '@mui/icons-material/Delete';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 import StatusChip from '../../common/StatusChip';
+import AppDataGrid from '../../common/AppDataGrid';
 
 const UserEvents = () => {
   const navigate = useNavigate();
@@ -34,7 +37,7 @@ const UserEvents = () => {
     {
       field: 'action',
       headerName: 'Actions',
-      width: 200,
+      width: 220,
       sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
         <div>
@@ -52,8 +55,18 @@ const UserEvents = () => {
           </IconButton>
 
           {/* tutaj musi być fetch danych bo status jest potrzebny (płatność dostępna po weryfikacji) */}
-          <IconButton onClick={() => console.log(params.id)} title="Payment">
+          <IconButton
+            onClick={() => navigate(`/app/payment?id=${params.id}`)}
+            title="Payment"
+          >
             <PaymentIcon />
+          </IconButton>
+
+          <IconButton
+            onClick={() => navigate(`/app/guest-list?id=${params.id}`)}
+            title="Create guest list"
+          >
+            <GroupAddIcon />
           </IconButton>
 
           <IconButton
@@ -145,24 +158,7 @@ const UserEvents = () => {
   ];
 
   return (
-    <Container sx={{ height: 400, marginTop: 1, marginBottom: 5 }}>
-      <Typography
-        gutterBottom
-        variant="h5"
-        component="div"
-        sx={{ marginTop: 3, marginBottom: 2 }}
-        className="noSelect"
-      >
-        Your orders
-      </Typography>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        sx={{
-          borderRadius: 4,
-        }}
-      />
-    </Container>
+    <AppDataGrid rows={rows} columns={columns} label="Your orders" mb={6} />
   );
 };
 export default UserEvents;

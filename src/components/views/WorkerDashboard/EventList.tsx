@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 import StatusChip from '../../common/StatusChip';
+import AppDataGrid from '../../common/AppDataGrid';
 
 const EventList = () => {
   const navigate = useNavigate();
@@ -144,31 +145,7 @@ const EventList = () => {
     },
   ];
 
-  return (
-    <Container
-      sx={{
-        height: '70vh',
-        mb: 10,
-      }}
-    >
-      <Typography
-        gutterBottom
-        variant="h5"
-        component="div"
-        sx={{ marginTop: 3, marginBottom: 2 }}
-        className="noSelect"
-      >
-        Orders
-      </Typography>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        sx={{
-          borderRadius: 4,
-        }}
-      />
-    </Container>
-  );
+  return <AppDataGrid rows={rows} columns={columns} label="Orders" mb={10} />;
 };
 
 export default EventList;

@@ -101,14 +101,6 @@ const OrderDetails = () => {
           <StatusChip type={data.status} />
         </Grid>
         <Grid item xs={1}></Grid>
-        <Grid item xs={5.5} sx={{ mt: 2 }}>
-          <Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
-            Finish date:
-          </Typography>
-          <Typography variant="h6" sx={{ fontSize: 16 }}>
-            {data.finishDate}
-          </Typography>
-        </Grid>
 
         {/* ---------------- Detailed data ---------------- */}
 

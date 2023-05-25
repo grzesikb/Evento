@@ -1,9 +1,17 @@
-import { Button, Grid, TextField } from '@mui/material';
-import Box from '@mui/material/Box';
+import { useState } from 'react';
+import { Button, Grid, TextField, Box } from '@mui/material';
 
 import AppContainer from '../../common/AppContainer';
+import { IPayment } from '../../../shared/interfaces/payment.interface';
 
 const PaymentSettings = () => {
+  const [payment, setPayment] = useState<IPayment>({
+    fullName: 'Bartłomiej Gruszka',
+    creditCard: '34544352345234532462635',
+    expires: '23/2025',
+    cvc: 734,
+  });
+
   return (
     <AppContainer back="/app/dashboard" label="Payment Settings" navbar>
       <Box component="form">
@@ -18,8 +26,8 @@ const PaymentSettings = () => {
               name="fullName"
               autoComplete="name"
               autoFocus
+              value={payment.fullName}
               // helperText="Please enter your name"
-              // value={}
               // onChange={() => {}}
             />
           </Grid>
@@ -33,6 +41,7 @@ const PaymentSettings = () => {
               name="creditCardNumber"
               // autoComplete="cc-number"
               autoFocus
+              value={payment.creditCard}
             />
           </Grid>
           <Grid item sm={3}>
@@ -45,6 +54,7 @@ const PaymentSettings = () => {
               name="expires"
               // autoComplete="cc-exp"
               autoFocus
+              value={payment.expires}
             />
           </Grid>
           <Grid item sm={0.5}></Grid>
@@ -58,6 +68,7 @@ const PaymentSettings = () => {
               name="cvc"
               // autoComplete="cc-csc"
               autoFocus
+              value={payment.cvc}
             />
           </Grid>
         </Grid>
