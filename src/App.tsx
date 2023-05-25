@@ -24,6 +24,7 @@ import EditOrder from './components/views/UserAcitons/EditOrder';
 import WorkerDashboard from './components/views/WorkerDashboard/WorkerDashboard';
 import GuestList from './components/views/UserAcitons/GuestList';
 import Payment from './components/views/UserAcitons/Payment';
+import Pricing from './components/views/WorkerDashboard/Pricing';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -41,7 +42,7 @@ const App = () => {
   let role;
   // tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
   // eslint-disable-next-line prefer-const
-  role = 'User'; // 'Worker' | 'User'
+  role = 'Worker'; // 'Worker' | 'User'
 
   const router = createBrowserRouter([
     {
@@ -102,6 +103,10 @@ const App = () => {
         {
           path: 'payment',
           element: <Payment />,
+        },
+        {
+          path: 'pricing',
+          element: <Pricing />,
         },
       ],
     },
