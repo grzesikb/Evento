@@ -27,5 +27,11 @@ export interface IOrderCelebrationEvent {
   types: 'Birthdays' | 'Name days' | 'Bachelorette parties';
 }
 
-// example of two connected interfaces
-// export interface ITest extends IOrderEvent, IOrderCelebrationEvent {}
+export interface IOrderEventsDataGrid {
+  lp: number;
+  id: string;
+  name: string;
+  startDate: string;
+  finishDate: string;
+  status: string;
+}
