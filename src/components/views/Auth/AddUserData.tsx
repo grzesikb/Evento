@@ -4,11 +4,17 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
-import PostalCodeInput from './PostalCodeInput';
 import Navbar from '../../common/Navbar/Navbar';
 
 const AddUserData = () => {
+  const navigate = useNavigate();
+
+  const handlleCreateAccount = () => {
+    navigate('/app/dashboard');
+  };
+
   return (
     <Box>
       <Navbar />
@@ -180,6 +186,7 @@ const AddUserData = () => {
               variant="contained"
               endIcon={<SendIcon />}
               sx={{ fontWeight: 600 }}
+              onClick={() => handlleCreateAccount()}
             >
               Add personal details
             </Button>
