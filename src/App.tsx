@@ -14,7 +14,7 @@ import UserDashboard from './components/views/UserDashboard/UserDashboard';
 import { SettingsContext } from './contexts/context/SettingsContext';
 import SignIn from './components/views/Auth/SignIn';
 import SignUp from './components/views/Auth/SignUp';
-import AddUserData from './components/views/AddUserData/AddUserData';
+import AddUserData from './components/views/Auth/AddUserData';
 import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
 import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
 import AccountSettings from './components/views/AccountSettings/AccountSettings';
@@ -55,6 +55,10 @@ const App = () => {
         {
           path: 'signup',
           element: <SignUp />,
+        },
+        {
+          path: 'add-user-data',
+          element: <AddUserData />,
         },
       ],
     },
