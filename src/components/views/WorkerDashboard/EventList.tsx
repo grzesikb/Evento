@@ -4,8 +4,9 @@ import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Button, Container, IconButton, Typography } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import PaymentIcon from '@mui/icons-material/Payment';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -35,7 +36,7 @@ const EventList = () => {
     {
       field: 'action',
       headerName: 'Actions',
-      width: 200,
+      width: 220,
       sortable: false,
       renderCell: (params: GridRenderCellParams<any>) => (
         <div>
@@ -52,9 +53,18 @@ const EventList = () => {
             <EditIcon />
           </IconButton>
 
-          {/* tutaj musi być fetch danych bo status jest potrzebny (płatność dostępna po weryfikacji) */}
-          <IconButton onClick={() => console.log(params.id)} title="Payment">
-            <PaymentIcon />
+          <IconButton
+            onClick={() => navigate(`/app/guest-list?id=${params.id}`)}
+            title="Guest list"
+          >
+            <PeopleAltIcon />
+          </IconButton>
+
+          <IconButton
+            onClick={() => navigate(`/app/pricing?id=${params.id}`)}
+            title="Pricing"
+          >
+            <RequestQuoteIcon />
           </IconButton>
 
           <IconButton
