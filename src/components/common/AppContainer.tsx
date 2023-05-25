@@ -9,6 +9,8 @@ interface IAppContainerProps {
   label?: string;
   additionalLabel?: string;
   navbar?: boolean;
+  email?: string | undefined;
+  permission?: 'User' | 'Worker' | 'Manager';
   nested?: boolean; // if true hide first Box with margin
 }
 
@@ -18,11 +20,13 @@ const AppContainer: React.FC<IAppContainerProps> = ({
   label,
   additionalLabel,
   navbar,
+  email,
+  permission,
   nested,
 }) => {
   return (
     <div>
-      {navbar && <Navbar />}
+      {navbar && <Navbar email={email} permission={permission} />}
       <Box
         sx={
           nested
