@@ -10,7 +10,7 @@ interface IAppContainerProps {
   additionalLabel?: string;
   navbar?: boolean;
   email?: string | undefined;
-  permission?: 'User' | 'Worker' | 'Manager';
+  permission?: 'User' | 'Worker' | 'Admin';
   nested?: boolean; // if true hide first Box with margin
 }
 
