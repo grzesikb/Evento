@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import * as React from 'react';
+import { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Box, Button, Container, IconButton, Typography } from '@mui/material';
+import { GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  IconButton,
+  useTheme,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -70,42 +77,7 @@ const UserEvents = () => {
           </IconButton>
 
           <IconButton
-            onClick={() =>
-              toast(
-                // eslint-disable-next-line react/no-unstable-nested-components
-                () => (
-                  <div style={{ width: '90%' }}>
-                    <div style={{ fontWeight: 700, marginBottom: 8 }}>
-                      Are you sure that you want to delete the order:
-                      {` ${params.id}`}
-                    </div>
-                    <div>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        sx={{ fontWeight: 600 }}
-                        onClick={() => toast.dismiss()} // add delete order
-                      >
-                        Delete Order
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => toast.dismiss()}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                ),
-                {
-                  style: {
-                    background: '#272727',
-                    color: '#fff',
-                  },
-                  duration: 10000,
-                },
-              )
-            }
+            onClick={() => setOpenDialog({ open: true, orderID: params.id })}
             title="Delete"
           >
             <DeleteIcon color="error" />
@@ -157,8 +129,43 @@ const UserEvents = () => {
     },
   ];
 
+  const theme = useTheme();
+  const [openDialog, setOpenDialog] = useState<{
+    open: boolean;
+    orderID: GridRowId;
+  }>({
+    open: false,
+    orderID: '',
+  });
+
+  const handleClose = () => {
+    setOpenDialog({
+      open: false,
+      orderID: '',
+    });
+  };
+
   return (
-    <AppDataGrid rows={rows} columns={columns} label="Your orders" mb={6} />
+    <div>
+      <AppDataGrid rows={rows} columns={columns} label="Your orders" mb={6} />
+      <Dialog open={openDialog.open} onClose={handleClose}>
+        <DialogTitle>
+          Are you sure you want to cancel the order: {openDialog.orderID}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
+          >
+            No
+          </Button>
+          <Button onClick={handleClose} variant="contained" color="error">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 };
 export default UserEvents;
