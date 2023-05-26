@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Box,
   Button,
-  Container,
-  Grid,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   IconButton,
   TextField,
-  Typography,
+  useTheme,
 } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,6 +15,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AppContainer from '../../common/AppContainer';
 import AppDataGrid from '../../common/AppDataGrid';
 
+// sprawdzanie czy celebration bo tam są jeszcze stoliki na backendzie jezeli jest private to table = null
 const celebration = true;
 
 const GuestList = () => {
@@ -23,25 +25,44 @@ const GuestList = () => {
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#', width: 60 },
-    { field: 'fisrtName', headerName: 'First Name', width: 230 },
-    { field: 'lastName', headerName: 'Last Name', width: 230 },
     {
-      field: 'table',
-      headerName: 'Table',
-      width: 220,
+      field: 'fisrtName',
+      headerName: 'First Name',
+      width: 230,
+      editable: true,
+    },
+    { field: 'lastName', headerName: 'Last Name', width: 230, editable: true },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 100,
       sortable: false,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <IconButton
+          onClick={() => console.log(`usuwanie guesta po ${params.id}`)}
+          title="Delete Guest"
+        >
+          <DeleteIcon color="error" />
+        </IconButton>
+      ),
     },
   ];
 
   const columnsCelebration: GridColDef[] = [
     { field: 'id', headerName: '#', width: 60 },
-    { field: 'fisrtName', headerName: 'First Name', width: 230 },
-    { field: 'lastName', headerName: 'Last Name', width: 230 },
+    {
+      field: 'fisrtName',
+      headerName: 'First Name',
+      width: 230,
+      editable: true,
+    },
+    { field: 'lastName', headerName: 'Last Name', width: 230, editable: true },
     {
       field: 'table',
       headerName: 'Table',
       width: 100,
       sortable: false,
+      editable: true,
     },
     {
       field: 'actions',
@@ -73,54 +94,74 @@ const GuestList = () => {
     },
   ];
 
+  const theme = useTheme();
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
   return (
     <AppContainer
       back="/app/dashboard"
       label={`Guest list for order: ${typeParam}`}
       navbar
     >
-      <Box component="form">
-        <Grid container>
-          <Grid item sm={5.75}>
-            <TextField
-              margin="dense"
-              fullWidth
-              id="fistName"
-              label="Fist name"
-              name="fistName"
-              required
-            />
-          </Grid>
-          <Grid item sm={0.5}></Grid>
-          <Grid item sm={5.75}>
-            <TextField
-              margin="dense"
-              fullWidth
-              id="lastName"
-              label="Last name"
-              name="lastName"
-              required
-            />
-          </Grid>
+      <Button
+        variant="contained"
+        sx={{ fontWeight: 600, width: '100%', mt: 1, mb: 1 }}
+        onClick={() => setOpenDialog(true)}
+      >
+        Add Guest
+      </Button>
+      <Dialog open={openDialog} onClose={handleClose}>
+        <DialogTitle>Add guest</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="firstName"
+            label="First Name"
+            type="firstName"
+            fullWidth
+            required
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="lastName"
+            label="Last Name"
+            type="lastName"
+            fullWidth
+            required
+          />
           {celebration && (
-            <Grid item sm={12}>
-              <TextField
-                margin="dense"
-                fullWidth
-                id="tableId"
-                label="Table ID"
-                name="tableId"
-              />
-            </Grid>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="table"
+              label="Table"
+              type="table"
+              fullWidth
+              required
+            />
           )}
-        </Grid>
-        <Button
-          variant="contained"
-          sx={{ fontWeight: 600, width: '100%', marginTop: 5 }}
-        >
-          Add Guest
-        </Button>
-      </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={handleClose}
+            sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
+          >
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
       <AppDataGrid
         rows={rows}
         columns={celebration ? columnsCelebration : columns}

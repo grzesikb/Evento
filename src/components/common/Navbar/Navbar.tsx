@@ -19,7 +19,7 @@ import UserAccountMenu from './UserAccountMenu';
 interface INavbar {
   hideMenu?: boolean;
   email?: string | undefined;
-  permission?: 'User' | 'Worker' | 'Manager';
+  permission?: 'User' | 'Worker' | 'Admin';
 }
 
 const Navbar = (props: INavbar) => {

@@ -1,3 +1,22 @@
+export interface IOrder {
+  name: string;
+  startDate: string | null | undefined;
+  finishDate: string | null | undefined;
+  type: string;
+  status: string;
+  additionalInfo?: string;
+  securityOption?: boolean;
+  barOption?: boolean;
+  artist?: string;
+  maxPeople?: number;
+  minAge?: number;
+  numberOfSeats?: number;
+  companyName?: string;
+  cateringOption?: boolean;
+  cateringName?: string;
+  types?: 'Birthdays' | 'Name days' | 'Bachelorette parties';
+}
+
 export interface IOrderEvent {
   name: string;
   startDate: string | null | undefined;

@@ -25,6 +25,8 @@ import WorkerDashboard from './components/views/WorkerDashboard/WorkerDashboard'
 import GuestList from './components/views/UserAcitons/GuestList';
 import Payment from './components/views/UserAcitons/Payment';
 import Pricing from './components/views/WorkerDashboard/Pricing';
+import AdminDashboard from './components/views/AdminDashboard/AdminDashboard';
+import EditAppEmails from './components/views/AdminDashboard/EditAppEmails';
 
 const App = () => {
   const { theme } = useContext(SettingsContext);
@@ -42,7 +44,7 @@ const App = () => {
   let role;
   // tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
   // eslint-disable-next-line prefer-const
-  role = 'Worker'; // 'Worker' | 'User'
+  role = 'User'; // 'Worker' | 'User' | 'Admin'
 
   const router = createBrowserRouter([
     {
@@ -68,13 +70,9 @@ const App = () => {
         {
           path: 'dashboard',
           element:
-            role === 'User' ? (
-              <UserDashboard />
-            ) : role === 'Worker' ? (
-              <WorkerDashboard />
-            ) : (
-              ''
-            ),
+            (role === 'User' && <UserDashboard />) ||
+            (role === 'Worker' && <WorkerDashboard />) ||
+            (role === 'Admin' && <AdminDashboard />),
         },
         {
           path: 'edit-personal-data',
@@ -111,6 +109,10 @@ const App = () => {
         {
           path: 'pricing',
           element: <Pricing />,
+        },
+        {
+          path: 'edit-app-emails',
+          element: <EditAppEmails />,
         },
       ],
     },
