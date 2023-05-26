@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
+import MailIcon from '@mui/icons-material/Mail';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import Logout from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -20,7 +20,7 @@ import { useNavigate } from 'react-router-dom';
 
 interface IUserAccountMenuProps {
   email?: string;
-  permission?: 'User' | 'Worker' | 'Manager';
+  permission?: 'User' | 'Worker' | 'Admin';
 }
 
 const UserAccountMenu = (props: IUserAccountMenuProps) => {
@@ -92,15 +92,15 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
           <Typography> {email}</Typography>
         </Box>
         <Divider />
+        <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
+          <ListItemIcon>
+            <AppsIcon fontSize="small" />
+          </ListItemIcon>
+          Dashboard
+        </MenuItem>
+        <Divider />
         {permission === 'User' && (
           <>
-            <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
-              <ListItemIcon>
-                <AppsIcon fontSize="small" />
-              </ListItemIcon>
-              Dashboard
-            </MenuItem>
-            <Divider />
             <MenuItem onClick={() => navigate('/app/edit-personal-data')}>
               <ListItemIcon>
                 <EditIcon fontSize="small" />
@@ -113,31 +113,23 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
               </ListItemIcon>
               Payment settings
             </MenuItem>
-            <MenuItem onClick={() => navigate('/app/account-settings')}>
-              <ListItemIcon>
-                <ManageAccountsIcon fontSize="small" />
-              </ListItemIcon>
-              Account settings
-            </MenuItem>
           </>
         )}
-        {permission === 'Worker' && (
-          <>
-            <MenuItem onClick={() => navigate('/app/dashboard')} sx={{ mt: 1 }}>
-              <ListItemIcon>
-                <AppsIcon fontSize="small" />
-              </ListItemIcon>
-              Dashboard
-            </MenuItem>
-            <Divider />
-            <MenuItem onClick={() => navigate('/app/account-settings')}>
-              <ListItemIcon>
-                <ManageAccountsIcon fontSize="small" />
-              </ListItemIcon>
-              Account settings
-            </MenuItem>
-          </>
+
+        {permission === 'Admin' && (
+          <MenuItem onClick={() => navigate('/app/edit-app-emails')}>
+            <ListItemIcon>
+              <MailIcon fontSize="small" />
+            </ListItemIcon>
+            Edit app e-mails
+          </MenuItem>
         )}
+        <MenuItem onClick={() => navigate('/app/account-settings')}>
+          <ListItemIcon>
+            <ManageAccountsIcon fontSize="small" />
+          </ListItemIcon>
+          Account settings
+        </MenuItem>
         <MenuItem onClick={() => navigate('/auth/signin')}>
           <ListItemIcon>
             <Logout fontSize="small" />
