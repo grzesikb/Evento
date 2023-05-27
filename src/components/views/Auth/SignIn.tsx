@@ -11,9 +11,10 @@ import {
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
+import { IAuth } from '../../../shared/interfaces/auth.interface';
 
 const SignIn = () => {
-  const [data, setData] = useState<{ email: string; password: string }>({
+  const [data, setData] = useState<IAuth>({
     email: '',
     password: '',
   });
@@ -37,7 +38,9 @@ const SignIn = () => {
   //     })
   //     .catch((err) => console.log(err));
   // };
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    console.log(data);
+  };
   // if (state.user) {
   // 	navigate('../../home');
   // }
