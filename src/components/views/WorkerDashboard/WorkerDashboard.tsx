@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Paper } from '@mui/material';
 import Navbar from '../../common/Navbar/Navbar';
-import Alert from '../../common/Alert';
 import EventList from './EventList';
 
 const WorkerDashboard = () => {
@@ -14,7 +13,6 @@ const WorkerDashboard = () => {
       >
         <EventList />
       </Paper>
-      <Alert />
     </Box>
   );
 };
