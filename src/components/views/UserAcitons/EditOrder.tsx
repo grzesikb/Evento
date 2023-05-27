@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -11,28 +12,30 @@ import {
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AppContainer from '../../common/AppContainer';
-import {
-  IOrderCelebrationEvent,
-  IOrderEvent,
-} from '../../../shared/interfaces/order.interface';
+import { IOrder } from '../../../shared/interfaces/order.interface';
 
 const EditOrder = () => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const typeParam = urlParams.get('id');
 
-  const [data, setData] = useState<IOrderEvent>({
+  const [data, setData] = useState<IOrder>({
     name: '',
-    startDate: '',
-    finishDate: '',
+    startDate: null,
+    finishDate: null,
     type: '',
     status: '',
     additionalInfo: '',
-  });
-  const [detailedData, setDetailedData] = useState<IOrderCelebrationEvent>({
-    numberOfSeatsC: 15,
+    securityOption: false,
+    barOption: false,
+    artist: '',
+    maxPeople: '',
+    minAge: '',
+    numberOfSeats: '',
+    companyName: '',
+    cateringOption: false,
     cateringName: '',
-    types: 'Birthdays',
+    types: '',
   });
 
   React.useEffect(() => {
@@ -46,14 +49,26 @@ const EditOrder = () => {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id pharetra urna, in rhoncus lorem. Nunc bibendum orci at ex iaculis faucibus.',
       securityOption: true,
       barOption: true,
-    });
-    setDetailedData({
-      numberOfSeatsC: 32,
+      artist: '',
+      maxPeople: '',
+      minAge: '',
+      numberOfSeats: 32,
+      companyName: '',
+      cateringOption: false,
       cateringName: 'PawełCatering',
       types: 'Birthdays',
     });
   }, []);
 
+  // tylko do testów czy wszystko działa
+  React.useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  const navigate = useNavigate();
+  const handleEditOrder = async () => {
+    navigate('/app/dashboard');
+  };
   return (
     <AppContainer
       back="/app/dashboard"
@@ -68,10 +83,11 @@ const EditOrder = () => {
               margin="dense"
               required
               fullWidth
-              id="eventName"
+              id="name"
               label="Event Name"
-              name="eventName"
+              name="name"
               value={data.name}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
             />
           </Grid>
 
@@ -89,7 +105,8 @@ const EditOrder = () => {
                   name="artist"
                   helperText="If you want to order artists, enter their names and artistic pseudonym"
                   multiline
-                  // value={detailedData.artist}
+                  value={data.artist}
+                  onChange={(e) => setData({ ...data, artist: e.target.value })}
                 />
               </Grid>
 
@@ -101,7 +118,10 @@ const EditOrder = () => {
                   id="numberOfPeople"
                   label="Maximum number of people"
                   name="numberOfPeople"
-                  // value={detailedData.maxPeople}
+                  value={data.maxPeople}
+                  onChange={(e) =>
+                    setData({ ...data, maxPeople: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item sm={1}></Grid>
@@ -112,9 +132,9 @@ const EditOrder = () => {
                   id="minAge"
                   label="Minimal Age"
                   name="minAge"
-                  // value={detailedData.minAge}
-
+                  value={data.minAge}
                   helperText="Minimum age of a person to let him or her into the party"
+                  onChange={(e) => setData({ ...data, minAge: e.target.value })}
                 />
               </Grid>
             </>
@@ -130,7 +150,10 @@ const EditOrder = () => {
                   id="numberOfSeats"
                   label="Number of seats"
                   name="numberOfSeats"
-                  // value={detailedData.numberOfSeats}
+                  value={data.numberOfSeats}
+                  onChange={(e) =>
+                    setData({ ...data, numberOfSeats: e.target.value })
+                  }
                 />
               </Grid>
               <Grid item sm={12}>
@@ -141,7 +164,10 @@ const EditOrder = () => {
                   id="company"
                   label="Company Name"
                   name="company"
-                  // value={detailedData.companyName}
+                  value={data.companyName}
+                  onChange={(e) =>
+                    setData({ ...data, companyName: e.target.value })
+                  }
                 />
               </Grid>
             </>
@@ -157,7 +183,10 @@ const EditOrder = () => {
                   id="numberOfSeats"
                   label="Number of seats"
                   name="numberOfSeats"
-                  value={detailedData.numberOfSeatsC}
+                  value={data.numberOfSeats}
+                  onChange={(e) =>
+                    setData({ ...data, numberOfSeats: e.target.value })
+                  }
                 />
               </Grid>
 
@@ -169,13 +198,16 @@ const EditOrder = () => {
                   id="catering"
                   label="Catering Name"
                   name="catering"
-                  value={detailedData.cateringName}
+                  value={data.cateringName}
+                  onChange={(e) =>
+                    setData({ ...data, cateringName: e.target.value })
+                  }
                 />
               </Grid>
 
               <Grid item sm={12} sx={{ mt: 1, mb: 1, ml: 0.5 }}>
                 <Typography component="h5" variant="body2">
-                  Type: {detailedData.types}
+                  Type: {data.types}
                 </Typography>
               </Grid>
             </>
@@ -190,6 +222,9 @@ const EditOrder = () => {
               name="additionalInfo"
               multiline
               value={data.additionalInfo}
+              onChange={(e) =>
+                setData({ ...data, additionalInfo: e.target.value })
+              }
             />
           </Grid>
           <Grid item sm={12}>
@@ -203,28 +238,76 @@ const EditOrder = () => {
               {data.type === 'Private' && (
                 <>
                   <FormControlLabel
-                    control={<Checkbox color="success" />}
+                    control={
+                      <Checkbox
+                        color="success"
+                        value={data.cateringOption}
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>,
+                        ) =>
+                          setData({
+                            ...data,
+                            cateringOption: event.target.checked,
+                          })
+                        }
+                        checked={data.cateringOption}
+                      />
+                    }
                     label="Catering package"
-                    // checked={detailedData.cateringOption}
                   />
                   <FormControlLabel
-                    control={<Checkbox color="success" />}
+                    control={
+                      <Checkbox
+                        color="success"
+                        value={data.securityOption}
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>,
+                        ) =>
+                          setData({
+                            ...data,
+                            securityOption: event.target.checked,
+                          })
+                        }
+                        checked={data.securityOption}
+                      />
+                    }
                     label="Security and bodyguards"
-                    checked={data.securityOption}
                   />
                 </>
               )}
               {data.type === 'Celebration' && (
                 <FormControlLabel
-                  control={<Checkbox color="success" />}
+                  control={
+                    <Checkbox
+                      color="success"
+                      value={data.securityOption}
+                      onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                        setData({
+                          ...data,
+                          securityOption: event.target.checked,
+                        })
+                      }
+                      checked={data.securityOption}
+                    />
+                  }
                   label="Security and bodyguards"
-                  checked={data.securityOption}
                 />
               )}
               <FormControlLabel
-                control={<Checkbox color="success" />}
+                control={
+                  <Checkbox
+                    color="success"
+                    value={data.barOption}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                      setData({
+                        ...data,
+                        barOption: event.target.checked,
+                      })
+                    }
+                    checked={data.barOption}
+                  />
+                }
                 label="Bar option with bartending service"
-                checked={data.barOption}
               />
             </FormGroup>
           </Grid>
@@ -239,6 +322,7 @@ const EditOrder = () => {
           variant="contained"
           endIcon={<EditIcon />}
           sx={{ fontWeight: 600 }}
+          onClick={handleEditOrder}
         >
           Edit Order
         </Button>
