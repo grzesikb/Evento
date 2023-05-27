@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -9,11 +10,9 @@ import {
 } from '@mui/material';
 
 import AppContainer from '../../common/AppContainer';
-import {
-  IOrderCelebrationEvent,
-  IOrderEvent,
-} from '../../../shared/interfaces/order.interface';
+import { IOrder } from '../../../shared/interfaces/order.interface';
 import StatusChip from '../../common/StatusChip';
+import { IPaymentDetails } from '../../../shared/interfaces/payment.interface';
 
 // eslint-disable react/prop-types
 const Pricing = () => {
@@ -22,18 +21,30 @@ const Pricing = () => {
   const urlParams = new URLSearchParams(window.location.search);
   const typeParam = urlParams.get('id');
 
-  // fetch data
-  const [data, setData] = useState<IOrderEvent>({
+  const [data, setData] = useState<IOrder>({
+    name: '',
+    startDate: null,
+    finishDate: null,
+    type: '',
+    status: '',
+    additionalInfo: '',
+    securityOption: false,
+    barOption: false,
+    artist: '',
+    maxPeople: '',
+    minAge: '',
+    numberOfSeats: '',
+    companyName: '',
+    cateringOption: false,
+    cateringName: '',
+    types: '',
+  });
+  const [paymentDetails, setPaymentDetails] = useState<IPaymentDetails>({
+    id: null,
     name: '',
     startDate: '',
     finishDate: '',
-    type: '',
-    status: '',
-  });
-  const [detailedData, setDetailedData] = useState<IOrderCelebrationEvent>({
-    numberOfSeatsC: 15,
-    cateringName: '',
-    types: 'Birthdays',
+    cost: '',
   });
 
   React.useEffect(() => {
@@ -47,14 +58,38 @@ const Pricing = () => {
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id pharetra urna, in rhoncus lorem. Nunc bibendum orci at ex iaculis faucibus.',
       securityOption: true,
       barOption: true,
-    });
-    setDetailedData({
-      numberOfSeatsC: 32,
+      artist: '',
+      maxPeople: '',
+      minAge: '',
+      numberOfSeats: 32,
+      companyName: '',
+      cateringOption: false,
       cateringName: 'PawełCatering',
       types: 'Birthdays',
     });
+    setPaymentDetails({
+      id: null,
+      name: data.name,
+      startDate: data.startDate,
+      finishDate: data.finishDate,
+      cost: '',
+    });
   }, []);
 
+  // tylko do testów czy wszystko działa
+  React.useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  const navigate = useNavigate();
+
+  const handleSendQuote = async () => {
+    navigate('/app/dashboard');
+  };
+
+  const handleRejectOrder = async () => {
+    navigate('/app/dashboard');
+  };
   return (
     <AppContainer
       back="/app/dashboard"
@@ -127,7 +162,7 @@ const Pricing = () => {
                   Maximum number of people:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.numberOfSeatsC}
+                  {data.numberOfSeats}
                   {/* maxPeople */}
                 </Typography>
               </Grid>
@@ -136,7 +171,7 @@ const Pricing = () => {
                   Minimal age:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.types}
+                  {data.types}
                   {/* minAge */}
                 </Typography>
               </Grid>
@@ -145,7 +180,7 @@ const Pricing = () => {
                   Artist:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.cateringName}
+                  {data.cateringName}
                   {/* artist */}
                 </Typography>
               </Grid>
@@ -166,7 +201,7 @@ const Pricing = () => {
                   Number of seats:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.numberOfSeatsC}
+                  {data.numberOfSeats}
                   {/* numberOfSeats */}
                 </Typography>
               </Grid>
@@ -175,7 +210,7 @@ const Pricing = () => {
                   Company name:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.types}
+                  {data.types}
                   {/* companyName */}
                 </Typography>
               </Grid>
@@ -196,7 +231,7 @@ const Pricing = () => {
                   Number of seats:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.numberOfSeatsC}
+                  {data.numberOfSeats}
                 </Typography>
               </Grid>
               <Grid item sx={{ ml: 5 }}>
@@ -204,7 +239,7 @@ const Pricing = () => {
                   Type:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.types}
+                  {data.types}
                 </Typography>
               </Grid>
               <Grid item sx={{ ml: 15 }}>
@@ -212,7 +247,7 @@ const Pricing = () => {
                   Catering Name:
                 </Typography>
                 <Typography variant="h6" sx={{ fontSize: 16 }}>
-                  {detailedData.cateringName}
+                  {data.cateringName}
                 </Typography>
               </Grid>
             </Box>
@@ -243,12 +278,17 @@ const Pricing = () => {
           id="price"
           label="Price (zł)"
           name="price"
-          // helperText="Please enter your name"
-          // value={}
-          // onChange={() => {}}
+          value={paymentDetails.cost}
+          onChange={(e) =>
+            setPaymentDetails({ ...paymentDetails, cost: e.target.value })
+          }
           sx={{ mt: 3 }}
         />
-        <Button variant="contained" sx={{ fontWeight: 600, mt: 3 }}>
+        <Button
+          variant="contained"
+          sx={{ fontWeight: 600, mt: 3 }}
+          onClick={handleSendQuote}
+        >
           Send quote
         </Button>
         <Button
@@ -259,6 +299,7 @@ const Pricing = () => {
             ml: 2,
             color: theme.palette.mode === 'dark' ? '#fff' : '#000',
           }}
+          onClick={handleRejectOrder}
         >
           Reject the order
         </Button>
