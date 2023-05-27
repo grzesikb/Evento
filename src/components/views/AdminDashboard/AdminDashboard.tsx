@@ -11,7 +11,6 @@ import {
   useTheme,
 } from '@mui/material';
 import Navbar from '../../common/Navbar/Navbar';
-import Alert from '../../common/Alert';
 import WorkerList from './WorkerList';
 import { IWorkersList } from '../../../shared/interfaces/admin.interface';
 
@@ -102,7 +101,6 @@ const AdminDashboard = () => {
         </Dialog>
         <WorkerList />
       </Paper>
-      <Alert />
     </Box>
   );
 };
