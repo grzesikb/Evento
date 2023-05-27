@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -13,10 +14,40 @@ import {
   Typography,
 } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { useNavigate } from 'react-router-dom';
 
 import AppContainer from '../../common/AppContainer';
+import {
+  IOrder,
+  IOrderDatesProps,
+} from '../../../shared/interfaces/order.interface';
 
-const OrderCelebrationEvent = () => {
+const OrderCelebrationEvent = (props: IOrderDatesProps) => {
+  const [data, setData] = useState<IOrder>({
+    name: '',
+    startDate: props.startDate,
+    finishDate: props.finishDate,
+    type: '',
+    status: '',
+    additionalInfo: '',
+    securityOption: false,
+    barOption: false,
+    artist: '',
+    maxPeople: '',
+    minAge: '',
+    numberOfSeats: '',
+    companyName: '',
+    cateringOption: false,
+    cateringName: '',
+    types: '',
+  });
+
+  const navigate = useNavigate();
+  const handleOrderEvent = async () => {
+    // add order
+    navigate('/app/dashboard');
+  };
+
   return (
     <AppContainer
       back="/app/dashboard"
@@ -24,6 +55,18 @@ const OrderCelebrationEvent = () => {
       additionalLabel="Birthdays, Name days, Bachelorette parties"
       navbar
     >
+      <Typography
+        component="h2"
+        variant="h5"
+        sx={{
+          fontWeight: 400,
+          mb: 1,
+          fontSize: 15,
+          color: 'grey',
+        }}
+      >
+        {`Selected dates: ${props.startDate} - ${props.finishDate}`}
+      </Typography>
       <Box component="form">
         <Grid container>
           <Grid item sm={7.5}>
@@ -31,9 +74,11 @@ const OrderCelebrationEvent = () => {
               margin="dense"
               required
               fullWidth
-              id="eventName"
+              id="name"
               label="Event Name"
-              name="eventName"
+              name="name"
+              value={data.name}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
             />
           </Grid>
           <Grid item sm={0.5}></Grid>
@@ -45,6 +90,10 @@ const OrderCelebrationEvent = () => {
               id="numberOfSeats"
               label="Number of seats"
               name="numberOfSeats"
+              value={data.numberOfSeats}
+              onChange={(e) =>
+                setData({ ...data, numberOfSeats: e.target.value })
+              }
             />
           </Grid>
 
@@ -53,20 +102,34 @@ const OrderCelebrationEvent = () => {
               margin="dense"
               required
               fullWidth
-              id="catering"
+              id="cateringName"
               label="Catering Name"
-              name="catering"
+              name="cateringName"
+              value={data.cateringName}
+              onChange={(e) =>
+                setData({ ...data, cateringName: e.target.value })
+              }
             />
           </Grid>
           <Grid item sm={12} sx={{ mt: 1, mb: 1 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <InputLabel id="types-label">Type *</InputLabel>
               <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                // value={age}
+                labelId="types-label"
+                id="types"
                 label="Type"
-                // onChange={handleChange}
+                value={data.types}
+                required
+                onChange={(e) =>
+                  setData({
+                    ...data,
+                    types: e.target.value as
+                      | ''
+                      | 'Birthdays'
+                      | 'Name days'
+                      | 'Bachelorette parties',
+                  })
+                }
               >
                 <MenuItem value={1}>Birthdays</MenuItem>
                 <MenuItem value={2}>Name days</MenuItem>
@@ -83,18 +146,44 @@ const OrderCelebrationEvent = () => {
               label="Aditional info / Expectations"
               name="additionalInfo"
               multiline
+              value={data.additionalInfo}
+              onChange={(e) =>
+                setData({ ...data, additionalInfo: e.target.value })
+              }
             />
           </Grid>
           <Grid item sm={12}>
             <FormGroup className="noSelect">
               <FormControlLabel
                 sx={{ mt: 5 }}
-                control={<Checkbox color="success" />}
+                control={
+                  <Checkbox
+                    color="success"
+                    value={data.barOption}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                      setData({
+                        ...data,
+                        barOption: event.target.checked,
+                      })
+                    }
+                  />
+                }
                 label="Bar option with bartending service"
               />
 
               <FormControlLabel
-                control={<Checkbox color="success" />}
+                control={
+                  <Checkbox
+                    color="success"
+                    value={data.securityOption}
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                      setData({
+                        ...data,
+                        securityOption: event.target.checked,
+                      })
+                    }
+                  />
+                }
                 label="Security and bodyguards"
               />
             </FormGroup>
@@ -110,6 +199,7 @@ const OrderCelebrationEvent = () => {
           variant="contained"
           endIcon={<SendIcon />}
           sx={{ fontWeight: 600 }}
+          onClick={handleOrderEvent}
         >
           Order celebration event
         </Button>
