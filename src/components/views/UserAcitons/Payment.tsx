@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Grid, Paper, useTheme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 import AppContainer from '../../common/AppContainer';
 import {
@@ -19,18 +20,44 @@ const Payment = () => {
 
   const [paymentDetails, setPaymentDetails] = useState<IPaymentDetails>({
     id: typeParam,
-    name: 'Wesele ani i Jakuba',
-    startDate: '16:00 31.06.2023',
-    finishDate: '17:00 31.06.2023',
-    cost: 2500,
+    name: '',
+    startDate: '',
+    finishDate: '',
+    cost: '',
   });
 
   const [payment, setPayment] = useState<IPayment>({
-    fullName: 'Bartłomiej Gruszka',
-    creditCard: '34544352345234532462635',
-    expires: '23/2025',
-    cvc: 734,
+    fullName: '',
+    creditCard: '',
+    expires: '',
+    cvc: '',
   });
+
+  React.useEffect(() => {
+    setPaymentDetails({
+      id: typeParam,
+      name: 'Wesele ani i Jakuba',
+      startDate: '16:00 31.06.2023',
+      finishDate: '17:00 31.06.2023',
+      cost: 2500,
+    });
+    setPayment({
+      fullName: 'Bartłomiej Gruszka',
+      creditCard: '34544352345234532462635',
+      expires: '23/2025',
+      cvc: 734,
+    });
+  }, []);
+
+  const navigate = useNavigate();
+
+  const handlePayment = async () => {
+    navigate('/app/dashboard');
+  };
+
+  const handleRejectPayment = async () => {
+    navigate('/app/dashboard');
+  };
 
   return (
     <AppContainer
@@ -69,7 +96,11 @@ const Payment = () => {
                 <div>{payment.cvc}</div>
               </Paper>
             </Grid>
-            <Button variant="contained" sx={{ fontWeight: 600, mt: 3 }}>
+            <Button
+              variant="contained"
+              sx={{ fontWeight: 600, mt: 3 }}
+              onClick={handlePayment}
+            >
               Pay for the order
             </Button>
             <Button
@@ -80,6 +111,7 @@ const Payment = () => {
                 ml: 2,
                 color: theme.palette.mode === 'dark' ? '#fff' : '#000',
               }}
+              onClick={handleRejectPayment}
             >
               Reject the order
             </Button>
