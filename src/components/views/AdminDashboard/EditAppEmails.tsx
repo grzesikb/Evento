@@ -15,6 +15,7 @@ const EditAppEmails = () => {
       accountantEmail: 'accountant@gmail.com',
     });
   }, []);
+
   return (
     <AppContainer back="/app/dashboard" label="Edit app emails" navbar>
       <TextField
@@ -25,6 +26,9 @@ const EditAppEmails = () => {
         label="Security Email"
         name="securityEmail"
         value={emails.securityEmail}
+        onChange={(e) =>
+          setEmails({ ...emails, securityEmail: e.target.value })
+        }
       />
       <TextField
         margin="dense"
@@ -34,6 +38,9 @@ const EditAppEmails = () => {
         label="Accountant Email"
         name="accountantEmail"
         value={emails.accountantEmail}
+        onChange={(e) =>
+          setEmails({ ...emails, accountantEmail: e.target.value })
+        }
       />
       <Button variant="contained" sx={{ fontWeight: 600, mt: 3 }}>
         Edit emails
