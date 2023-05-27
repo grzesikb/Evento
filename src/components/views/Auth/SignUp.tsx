@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Box, TextField } from '@mui/material';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
+import { IAuthSignIn } from '../../../shared/interfaces/auth.interface';
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [data, setData] = useState<{ email: string; password: string }>({
+  const [data, setData] = useState<IAuthSignIn>({
     email: '',
     password: '',
+    repeatPassword: '',
   });
   // const errors = useValidate(data as LoginDataInterface, signInSchema);
 
@@ -31,6 +33,7 @@ const SignUp = () => {
   //     .catch((err) => console.log(err));
   // };
   const onSubmit = async () => {
+    console.log(data);
     navigate('/auth/add-user-data');
   };
 
@@ -64,7 +67,6 @@ const SignUp = () => {
           label="Password"
           type="password"
           id="password"
-          autoComplete="current-password"
           value={data.password}
           onChange={(e) => setData({ ...data, password: e.target.value })}
         />
@@ -73,13 +75,12 @@ const SignUp = () => {
           margin="dense"
           required
           fullWidth
-          name="password"
+          name="repeatPassword"
           label="Repeat your password"
           type="password"
-          id="password"
-          autoComplete="current-password"
-          value={data.password}
-          onChange={(e) => setData({ ...data, password: e.target.value })}
+          id="repeatPassword"
+          value={data.repeatPassword}
+          onChange={(e) => setData({ ...data, repeatPassword: e.target.value })}
         />
       </Form>
     </Box>
