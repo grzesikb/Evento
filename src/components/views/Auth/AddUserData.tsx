@@ -7,11 +7,26 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import Navbar from '../../common/Navbar/Navbar';
+import { IPersonalData } from '../../../shared/interfaces/person.interface';
 
 const AddUserData = () => {
   const navigate = useNavigate();
 
-  const handlleCreateAccount = () => {
+  const [personalData, setPersonalData] = useState<IPersonalData>({
+    firstName: '',
+    lastName: '',
+    dateOfBirth: null,
+    phoneNumber: '',
+    street: '',
+    houseNumber: '',
+    city: '',
+    postalCode: '',
+    voivodeship: '',
+    country: '',
+  });
+
+  const handlleCreateAccount = async () => {
+    console.log(personalData);
     navigate('/app/dashboard');
   };
 
@@ -47,9 +62,13 @@ const AddUserData = () => {
                   name="firstName"
                   autoComplete="given-name"
                   autoFocus
-                  // helperText="Please enter your name"
-                  // value={}
-                  // onChange={() => {}}
+                  value={personalData.firstName}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      firstName: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item sm={1}></Grid>
@@ -63,6 +82,13 @@ const AddUserData = () => {
                   name="street"
                   autoComplete="address-line1"
                   autoFocus
+                  value={personalData.street}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      street: e.target.value,
+                    })
+                  }
                 />
               </Grid>
 
@@ -76,6 +102,13 @@ const AddUserData = () => {
                   name="lastName"
                   autoComplete="family-name"
                   autoFocus
+                  value={personalData.lastName}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      lastName: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item sm={1}></Grid>
@@ -88,6 +121,13 @@ const AddUserData = () => {
                   name="houseNumber"
                   autoComplete="address-line2"
                   autoFocus
+                  value={personalData.houseNumber}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      houseNumber: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item sm={5.5}>
@@ -100,6 +140,13 @@ const AddUserData = () => {
                       label="Date of birth"
                       format="DD/MM/YYYY"
                       views={['year', 'month', 'day']}
+                      value={personalData.dateOfBirth}
+                      onChange={(newDate) =>
+                        setPersonalData({
+                          ...personalData,
+                          dateOfBirth: newDate,
+                        })
+                      }
                     />
                   </DemoContainer>
                 </LocalizationProvider>
@@ -115,6 +162,13 @@ const AddUserData = () => {
                   name="city"
                   autoComplete="address-line3"
                   autoFocus
+                  value={personalData.city}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      city: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item sm={5.5}>
@@ -135,6 +189,13 @@ const AddUserData = () => {
                         margin: 0,
                       },
                   }}
+                  value={personalData.phoneNumber}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      phoneNumber: parseInt(e.target.value, 10),
+                    })
+                  }
                 />
               </Grid>
               <Grid item sm={1}></Grid>
@@ -148,8 +209,14 @@ const AddUserData = () => {
                   name="postalCode"
                   autoComplete="postal-code"
                   autoFocus
+                  value={personalData.postalCode}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      postalCode: e.target.value,
+                    })
+                  }
                 />
-                {/* <PostalCodeInput /> */}
               </Grid>
               <Grid item sm={6.5}></Grid>
               <Grid item sm={5.5}>
@@ -162,6 +229,13 @@ const AddUserData = () => {
                   name="voivodeship"
                   autoComplete="address-line4"
                   autoFocus
+                  value={personalData.voivodeship}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      voivodeship: e.target.value,
+                    })
+                  }
                 />
               </Grid>
               <Grid item sm={6.5}>
@@ -179,6 +253,13 @@ const AddUserData = () => {
                   name="country"
                   autoComplete="country"
                   autoFocus
+                  value={personalData.country}
+                  onChange={(e) =>
+                    setPersonalData({
+                      ...personalData,
+                      country: e.target.value,
+                    })
+                  }
                 />
               </Grid>
             </Grid>
@@ -186,7 +267,7 @@ const AddUserData = () => {
               variant="contained"
               endIcon={<SendIcon />}
               sx={{ fontWeight: 600 }}
-              onClick={() => handlleCreateAccount()}
+              onClick={handlleCreateAccount}
             >
               Add personal details
             </Button>
