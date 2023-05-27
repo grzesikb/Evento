@@ -1,22 +1,34 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState } from 'react';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import SendIcon from '@mui/icons-material/Send';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { useNavigate } from 'react-router-dom';
 
-import dayjs from 'dayjs';
 import AppContainer from '../../common/AppContainer';
-
 import { IPersonalData } from '../../../shared/interfaces/person.interface';
 
 const EditPersonalData = () => {
-  const today = dayjs();
   const [personalData, setPersonalData] = useState<IPersonalData>({
-    // example
+    firstName: '',
+    lastName: '',
+    dateOfBirth: null,
+    phoneNumber: '',
+    street: '',
+    houseNumber: '',
+    city: '',
+    postalCode: '',
+    voivodeship: '',
+    country: '',
+  });
+
+  // auto wypełnianie juz danych ale tu musi być fetch
+  const defaultPersonalData = {
     firstName: 'Bartek',
     lastName: 'Gruszka',
-    dateOfBirth: today,
+    dateOfBirth: null,
     phoneNumber: 999999999,
     street: 'Ala ma kota',
     houseNumber: '4A',
@@ -24,7 +36,17 @@ const EditPersonalData = () => {
     postalCode: '25-561',
     voivodeship: 'świętokrzyskie',
     country: 'Polska',
-  });
+  };
+
+  React.useEffect(() => {
+    setPersonalData(defaultPersonalData);
+  }, []);
+
+  const navigate = useNavigate();
+
+  const handleEditPersonalData = async () => {
+    navigate('/app/dashboard');
+  };
 
   return (
     <AppContainer
@@ -45,9 +67,13 @@ const EditPersonalData = () => {
               name="firstName"
               autoComplete="given-name"
               autoFocus
-              // helperText="Please enter your name"
-              // value={}
-              // onChange={() => {}}
+              value={personalData.firstName}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  firstName: e.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item sm={1}></Grid>
@@ -62,6 +88,13 @@ const EditPersonalData = () => {
               name="street"
               autoComplete="address-line1"
               autoFocus
+              value={personalData.street}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  street: e.target.value,
+                })
+              }
             />
           </Grid>
 
@@ -76,6 +109,13 @@ const EditPersonalData = () => {
               name="lastName"
               autoComplete="family-name"
               autoFocus
+              value={personalData.lastName}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  lastName: e.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item sm={1}></Grid>
@@ -89,6 +129,13 @@ const EditPersonalData = () => {
               name="houseNumber"
               autoComplete="address-line2"
               autoFocus
+              value={personalData.houseNumber}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  houseNumber: e.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item sm={5.5}>
@@ -101,7 +148,13 @@ const EditPersonalData = () => {
                   label="Date of birth"
                   format="DD/MM/YYYY"
                   views={['year', 'month', 'day']}
-                  defaultValue={personalData.dateOfBirth}
+                  value={personalData.dateOfBirth}
+                  onChange={(newDate) =>
+                    setPersonalData({
+                      ...personalData,
+                      dateOfBirth: newDate,
+                    })
+                  }
                 />
               </DemoContainer>
             </LocalizationProvider>
@@ -118,6 +171,13 @@ const EditPersonalData = () => {
               name="city"
               autoComplete="address-line3"
               autoFocus
+              value={personalData.city}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  city: e.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item sm={5.5}>
@@ -139,6 +199,13 @@ const EditPersonalData = () => {
                     margin: 0,
                   },
               }}
+              value={personalData.phoneNumber}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  phoneNumber: parseInt(e.target.value, 10),
+                })
+              }
             />
           </Grid>
           <Grid item sm={1}></Grid>
@@ -153,8 +220,14 @@ const EditPersonalData = () => {
               name="postalCode"
               autoComplete="postal-code"
               autoFocus
+              value={personalData.postalCode}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  postalCode: e.target.value,
+                })
+              }
             />
-            {/* <PostalCodeInput /> */}
           </Grid>
           <Grid item sm={6.5}></Grid>
           <Grid item sm={5.5}>
@@ -168,6 +241,13 @@ const EditPersonalData = () => {
               name="voivodeship"
               autoComplete="address-line4"
               autoFocus
+              value={personalData.voivodeship}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  voivodeship: e.target.value,
+                })
+              }
             />
           </Grid>
           <Grid item sm={6.5}>
@@ -186,6 +266,13 @@ const EditPersonalData = () => {
               name="country"
               autoComplete="country"
               autoFocus
+              value={personalData.country}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  country: e.target.value,
+                })
+              }
             />
           </Grid>
         </Grid>
@@ -193,6 +280,7 @@ const EditPersonalData = () => {
           variant="contained"
           endIcon={<SendIcon />}
           sx={{ fontWeight: 600 }}
+          onClick={() => handleEditPersonalData()}
         >
           Edit personal details
         </Button>
