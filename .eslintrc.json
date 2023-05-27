@@ -48,6 +48,7 @@
     "eslint-disable-next-line": "off",
     "no-nested-ternary": "off",
     "react/destructuring-assignment": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "react-hooks/exhaustive-deps": "off"
   }
 }
