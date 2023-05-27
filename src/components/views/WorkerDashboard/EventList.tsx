@@ -1,14 +1,26 @@
-import * as React from 'react';
+/* eslint-disable @typescript-eslint/no-use-before-define */
+import React, { useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Button, Container, IconButton, Typography } from '@mui/material';
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowId,
+} from '@mui/x-data-grid';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  IconButton,
+  useTheme,
+} from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-hot-toast';
 
 import StatusChip from '../../common/StatusChip';
 import AppDataGrid from '../../common/AppDataGrid';
@@ -68,42 +80,7 @@ const EventList = () => {
           </IconButton>
 
           <IconButton
-            onClick={() =>
-              toast(
-                // eslint-disable-next-line react/no-unstable-nested-components
-                () => (
-                  <div style={{ width: '90%' }}>
-                    <div style={{ fontWeight: 700, marginBottom: 8 }}>
-                      Are you sure that you want to delete the order:
-                      {` ${params.id}`}
-                    </div>
-                    <div>
-                      <Button
-                        variant="contained"
-                        color="error"
-                        sx={{ fontWeight: 600 }}
-                        onClick={() => toast.dismiss()} // add delete order
-                      >
-                        Delete Order
-                      </Button>
-                      <Button
-                        variant="contained"
-                        onClick={() => toast.dismiss()}
-                      >
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                ),
-                {
-                  style: {
-                    background: '#272727',
-                    color: '#fff',
-                  },
-                  duration: 10000,
-                },
-              )
-            }
+            onClick={() => setOpenDialog({ open: true, orderID: params.id })}
             title="Delete"
           >
             <DeleteIcon color="error" />
@@ -155,7 +132,44 @@ const EventList = () => {
     },
   ];
 
-  return <AppDataGrid rows={rows} columns={columns} label="Orders" mb={10} />;
+  const theme = useTheme();
+  const [openDialog, setOpenDialog] = useState<{
+    open: boolean;
+    orderID: GridRowId;
+  }>({
+    open: false,
+    orderID: '',
+  });
+
+  const handleClose = () => {
+    setOpenDialog({
+      open: false,
+      orderID: '',
+    });
+  };
+
+  return (
+    <div>
+      <AppDataGrid rows={rows} columns={columns} label="Orders" mb={10} />
+      <Dialog open={openDialog.open} onClose={handleClose}>
+        <DialogTitle>
+          Are you sure you want to cancel the order: {openDialog.orderID}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
+          >
+            No
+          </Button>
+          <Button onClick={handleClose} variant="contained" color="error">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 };
 
 export default EventList;
