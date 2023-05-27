@@ -1,97 +1,115 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { Box, Button, Grid, TextField, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {
+  Alert,
+  Box,
+  Button,
+  Collapse,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
 /* ATTENTION. Older version of @mui/x-date-pickers-pro used because 
 it has a better time picker and the new one doesn't have. Don't upgrade */
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
 
-import Alert from '../../common/Alert';
 import OrderPublicEvent from './OrderPublicEvent';
 import OrderPrivateEvent from './OrderPrivateEvent';
 import OrderCelebrationEvent from './OrderCelebrationEvent';
 import AppContainer from '../../common/AppContainer';
+import { IOrderDatesProps } from '../../../shared/interfaces/order.interface';
 
-interface IOrderEvent {
-  startDate: string | null | undefined;
-  finishDate: string | null | undefined;
-}
-interface IPropsEvent {
+interface IProps {
   type: string;
   isReady: boolean;
 }
 
 const OrderEvent = () => {
-  const navigate = useNavigate();
-
-  const today = new Date();
-  const todayString = today.toDateString();
-
-  const [propsEvent, setPropsEvent] = useState<IPropsEvent>({
+  const [propsEvent, setPropsEvent] = useState<IProps>({
     type: '',
     isReady: false,
   });
 
-  const [eventData, setEventData] = useState<IOrderEvent>({
-    startDate: todayString,
-    finishDate: todayString,
+  const [eventDates, setEventDates] = useState<IOrderDatesProps>({
+    startDate: null,
+    finishDate: null,
+  });
+
+  const [openAlert, setOpenAlert] = useState<{
+    success: boolean;
+    error: boolean;
+  }>({
+    success: false,
+    error: false,
   });
 
   const checkDateAvailability = async () => {
     try {
+      //
       // tu sprawdzanie czy data jest dostępna
-      console.log('Sprawdzanie czy data dostępna');
-      // tutaj naprawic to
-      return true;
+      //
+      // rand tylko do testów ale ma zwracać true lub false
+      const randomBoolean: boolean = Math.random() < 0.5;
+      return randomBoolean;
     } catch (error) {
-      console.error(error);
       return Promise.reject(error);
     }
   };
 
   const checkAvailability = async () => {
-    const availability = checkDateAvailability();
-    toast.promise(availability, {
-      loading: 'Availability check...',
-      success: 'Selected date is available',
-      error: 'Selected date is already taken. Please try another date',
-    });
-
-    if (await availability) {
-      setTimeout(() => {
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const typeParam = urlParams.get('type');
-        if (
-          typeParam === 'public' ||
-          typeParam === 'private' ||
-          typeParam === 'celebration'
-        ) {
-          setPropsEvent({ type: typeParam, isReady: true });
-        } else {
-          toast.error('Wrong data type ');
-        }
-      }, 1500);
-
-      //
-      //  POST /order/  (typ wyciągnięty i w state type)
-      //
+    let availability;
+    if (eventDates.startDate && eventDates.finishDate) {
+      availability = checkDateAvailability();
+      if (await availability) {
+        setOpenAlert({ success: true, error: false });
+      } else {
+        setOpenAlert({ success: false, error: true });
+      }
+    } else {
+      setOpenAlert({ success: false, error: false });
     }
-    // } else
-    //   toast.error(
-    //     'The selected date is already taken. Please try another date ',
-    //   );
   };
+
+  const handleSelectDate = async () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const typeParam = urlParams.get('type');
+    if (
+      typeParam === 'public' ||
+      typeParam === 'private' ||
+      typeParam === 'celebration'
+    ) {
+      setPropsEvent({ type: typeParam, isReady: true });
+    }
+  };
+  useEffect(() => {
+    checkAvailability();
+  }, [eventDates]);
+
   return (
     <Box>
       {propsEvent.isReady ? (
-        (propsEvent.type === 'public' && <OrderPublicEvent />) ||
-        (propsEvent.type === 'private' && <OrderPrivateEvent />) ||
-        (propsEvent.type === 'celebration' && <OrderCelebrationEvent />)
+        (propsEvent.type === 'public' && (
+          <OrderPublicEvent
+            startDate={eventDates.startDate}
+            finishDate={eventDates.finishDate}
+          />
+        )) ||
+        (propsEvent.type === 'private' && (
+          <OrderPrivateEvent
+            startDate={eventDates.startDate}
+            finishDate={eventDates.finishDate}
+          />
+        )) ||
+        (propsEvent.type === 'celebration' && (
+          <OrderCelebrationEvent
+            startDate={eventDates.startDate}
+            finishDate={eventDates.finishDate}
+          />
+        ))
       ) : (
         <AppContainer
           back="/app/dashboard"
@@ -109,10 +127,10 @@ const OrderEvent = () => {
                       <TextField {...propsTextField} />
                     )}
                     label="Start date and time*"
-                    value={eventData.startDate}
+                    value={eventDates.startDate}
                     onChange={(value) =>
-                      setEventData({
-                        ...eventData,
+                      setEventDates({
+                        ...eventDates,
                         startDate: value,
                       })
                     }
@@ -142,10 +160,10 @@ const OrderEvent = () => {
                       <TextField {...propsTextField} />
                     )}
                     label="Finish date and time*"
-                    value={eventData.finishDate}
+                    value={eventDates.finishDate}
                     onChange={(value) =>
-                      setEventData({
-                        ...eventData,
+                      setEventDates({
+                        ...eventDates,
                         finishDate: value,
                       })
                     }
@@ -154,18 +172,7 @@ const OrderEvent = () => {
                   />
                 </LocalizationProvider>
               </Grid>
-              {/* <Grid item sm={12}></Grid>
-                <Grid item sm={12}>
-                  <TextField
-                    margin="dense"
-                    fullWidth
-                    id="additionalInfo"
-                    label="Aditional info"
-                    name="additionalInfo"
-                    autoFocus
-                    multiline
-                  />
-                </Grid> */}
+
               <Grid item sm={6.5}>
                 <Typography
                   component="h5"
@@ -177,18 +184,32 @@ const OrderEvent = () => {
               </Grid>
               <Grid item sm={5.5}></Grid>
             </Grid>
-            <Button
-              variant="contained"
-              endIcon={<CalendarTodayIcon />}
-              sx={{ fontWeight: 600 }}
-              onClick={checkAvailability}
-            >
-              Check the availability of dates
-            </Button>
+            <Collapse in={openAlert.success}>
+              <Alert severity="success" sx={{ m: 2 }}>
+                Selected dates are free
+              </Alert>
+            </Collapse>
+            <Collapse in={openAlert.error}>
+              <Alert severity="info" color="error" sx={{ m: 2 }}>
+                The selected date is already taken. Please select a different
+                date
+              </Alert>
+            </Collapse>
+
+            {openAlert.success && (
+              <Button
+                variant="contained"
+                endIcon={<CalendarTodayIcon />}
+                sx={{ fontWeight: 600 }}
+                fullWidth
+                onClick={handleSelectDate}
+              >
+                Select Dates
+              </Button>
+            )}
           </Box>
         </AppContainer>
       )}
-      <Alert />
     </Box>
   );
 };
