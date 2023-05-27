@@ -14,6 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import AppContainer from '../../common/AppContainer';
 import AppDataGrid from '../../common/AppDataGrid';
+import { IGuestList } from '../../../shared/interfaces/guest-list.interface';
 
 // sprawdzanie czy celebration bo tam są jeszcze stoliki na backendzie jezeli jest private to table = null
 const celebration = true;
@@ -97,7 +98,19 @@ const GuestList = () => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState<boolean>(false);
 
-  const handleClose = () => {
+  const [guest, setGuest] = useState<IGuestList>({
+    id: '',
+    firstName: '',
+    lastName: '',
+    table: undefined,
+  });
+
+  const handleCloseDialog = async () => {
+    setOpenDialog(false);
+  };
+
+  const handleAddGuest = async () => {
+    // add guest to rows
     setOpenDialog(false);
   };
 
@@ -114,48 +127,51 @@ const GuestList = () => {
       >
         Add Guest
       </Button>
-      <Dialog open={openDialog} onClose={handleClose}>
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
         <DialogTitle>Add guest</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
             margin="dense"
             id="firstName"
             label="First Name"
             type="firstName"
             fullWidth
             required
+            value={guest.firstName}
+            onChange={(e) => setGuest({ ...guest, firstName: e.target.value })}
           />
           <TextField
-            autoFocus
             margin="dense"
             id="lastName"
             label="Last Name"
             type="lastName"
             fullWidth
             required
+            value={guest.lastName}
+            onChange={(e) => setGuest({ ...guest, lastName: e.target.value })}
           />
           {celebration && (
             <TextField
-              autoFocus
               margin="dense"
               id="table"
               label="Table"
               type="table"
               fullWidth
               required
+              value={guest.table}
+              onChange={(e) => setGuest({ ...guest, table: e.target.value })}
             />
           )}
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={handleClose}
+            onClick={handleCloseDialog}
             sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
           >
             Cancel
           </Button>
           <Button
-            onClick={handleClose}
+            onClick={handleAddGuest}
             sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
           >
             Add
