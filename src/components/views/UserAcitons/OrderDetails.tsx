@@ -3,30 +3,30 @@ import { Box, Grid, Typography } from '@mui/material';
 
 import AppContainer from '../../common/AppContainer';
 import StatusChip from '../../common/StatusChip';
-import {
-  IOrderCelebrationEvent,
-  IOrderEvent,
-  IOrderPrivateEvent,
-  IOrderPublicEvent,
-} from '../../../shared/interfaces/order.interface';
+import { IOrder } from '../../../shared/interfaces/order.interface';
 
 const OrderDetails = () => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const typeParam = urlParams.get('id');
 
-  // fetch data
-  const [data, setData] = useState<IOrderEvent>({
+  const [data, setData] = useState<IOrder>({
     name: '',
-    startDate: '',
-    finishDate: '',
+    startDate: null,
+    finishDate: null,
     type: '',
     status: '',
-  });
-  const [detailedData, setDetailedData] = useState<IOrderCelebrationEvent>({
-    numberOfSeatsC: 15,
+    additionalInfo: '',
+    securityOption: false,
+    barOption: false,
+    artist: '',
+    maxPeople: '',
+    minAge: '',
+    numberOfSeats: '',
+    companyName: '',
+    cateringOption: false,
     cateringName: '',
-    types: 'Birthdays',
+    types: '',
   });
 
   React.useEffect(() => {
@@ -34,19 +34,27 @@ const OrderDetails = () => {
       name: 'Wesele Ani i Jakuba',
       startDate: '16:00 31.06.2023',
       finishDate: '17:00 31.06.2023',
-      type: 'Celebration',
+      type: 'Public',
       status: 'inProgress',
       additionalInfo:
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id pharetra urna, in rhoncus lorem. Nunc bibendum orci at ex iaculis faucibus.',
       securityOption: true,
       barOption: true,
-    });
-    setDetailedData({
-      numberOfSeatsC: 32,
+      artist: '',
+      maxPeople: '',
+      minAge: '',
+      numberOfSeats: 32,
+      companyName: '',
+      cateringOption: false,
       cateringName: 'PawełCatering',
       types: 'Birthdays',
     });
   }, []);
+
+  // tylko do testów czy wszystko działa
+  React.useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
     <AppContainer
@@ -119,7 +127,7 @@ const OrderDetails = () => {
                 Maximum number of people:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.numberOfSeatsC}
+                {data.numberOfSeats}
                 {/* maxPeople */}
               </Typography>
             </Grid>
@@ -128,7 +136,7 @@ const OrderDetails = () => {
                 Minimal age:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.types}
+                {data.types}
                 {/* minAge */}
               </Typography>
             </Grid>
@@ -137,7 +145,7 @@ const OrderDetails = () => {
                 Artist:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.cateringName}
+                {data.cateringName}
                 {/* artist */}
               </Typography>
             </Grid>
@@ -158,7 +166,7 @@ const OrderDetails = () => {
                 Number of seats:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.numberOfSeatsC}
+                {data.numberOfSeats}
                 {/* numberOfSeats */}
               </Typography>
             </Grid>
@@ -167,7 +175,7 @@ const OrderDetails = () => {
                 Company name:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.types}
+                {data.types}
                 {/* companyName */}
               </Typography>
             </Grid>
@@ -188,7 +196,7 @@ const OrderDetails = () => {
                 Number of seats:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.numberOfSeatsC}
+                {data.numberOfSeats}
               </Typography>
             </Grid>
             <Grid item sx={{ ml: 5 }}>
@@ -196,7 +204,7 @@ const OrderDetails = () => {
                 Type:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.types}
+                {data.types}
               </Typography>
             </Grid>
             <Grid item sx={{ ml: 15 }}>
@@ -204,7 +212,7 @@ const OrderDetails = () => {
                 Catering Name:
               </Typography>
               <Typography variant="h6" sx={{ fontSize: 16 }}>
-                {detailedData.cateringName}
+                {data.cateringName}
               </Typography>
             </Grid>
           </Box>
