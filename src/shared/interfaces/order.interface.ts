@@ -5,16 +5,16 @@ export interface IOrder {
   type: string;
   status: string;
   additionalInfo?: string;
-  securityOption?: boolean;
-  barOption?: boolean;
+  securityOption?: boolean | undefined;
+  barOption?: boolean | undefined;
   artist?: string;
-  maxPeople?: number;
-  minAge?: number;
-  numberOfSeats?: number;
+  maxPeople?: number | string;
+  minAge?: number | string;
+  numberOfSeats?: number | string;
   companyName?: string;
-  cateringOption?: boolean;
+  cateringOption?: boolean | undefined;
   cateringName?: string;
-  types?: 'Birthdays' | 'Name days' | 'Bachelorette parties';
+  types?: 'Birthdays' | 'Name days' | 'Bachelorette parties' | '';
 }
 
 export interface IOrderEvent {
