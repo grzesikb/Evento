@@ -1,10 +1,8 @@
-import { Box, Container, Grid, Paper, Typography } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 
-import EventTypeCard from './EventTypeCard';
 import OrderEventsPanel from './OrderEventsPanel';
 import UserEvents from './UserEvents';
 import Navbar from '../../common/Navbar/Navbar';
-import Alert from '../../common/Alert';
 
 const UserDashboard = () => {
   return (
@@ -17,7 +15,6 @@ const UserDashboard = () => {
         <OrderEventsPanel />
         <UserEvents />
       </Paper>
-      <Alert />
     </Box>
   );
 };
