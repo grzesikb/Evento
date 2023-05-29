@@ -1,9 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-  useNavigate,
+	createBrowserRouter,
+	RouterProvider,
+	Navigate,
+	useNavigate,
 } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -27,106 +27,113 @@ import Payment from './components/views/UserAcitons/Payment';
 import Pricing from './components/views/WorkerDashboard/Pricing';
 import AdminDashboard from './components/views/AdminDashboard/AdminDashboard';
 import EditAppEmails from './components/views/AdminDashboard/EditAppEmails';
+import { Api } from './tools/Api';
 
 const App = () => {
-  const { theme } = useContext(SettingsContext);
+	const { theme } = useContext(SettingsContext);
 
-  const Theme = createTheme({
-    palette: {
-      mode: theme,
-      primary: {
-        main: theme === 'light' ? '#081a2d' : '#272727',
-      },
-    },
-  });
+	const Theme = createTheme({
+		palette: {
+			mode: theme,
+			primary: {
+				main: theme === 'light' ? '#081a2d' : '#272727',
+			},
+		},
+	});
 
-  // Auth Context
-  let role;
-  // tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
-  // eslint-disable-next-line prefer-const
-  role = 'User'; // 'Worker' | 'User' | 'Admin'
+	// Auth Context
+	let role;
+	// tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
+	// eslint-disable-next-line prefer-const
+	role = 'User'; // 'Worker' | 'User' | 'Admin'
 
-  const router = createBrowserRouter([
-    {
-      path: '/auth',
-      children: [
-        {
-          path: 'signin',
-          element: <SignIn />,
-        },
-        {
-          path: 'signup',
-          element: <SignUp />,
-        },
-        {
-          path: 'add-user-data',
-          element: <AddUserData />,
-        },
-      ],
-    },
-    {
-      path: '/app',
-      children: [
-        {
-          path: 'dashboard',
-          element:
-            (role === 'User' && <UserDashboard />) ||
-            (role === 'Worker' && <WorkerDashboard />) ||
-            (role === 'Admin' && <AdminDashboard />),
-        },
-        {
-          path: 'edit-personal-data',
-          element: <EditPersonalData />,
-        },
-        {
-          path: 'payments-settings',
-          element: <PaymentSettings />,
-        },
-        {
-          path: 'account-settings',
-          element: <AccountSettings />,
-        },
-        {
-          path: 'order-event',
-          element: <OrderEvent />,
-        },
-        {
-          path: 'order-details',
-          element: <OrderDetails />,
-        },
-        {
-          path: 'edit-order',
-          element: <EditOrder />,
-        },
-        {
-          path: 'guest-list',
-          element: <GuestList />,
-        },
-        {
-          path: 'payment',
-          element: <Payment />,
-        },
-        {
-          path: 'pricing',
-          element: <Pricing />,
-        },
-        {
-          path: 'edit-app-emails',
-          element: <EditAppEmails />,
-        },
-      ],
-    },
-    { path: '/', element: <Navigate to="/auth/signin" /> },
-  ]);
+	useEffect(() => {
+		(async () => {
+			await Api.initAxios();
+		})();
+	}, []);
 
-  return (
-    <ThemeProvider theme={Theme}>
-      <CssBaseline />
-      <Container fixed maxWidth="lg">
-        <RouterProvider router={router} />
-      </Container>
-    </ThemeProvider>
-  );
+	const router = createBrowserRouter([
+		{
+			path: '/auth',
+			children: [
+				{
+					path: 'signin',
+					element: <SignIn />,
+				},
+				{
+					path: 'signup',
+					element: <SignUp />,
+				},
+				{
+					path: 'add-user-data',
+					element: <AddUserData />,
+				},
+			],
+		},
+		{
+			path: '/app',
+			children: [
+				{
+					path: 'dashboard',
+					element:
+						(role === 'User' && <UserDashboard />) ||
+						(role === 'Worker' && <WorkerDashboard />) ||
+						(role === 'Admin' && <AdminDashboard />),
+				},
+				{
+					path: 'edit-personal-data',
+					element: <EditPersonalData />,
+				},
+				{
+					path: 'payments-settings',
+					element: <PaymentSettings />,
+				},
+				{
+					path: 'account-settings',
+					element: <AccountSettings />,
+				},
+				{
+					path: 'order-event',
+					element: <OrderEvent />,
+				},
+				{
+					path: 'order-details',
+					element: <OrderDetails />,
+				},
+				{
+					path: 'edit-order',
+					element: <EditOrder />,
+				},
+				{
+					path: 'guest-list',
+					element: <GuestList />,
+				},
+				{
+					path: 'payment',
+					element: <Payment />,
+				},
+				{
+					path: 'pricing',
+					element: <Pricing />,
+				},
+				{
+					path: 'edit-app-emails',
+					element: <EditAppEmails />,
+				},
+			],
+		},
+		{ path: '/', element: <Navigate to="/auth/signin" /> },
+	]);
+
+	return (
+		<ThemeProvider theme={Theme}>
+			<CssBaseline />
+			<Container fixed maxWidth="lg">
+				<RouterProvider router={router} />
+			</Container>
+		</ThemeProvider>
+	);
 };
 
 export default App;
