@@ -1,280 +1,316 @@
-import { Box, Button, Grid, Paper, TextField, Typography } from '@mui/material';
+import {
+	Alert,
+	Box,
+	Button,
+	Grid,
+	Paper,
+	TextField,
+	Typography,
+} from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import Navbar from '../../common/Navbar/Navbar';
 import { IPersonalData } from '../../../shared/interfaces/person.interface';
+import { signUpService } from '../../../services/authService';
+import { useMutation } from 'react-query';
 
 const AddUserData = () => {
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+	const { state } = useLocation();
 
-  const [personalData, setPersonalData] = useState<IPersonalData>({
-    firstName: '',
-    lastName: '',
-    dateOfBirth: null,
-    phoneNumber: '',
-    street: '',
-    houseNumber: '',
-    city: '',
-    postalCode: '',
-    voivodeship: '',
-    country: '',
-  });
+	const [registerError, setRegisterError] = useState('');
 
-  const handlleCreateAccount = async () => {
-    console.log(personalData);
-    navigate('/app/dashboard');
-  };
+	const { mutate, isSuccess, isError, error } = useMutation(signUpService);
 
-  return (
-    <Box>
-      <Navbar />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          mt: 12,
-        }}
-      >
-        <Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
-          <Typography
-            component="h1"
-            variant="h5"
-            sx={{ fontWeight: 600, mb: 2 }}
-          >
-            Complete your personal details
-          </Typography>
-          <Box component="form">
-            <Grid container>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  name="firstName"
-                  autoComplete="given-name"
-                  autoFocus
-                  value={personalData.firstName}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      firstName: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={1}></Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="street"
-                  label="Street"
-                  name="street"
-                  autoComplete="address-line1"
-                  autoFocus
-                  value={personalData.street}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      street: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
+	const [personalData, setPersonalData] = useState<IPersonalData>({
+		firstName: '',
+		lastName: '',
+		dateOfBirth: null,
+		phoneNumber: '',
+		street: '',
+		houseNumber: '',
+		city: '',
+		postalCode: '',
+		voivodeship: '',
+		country: '',
+	});
 
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                  autoFocus
-                  value={personalData.lastName}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      lastName: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={1}></Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  fullWidth
-                  id="houseNumber"
-                  label="House Number"
-                  name="houseNumber"
-                  autoComplete="address-line2"
-                  autoFocus
-                  value={personalData.houseNumber}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      houseNumber: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={5.5}>
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                  autoComplete="bday"
-                >
-                  <DemoContainer components={['DateTimePicker']}>
-                    <DateTimePicker
-                      label="Date of birth"
-                      format="DD/MM/YYYY"
-                      views={['year', 'month', 'day']}
-                      value={personalData.dateOfBirth}
-                      onChange={(newDate) =>
-                        setPersonalData({
-                          ...personalData,
-                          dateOfBirth: newDate,
-                        })
-                      }
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-              </Grid>
-              <Grid item sm={1}></Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="city"
-                  label="City"
-                  name="city"
-                  autoComplete="address-line3"
-                  autoFocus
-                  value={personalData.city}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      city: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  type="number"
-                  required
-                  fullWidth
-                  id="phone"
-                  label="Phone Number"
-                  name="phone"
-                  autoComplete="phone"
-                  autoFocus
-                  sx={{
-                    '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
-                      {
-                        '-webkit-appearance': 'none',
-                        margin: 0,
-                      },
-                  }}
-                  value={personalData.phoneNumber}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      phoneNumber: parseInt(e.target.value, 10),
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={1}></Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="postalCode"
-                  label="Postal Code"
-                  name="postalCode"
-                  autoComplete="postal-code"
-                  autoFocus
-                  value={personalData.postalCode}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      postalCode: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={6.5}></Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="voivodeship"
-                  label="Voivodeship"
-                  name="voivodeship"
-                  autoComplete="address-line4"
-                  autoFocus
-                  value={personalData.voivodeship}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      voivodeship: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-              <Grid item sm={6.5}>
-                <Typography component="h5" variant="body2" sx={{ mt: 2 }}>
-                  * require
-                </Typography>
-              </Grid>
-              <Grid item sm={5.5}>
-                <TextField
-                  margin="dense"
-                  required
-                  fullWidth
-                  id="country"
-                  label="Country"
-                  name="country"
-                  autoComplete="country"
-                  autoFocus
-                  value={personalData.country}
-                  onChange={(e) =>
-                    setPersonalData({
-                      ...personalData,
-                      country: e.target.value,
-                    })
-                  }
-                />
-              </Grid>
-            </Grid>
-            <Button
-              variant="contained"
-              endIcon={<SendIcon />}
-              sx={{ fontWeight: 600 }}
-              onClick={handlleCreateAccount}
-            >
-              Add personal details
-            </Button>
-          </Box>
-        </Paper>
-      </Box>
-    </Box>
-  );
+	const handlleCreateAccount = async () => {
+		const signUpData = {
+			email: state.email,
+			password: state.password,
+			role: 1,
+			personal_data: {
+				first_name: personalData.firstName,
+				last_name: personalData.lastName,
+				phone: personalData.phoneNumber,
+			},
+			address: {
+				street: personalData.street,
+				postal_code: personalData.postalCode,
+				city: personalData.city,
+				house_number: personalData.houseNumber,
+				country: personalData.country,
+				voivodeship: personalData.voivodeship,
+			},
+		};
+		mutate(signUpData);
+	};
+
+	useEffect(() => {
+		isSuccess && navigate('/auth/signin');
+	}, [isSuccess, navigate]);
+
+	return (
+		<Box>
+			<Navbar />
+			<Box
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					alignItems: 'center',
+					justifyContent: 'center',
+					mt: 12,
+				}}
+			>
+				<Paper variant="outlined" sx={{ padding: 6, borderRadius: 4 }}>
+					<Typography
+						component="h1"
+						variant="h5"
+						sx={{ fontWeight: 600, mb: 2 }}
+					>
+						Complete your personal details
+					</Typography>
+					<Box component="form">
+						<Grid container>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="firstName"
+									label="First Name"
+									name="firstName"
+									autoComplete="given-name"
+									autoFocus
+									value={personalData.firstName}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											firstName: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={1}></Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="street"
+									label="Street"
+									name="street"
+									autoComplete="address-line1"
+									autoFocus
+									value={personalData.street}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											street: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="lastName"
+									label="Last Name"
+									name="lastName"
+									autoComplete="family-name"
+									autoFocus
+									value={personalData.lastName}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											lastName: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={1}></Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									fullWidth
+									id="houseNumber"
+									label="House Number"
+									name="houseNumber"
+									autoComplete="address-line2"
+									autoFocus
+									value={personalData.houseNumber}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											houseNumber: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={5.5}>
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+									<DemoContainer components={['DateTimePicker']}>
+										<DateTimePicker
+											label="Date of birth"
+											format="DD/MM/YYYY"
+											views={['year', 'month', 'day']}
+											value={personalData.dateOfBirth}
+											onChange={(newDate) =>
+												setPersonalData({
+													...personalData,
+													dateOfBirth: newDate,
+												})
+											}
+										/>
+									</DemoContainer>
+								</LocalizationProvider>
+							</Grid>
+							<Grid item sm={1}></Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="city"
+									label="City"
+									name="city"
+									autoComplete="address-line3"
+									autoFocus
+									value={personalData.city}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											city: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									type="number"
+									required
+									fullWidth
+									id="phone"
+									label="Phone Number"
+									name="phone"
+									autoComplete="phone"
+									autoFocus
+									sx={{
+										'& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button':
+											{
+												'-webkit-appearance': 'none',
+												margin: 0,
+											},
+									}}
+									value={personalData.phoneNumber}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											phoneNumber: parseInt(e.target.value, 10),
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={1}></Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="postalCode"
+									label="Postal Code"
+									name="postalCode"
+									autoComplete="postal-code"
+									autoFocus
+									value={personalData.postalCode}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											postalCode: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={6.5}></Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="voivodeship"
+									label="Voivodeship"
+									name="voivodeship"
+									autoComplete="address-line4"
+									autoFocus
+									value={personalData.voivodeship}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											voivodeship: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+							<Grid item sm={6.5}>
+								<Typography component="h5" variant="body2" sx={{ mt: 2 }}>
+									* require
+								</Typography>
+							</Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="country"
+									label="Country"
+									name="country"
+									autoComplete="country"
+									autoFocus
+									value={personalData.country}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											country: e.target.value,
+										})
+									}
+								/>
+							</Grid>
+						</Grid>
+						<Button
+							variant="contained"
+							endIcon={<SendIcon />}
+							sx={{ fontWeight: 600 }}
+							onClick={handlleCreateAccount}
+						>
+							Add personal details
+						</Button>
+					</Box>
+				</Paper>
+			</Box>
+			{isError && (
+				<Alert severity="error">{(error as any).response.data.detail}</Alert>
+			)}
+		</Box>
+	);
 };
 export default AddUserData;
