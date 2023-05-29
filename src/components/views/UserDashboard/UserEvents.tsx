@@ -26,7 +26,18 @@ const UserEvents = () => {
 	const navigate = useNavigate();
 
 	const { mutate, isSuccess, data } = useMutation(userEventsService);
-	const [orders, setOrders] = useState([]);
+	const [orders, setOrders] = useState<any[]>([]);
+
+	const statusFormatter = (statusNumber: number) => {
+		switch (statusNumber) {
+			case 1:
+				return 'inProgress';
+				break;
+			case 2:
+				return 'Verification';
+				break;
+		}
+	};
 
 	const columns: GridColDef[] = [
 		{ field: 'lp', headerName: '#', width: 60 },
@@ -97,7 +108,23 @@ const UserEvents = () => {
 
 	useEffect(() => {
 		if (isSuccess) {
-			///Funkcja co sformatuje to
+			console.log(data);
+			const foremattedOrders: any[] = [];
+
+			const events = data.data.payload;
+
+			events.map((item: any, index: number) => {
+				foremattedOrders.push({
+					lp: index + 1,
+					id: item.id.toString(),
+					name: item.name,
+					startDate: item.start_date,
+					finishDate: item.end_date,
+					status: statusFormatter(+item.status),
+				});
+			});
+
+			setOrders(foremattedOrders);
 		}
 	}, [isSuccess]);
 
@@ -162,7 +189,7 @@ const UserEvents = () => {
 
 	return (
 		<div>
-			<AppDataGrid rows={rows} columns={columns} label="Your orders" mb={6} />
+			<AppDataGrid rows={orders} columns={columns} label="Your orders" mb={6} />
 			<Dialog open={openDialog.open} onClose={handleClose}>
 				<DialogTitle>
 					Are you sure you want to cancel the order: {openDialog.orderID}
