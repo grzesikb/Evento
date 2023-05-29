@@ -35,4 +35,23 @@ export class Api {
 			},
 		});
 	}
+
+	static async getUserEvents(access_token: string) {
+		return Api.axiosInstance.get('/order/my/', {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async createEvent(access_token: string, data: any) {
+		console.log(data);
+		return Api.axiosInstance.post('/order/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
