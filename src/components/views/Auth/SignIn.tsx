@@ -1,4 +1,4 @@
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState, MouseEvent, useContext } from 'react';
 import {
 	Alert,
 	Box,
@@ -19,12 +19,18 @@ import {
 	refreshService,
 	signInService,
 } from '../../../services/authService';
+import UserContext from '../../../contexts/context/UserContext';
+import { UserActions } from '../../../shared/interfaces/user.interface';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
 	const [data, setData] = useState<IAuth>({
 		email: '',
 		password: '',
 	});
+
+	const { state, dispatch } = useContext(UserContext);
+	const navigate = useNavigate();
 
 	const {
 		mutate,
@@ -75,6 +81,7 @@ const SignIn = () => {
 
 	useEffect(() => {
 		if (identifySuccess) {
+			dispatch({ type: UserActions.LOAD_USER, payload: identifyData.data });
 			console.log(identifyData);
 		}
 	}, [identifySuccess]);
@@ -88,6 +95,8 @@ const SignIn = () => {
 	) => {
 		event.preventDefault();
 	};
+
+	if (state?.user) navigate('../../app/dashboard');
 
 	return (
 		<Box>
