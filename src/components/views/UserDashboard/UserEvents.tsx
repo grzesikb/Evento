@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import {
@@ -19,9 +19,14 @@ import { useNavigate } from 'react-router-dom';
 
 import StatusChip from '../../common/StatusChip';
 import AppDataGrid from '../../common/AppDataGrid';
+import { useMutation } from 'react-query';
+import { userEventsService } from '../../../services/eventService';
 
 const UserEvents = () => {
 	const navigate = useNavigate();
+
+	const { mutate, isSuccess, data } = useMutation(userEventsService);
+	const [orders, setOrders] = useState([]);
 
 	const columns: GridColDef[] = [
 		{ field: 'lp', headerName: '#', width: 60 },
@@ -85,6 +90,17 @@ const UserEvents = () => {
 			),
 		},
 	];
+
+	useEffect(() => {
+		mutate(localStorage.getItem('accessToken') as string);
+	}, []);
+
+	useEffect(() => {
+		if (isSuccess) {
+			///Funkcja co sformatuje to
+		}
+	}, [isSuccess]);
+
 	const rows = [
 		{
 			lp: 1,
