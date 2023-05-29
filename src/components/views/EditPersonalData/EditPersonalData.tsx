@@ -141,7 +141,7 @@ const EditPersonalData = () => {
           <Grid item sm={5.5}>
             <LocalizationProvider
               dateAdapter={AdapterDayjs}
-              autoComplete="bday"
+              
             >
               <DemoContainer components={['DateTimePicker']}>
                 <DateTimePicker
