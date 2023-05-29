@@ -28,9 +28,31 @@ import Pricing from './components/views/WorkerDashboard/Pricing';
 import AdminDashboard from './components/views/AdminDashboard/AdminDashboard';
 import EditAppEmails from './components/views/AdminDashboard/EditAppEmails';
 import { Api } from './tools/Api';
+import Router from './routes/Router';
+import { useMutation } from 'react-query';
+import { identifyService } from './services/authService';
+import UserContext from './contexts/context/UserContext';
+import { UserActions } from './shared/interfaces/user.interface';
 
 const App = () => {
 	const { theme } = useContext(SettingsContext);
+	const { state, dispatch } = useContext(UserContext);
+
+	const { mutate, data, isSuccess, isError } = useMutation(identifyService);
+
+	useEffect(() => {
+		if (!localStorage.getItem('accessToken')) {
+			dispatch({ type: UserActions.LOAD_USER, payload: undefined });
+		} else {
+			mutate(localStorage.getItem('accessToken') as string);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (isSuccess)
+			dispatch({ type: UserActions.LOAD_USER, payload: data.data });
+		if (isError) dispatch({ type: UserActions.LOAD_USER, payload: undefined });
+	}, [isSuccess, isError]);
 
 	const Theme = createTheme({
 		palette: {
@@ -41,96 +63,17 @@ const App = () => {
 		},
 	});
 
-	// Auth Context
-	let role;
-	// tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
-	// eslint-disable-next-line prefer-const
-	role = 'User'; // 'Worker' | 'User' | 'Admin'
-
 	useEffect(() => {
 		(async () => {
 			await Api.initAxios();
 		})();
 	}, []);
 
-	const router = createBrowserRouter([
-		{
-			path: '/auth',
-			children: [
-				{
-					path: 'signin',
-					element: <SignIn />,
-				},
-				{
-					path: 'signup',
-					element: <SignUp />,
-				},
-				{
-					path: 'add-user-data',
-					element: <AddUserData />,
-				},
-			],
-		},
-		{
-			path: '/app',
-			children: [
-				{
-					path: 'dashboard',
-					element:
-						(role === 'User' && <UserDashboard />) ||
-						(role === 'Worker' && <WorkerDashboard />) ||
-						(role === 'Admin' && <AdminDashboard />),
-				},
-				{
-					path: 'edit-personal-data',
-					element: <EditPersonalData />,
-				},
-				{
-					path: 'payments-settings',
-					element: <PaymentSettings />,
-				},
-				{
-					path: 'account-settings',
-					element: <AccountSettings />,
-				},
-				{
-					path: 'order-event',
-					element: <OrderEvent />,
-				},
-				{
-					path: 'order-details',
-					element: <OrderDetails />,
-				},
-				{
-					path: 'edit-order',
-					element: <EditOrder />,
-				},
-				{
-					path: 'guest-list',
-					element: <GuestList />,
-				},
-				{
-					path: 'payment',
-					element: <Payment />,
-				},
-				{
-					path: 'pricing',
-					element: <Pricing />,
-				},
-				{
-					path: 'edit-app-emails',
-					element: <EditAppEmails />,
-				},
-			],
-		},
-		{ path: '/', element: <Navigate to="/auth/signin" /> },
-	]);
-
 	return (
 		<ThemeProvider theme={Theme}>
 			<CssBaseline />
 			<Container fixed maxWidth="lg">
-				<RouterProvider router={router} />
+				<Router />
 			</Container>
 		</ThemeProvider>
 	);
