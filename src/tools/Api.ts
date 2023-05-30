@@ -54,4 +54,31 @@ export class Api {
 			},
 		});
 	}
+
+	static async getEventDetails(access_token: string, id: string) {
+		return Api.axiosInstance.get('/order/' + id, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async updateEvent(access_token: string, data: any) {
+		return Api.axiosInstance.post('/order/update/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async deleteEvent(access_token: string, id: string) {
+		return Api.axiosInstance.delete('/order/' + id, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
