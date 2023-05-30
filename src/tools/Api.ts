@@ -81,4 +81,22 @@ export class Api {
 			},
 		});
 	}
+
+	static async createGuestList(access_token: string, data: any) {
+		return Api.axiosInstance.post('/guestList/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async getGuests(access_token: string, id: string) {
+		return Api.axiosInstance.get('/order/' + id + '/guest_list', {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
