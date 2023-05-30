@@ -27,11 +27,15 @@ import {
 } from '../../../services/eventService';
 import { convert } from '../../../tools/IdConverter';
 import { statusFormatter } from '../../../tools/StatusFormatter';
+import { createGuestListService } from '../../../services/guestListService';
 
 const UserEvents = () => {
 	const navigate = useNavigate();
 
 	const { mutate, isSuccess, data, isLoading } = useMutation(userEventsService);
+	const { mutate: guestListMutate, isSuccess: guestListSuccess } = useMutation(
+		createGuestListService
+	);
 	const {
 		mutate: deleteMutate,
 		isSuccess: deleteSuccess,
@@ -85,7 +89,7 @@ const UserEvents = () => {
 					</IconButton>
 
 					<IconButton
-						onClick={() => navigate(`/app/guest-list?id=${params.id}`)}
+						onClick={() => handleCreateGuestList(params.id as string)}
 						title="Create guest list"
 					>
 						<GroupAddIcon />
@@ -101,6 +105,14 @@ const UserEvents = () => {
 			),
 		},
 	];
+
+	const handleCreateGuestList = async (id: string) => {
+		await guestListMutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			orderData: { order_id: id },
+		});
+		navigate(`/app/guest-list?id=${id}`);
+	};
 
 	useEffect(() => {
 		mutate(localStorage.getItem('accessToken') as string);
