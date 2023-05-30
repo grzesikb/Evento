@@ -8,8 +8,11 @@ import {
 	InputLabel,
 	OutlinedInput,
 	TextField,
+  FormHelperText,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import validator from 'validator';
+import {Validator} from '../../../tools/Validator';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
 import { IAuth } from '../../../shared/interfaces/auth.interface';
@@ -28,6 +31,37 @@ const SignIn = () => {
 		email: '',
 		password: '',
 	});
+
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
+
+  const validateForm = () => {
+    let isValid = true;
+    Validator.checkEmail(data.email).then((result)=>{
+      setErrors((prevErrors)=>({
+        ...prevErrors,
+        email: result ?? '',
+      }))
+    })
+  
+
+    if (validator.isEmpty(data.password)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: 'Password is required',
+      }));
+      isValid = false;
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: '',
+      }));
+    }
+
+    return isValid;
+  };
 
 	const { state, dispatch } = useContext(UserContext);
 	const navigate = useNavigate();
@@ -58,8 +92,10 @@ const SignIn = () => {
 
 	const onSubmit = async (e: MouseEvent) => {
 		e.preventDefault();
-		console.log(data);
-		mutate(data);
+    if(validateForm()){
+      console.log(data);
+		  mutate(data);
+    }
 	};
 	useEffect(() => {
 		if (isSuccess && responseData) {
@@ -118,8 +154,10 @@ const SignIn = () => {
 					autoFocus
 					value={data.email}
 					onChange={(e) => setData({ ...data, email: e.target.value })}
+          error={!!errors.email}
+          helperText={errors.email}
 				/>
-				<FormControl sx={{ mt: 1 }} variant="outlined">
+				<FormControl sx={{ mt: 1}} variant="outlined" error={!!errors.password}>
 					<InputLabel htmlFor="outlined-adornment-password">
 						Password
 					</InputLabel>
@@ -142,11 +180,14 @@ const SignIn = () => {
 						value={data.password}
 						onChange={(e) => setData({ ...data, password: e.target.value })}
 					/>
+          {errors.password && (
+            <FormHelperText error>{errors.password}</FormHelperText>
+          )}
 				</FormControl>
+        {isError && (
+          <Alert sx={{ minWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
+        )}
 			</Form>
-			{isError && (
-				<Alert severity="error">{(error as any).response.data.detail}</Alert>
-			)}
 		</Box>
 	);
 };
