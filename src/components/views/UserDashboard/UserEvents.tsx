@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import {
 	Button,
+	CircularProgress,
 	Dialog,
 	DialogActions,
 	DialogTitle,
@@ -20,24 +21,23 @@ import { useNavigate } from 'react-router-dom';
 import StatusChip from '../../common/StatusChip';
 import AppDataGrid from '../../common/AppDataGrid';
 import { useMutation } from 'react-query';
-import { userEventsService } from '../../../services/eventService';
+import {
+	deleteEventService,
+	userEventsService,
+} from '../../../services/eventService';
+import { convert } from '../../../tools/IdConverter';
+import { statusFormatter } from '../../../tools/StatusFormatter';
 
 const UserEvents = () => {
 	const navigate = useNavigate();
 
-	const { mutate, isSuccess, data } = useMutation(userEventsService);
+	const { mutate, isSuccess, data, isLoading } = useMutation(userEventsService);
+	const {
+		mutate: deleteMutate,
+		isSuccess: deleteSuccess,
+		data: deleteData,
+	} = useMutation(deleteEventService);
 	const [orders, setOrders] = useState<any[]>([]);
-
-	const statusFormatter = (statusNumber: number) => {
-		switch (statusNumber) {
-			case 1:
-				return 'inProgress';
-				break;
-			case 2:
-				return 'Verification';
-				break;
-		}
-	};
 
 	const columns: GridColDef[] = [
 		{ field: 'lp', headerName: '#', width: 60 },
@@ -116,7 +116,7 @@ const UserEvents = () => {
 			events.map((item: any, index: number) => {
 				foremattedOrders.push({
 					lp: index + 1,
-					id: item.id.toString(),
+					id: item.id,
 					name: item.name,
 					startDate: item.start_date,
 					finishDate: item.end_date,
@@ -127,6 +127,19 @@ const UserEvents = () => {
 			setOrders(foremattedOrders);
 		}
 	}, [isSuccess]);
+
+	const handleDelete = (id: string) => {
+		deleteMutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			id,
+		});
+	};
+
+	useEffect(() => {
+		if (deleteSuccess) {
+			handleClose();
+		}
+	}, [deleteSuccess]);
 
 	const rows = [
 		{
@@ -189,24 +202,39 @@ const UserEvents = () => {
 
 	return (
 		<div>
-			<AppDataGrid rows={orders} columns={columns} label="Your orders" mb={6} />
-			<Dialog open={openDialog.open} onClose={handleClose}>
-				<DialogTitle>
-					Are you sure you want to cancel the order: {openDialog.orderID}
-				</DialogTitle>
+			{isLoading ? (
+				<CircularProgress />
+			) : (
+				<>
+					<AppDataGrid
+						rows={orders}
+						columns={columns}
+						label="Your orders"
+						mb={6}
+					/>
+					<Dialog open={openDialog.open} onClose={handleClose}>
+						<DialogTitle>
+							Are you sure you want to cancel the order: {openDialog.orderID}
+						</DialogTitle>
 
-				<DialogActions>
-					<Button
-						onClick={handleClose}
-						sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
-					>
-						No
-					</Button>
-					<Button onClick={handleClose} variant="contained" color="error">
-						Yes
-					</Button>
-				</DialogActions>
-			</Dialog>
+						<DialogActions>
+							<Button
+								onClick={handleClose}
+								sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
+							>
+								No
+							</Button>
+							<Button
+								onClick={() => handleDelete(openDialog.orderID as string)}
+								variant="contained"
+								color="error"
+							>
+								Yes
+							</Button>
+						</DialogActions>
+					</Dialog>
+				</>
+			)}
 		</div>
 	);
 };
