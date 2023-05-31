@@ -28,10 +28,31 @@ export class Validator {
     static async checkRepeatPassword(password: string, repeatPassword: string): Promise<string | null>{
         let message: string | null = null;
         if(validator.isEmpty(repeatPassword)){
-            message = 'repeatPassword is required';
+            message = 'This field is required';
             return message;
         } else if(password !== repeatPassword){
             message = 'passwords are not equal';
+            return message;
+        }
+        return message;
+    }
+
+    static async checkRequiredString(data: string): Promise<string | null>{
+        let message: string | null = null;
+        if(validator.isEmpty(data)){
+            message = 'This field is required';
+            return message;
+        } 
+        return message;
+    }
+
+    static async checkPhoneNumber(phoneNumber: any): Promise<string | null>{
+        let message: string | null = null;
+        if(validator.isEmpty(phoneNumber.toString())){
+            message = 'This field is required';
+            return message;
+        } else if (!validator.isMobilePhone(phoneNumber.toString(), 'pl-PL')){
+            message = 'Invalid phone number';
             return message;
         }
         return message;
