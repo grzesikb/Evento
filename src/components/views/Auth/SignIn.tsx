@@ -11,7 +11,6 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
-import validator from 'validator';
 import {Validator} from '../../../tools/Validator';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
@@ -32,36 +31,20 @@ const SignIn = () => {
 		password: '',
 	});
 
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-  });
+	const [errors, setErrors] = useState({
+		email: '',
+		password: '',
+	});
 
-  const validateForm = () => {
-    let isValid = true;
-    Validator.checkEmail(data.email).then((result)=>{
-      setErrors((prevErrors)=>({
-        ...prevErrors,
-        email: result ?? '',
-      }))
-    })
-  
-
-    if (validator.isEmpty(data.password)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: 'Password is required',
-      }));
-      isValid = false;
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: '',
-      }));
-    }
-
-    return isValid;
-  };
+	const validateForm = async () => {
+		const emailError = await Validator.checkEmail(data.email);
+		const passwordError = await Validator.checkPassword(data.password, false);
+		setErrors({
+			email: emailError ?? '',
+			password: passwordError ?? ''
+		})
+		return !(emailError || passwordError)
+	};
 
 	const { state, dispatch } = useContext(UserContext);
 	const navigate = useNavigate();
@@ -92,11 +75,11 @@ const SignIn = () => {
 
 	const onSubmit = async (e: MouseEvent) => {
 		e.preventDefault();
-    if(validateForm()){
-      console.log(data);
+		if (await validateForm()) {
 		  mutate(data);
-    }
+		}
 	};
+
 	useEffect(() => {
 		if (isSuccess && responseData) {
 			refreshMutate(responseData.data.refresh_token);
@@ -154,8 +137,8 @@ const SignIn = () => {
 					autoFocus
 					value={data.email}
 					onChange={(e) => setData({ ...data, email: e.target.value })}
-          error={!!errors.email}
-          helperText={errors.email}
+					error={!!errors.email}
+					helperText={errors.email}
 				/>
 				<FormControl sx={{ mt: 1}} variant="outlined" error={!!errors.password}>
 					<InputLabel htmlFor="outlined-adornment-password">
