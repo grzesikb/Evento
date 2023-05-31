@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, TextField } from '@mui/material';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
 import { IAuthSignIn } from '../../../shared/interfaces/auth.interface';
+import {Validator} from '../../../tools/Validator';
 
 const SignUp = () => {
 	const navigate = useNavigate();
@@ -12,36 +13,38 @@ const SignUp = () => {
 		password: '',
 		repeatPassword: '',
 	});
-	// const errors = useValidate(data as LoginDataInterface, signInSchema);
 
-	// const { mutateAsync, isSuccess } = useMutation(signInService);
-	// const { state, dispatch } = useContext(AuthContext);
-	// const navigate = useNavigate();
+	const [errors, setErrors] = useState({
+		email: '',
+		password: '',
+		repeatPassword: '',
+	});
 
-	// const onSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
-	//   e.preventDefault();
-	//   const loginPromise = mutateAsync(data);
-
-	//   await statusNotifier<AxiosResponse>(loginPromise, {
-	//     pendingText: 'Logowanie...',
-	//     successText: 'Zalogowano!',
-	//     toastId,
-	//   })
-	//     .then((response: AxiosResponse) => {
-	//       dispatch({ type: ACTIONS.loadUser, payload: { ...response.data } });
-	//     })
-	//     .catch((err) => console.log(err));
-	// };
-	const onSubmit = async () => {
+	const validateForm = async () => {
+		const emailError = await Validator.checkEmail(data.email);
+		const passwordError = await Validator.checkPassword(data.password, true);
+		const repeatPassword = await Validator.checkRepeatPassword(data.password, data.repeatPassword)
+		setErrors({
+			email: emailError ?? '',
+			password: passwordError ?? '',
+			repeatPassword: repeatPassword ?? '',
+		})
+		return !(emailError || passwordError || repeatPassword)
+	};
+	
+	const onSubmit = async (e: MouseEvent) => {
+		e.preventDefault();
 		console.log(data);
-		navigate('/auth/add-user-data' as never, { state: data } as never);
+		if(await validateForm()){
+			navigate('/auth/add-user-data' as never, { state: data } as never);
+		}
 	};
 
 	return (
 		<Box>
 			<Navbar hideMenu />
 			<Form
-				handleClick={() => onSubmit()}
+				handleClick={(e) => onSubmit(e)}
 				text="Sign Up"
 				navigateText="Do you have an account? Login now!"
 				navigatePath="../auth/signin"
@@ -57,6 +60,8 @@ const SignUp = () => {
 					autoFocus
 					value={data.email}
 					onChange={(e) => setData({ ...data, email: e.target.value })}
+					error={!!errors.email}
+					helperText={errors.email}
 				/>
 
 				<TextField
@@ -69,6 +74,8 @@ const SignUp = () => {
 					id="password"
 					value={data.password}
 					onChange={(e) => setData({ ...data, password: e.target.value })}
+					error={!!errors.password}
+					helperText={errors.password}
 				/>
 
 				<TextField
@@ -81,6 +88,8 @@ const SignUp = () => {
 					id="repeatPassword"
 					value={data.repeatPassword}
 					onChange={(e) => setData({ ...data, repeatPassword: e.target.value })}
+					error={!!errors.repeatPassword}
+					helperText={errors.repeatPassword}
 				/>
 			</Form>
 		</Box>
