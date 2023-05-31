@@ -99,4 +99,13 @@ export class Api {
 			},
 		});
 	}
+
+	static async addGuest(access_token: string, data: any) {
+		return Api.axiosInstance.post('/guest/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
