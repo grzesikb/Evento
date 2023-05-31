@@ -14,7 +14,6 @@ const EditPersonalData = () => {
   const [personalData, setPersonalData] = useState<IPersonalData>({
     firstName: '',
     lastName: '',
-    dateOfBirth: null,
     phoneNumber: '',
     street: '',
     houseNumber: '',
@@ -28,7 +27,6 @@ const EditPersonalData = () => {
   const defaultPersonalData = {
     firstName: 'Bartek',
     lastName: 'Gruszka',
-    dateOfBirth: null,
     phoneNumber: 999999999,
     street: 'Ala ma kota',
     houseNumber: '4A',
@@ -137,27 +135,6 @@ const EditPersonalData = () => {
                 })
               }
             />
-          </Grid>
-          <Grid item sm={5.5}>
-            <LocalizationProvider
-              dateAdapter={AdapterDayjs}
-              
-            >
-              <DemoContainer components={['DateTimePicker']}>
-                <DateTimePicker
-                  label="Date of birth"
-                  format="DD/MM/YYYY"
-                  views={['year', 'month', 'day']}
-                  value={personalData.dateOfBirth}
-                  onChange={(newDate) =>
-                    setPersonalData({
-                      ...personalData,
-                      dateOfBirth: newDate,
-                    })
-                  }
-                />
-              </DemoContainer>
-            </LocalizationProvider>
           </Grid>
           <Grid item sm={1}></Grid>
           <Grid item sm={5.5}>
