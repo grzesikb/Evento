@@ -32,9 +32,12 @@ const UserEvents = () => {
 	const navigate = useNavigate();
 
 	const { mutate, isSuccess, data, isLoading } = useMutation(userEventsService);
-	const { mutate: guestListMutate, isSuccess: guestListSuccess } = useMutation(
-		createGuestListService
-	);
+	const {
+		mutate: guestListMutate,
+		isSuccess: guestListSuccess,
+		data: guestListData,
+		isError: guestListError,
+	} = useMutation(createGuestListService);
 	const {
 		mutate: deleteMutate,
 		isSuccess: deleteSuccess,
@@ -106,12 +109,22 @@ const UserEvents = () => {
 	];
 
 	const handleCreateGuestList = async (id: string) => {
+		localStorage.setItem('order_id', id);
+
 		await guestListMutate({
 			access_token: localStorage.getItem('accessToken') as string,
 			orderData: { order_id: id },
 		});
-		navigate(`/app/guest-list?id=${id}`);
 	};
+
+	useEffect(() => {
+		const order_id = localStorage.getItem('order_id');
+		if (guestListSuccess) {
+			localStorage.setItem(order_id!, guestListData.data.payload.id);
+		}
+		if (guestListSuccess || guestListError)
+			navigate(`/app/guest-list?id=${order_id}`);
+	}, [guestListSuccess, guestListError]);
 
 	useEffect(() => {
 		mutate(localStorage.getItem('accessToken') as string);
