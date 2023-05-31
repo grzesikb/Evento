@@ -25,7 +25,6 @@ import {
 	deleteEventService,
 	userEventsService,
 } from '../../../services/eventService';
-import { convert } from '../../../tools/IdConverter';
 import { statusFormatter } from '../../../tools/StatusFormatter';
 import { createGuestListService } from '../../../services/guestListService';
 
