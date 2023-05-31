@@ -7,10 +7,6 @@ import {
 	TextField,
 	Typography,
 } from '@mui/material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
@@ -18,6 +14,7 @@ import Navbar from '../../common/Navbar/Navbar';
 import { IPersonalData } from '../../../shared/interfaces/person.interface';
 import { signUpService } from '../../../services/authService';
 import { useMutation } from 'react-query';
+import { Validator } from '../../../tools/Validator';
 
 const AddUserData = () => {
 	const navigate = useNavigate();
@@ -30,7 +27,6 @@ const AddUserData = () => {
 	const [personalData, setPersonalData] = useState<IPersonalData>({
 		firstName: '',
 		lastName: '',
-		dateOfBirth: null,
 		phoneNumber: '',
 		street: '',
 		houseNumber: '',
@@ -39,6 +35,44 @@ const AddUserData = () => {
 		voivodeship: '',
 		country: '',
 	});
+
+	const [errors, setErrors] = useState({
+		firstName: '',
+		lastName: '',
+		phoneNumber: '',
+		street: '',
+		houseNumber: '',
+		city: '',
+		postalCode: '',
+		voivodeship: '',
+		country: '',
+	});
+
+	const validateForm = async () => {
+		const firstNameError = await Validator.checkRequiredString(personalData.firstName);
+		const lastNameError = await Validator.checkRequiredString(personalData.lastName);
+		const phoneNumberError = await Validator.checkPhoneNumber(personalData.phoneNumber);
+		const streetError = await Validator.checkRequiredString(personalData.street);
+		const houseNumberError = await Validator.checkRequiredString(personalData.houseNumber);
+		const cityError = await Validator.checkRequiredString(personalData.city);
+		const postalCodeError = await Validator.checkRequiredString(personalData.postalCode);
+		const voivodeshipError = await Validator.checkRequiredString(personalData.voivodeship);
+		const countryError = await Validator.checkRequiredString(personalData.country);
+		
+		setErrors({
+			firstName: firstNameError ?? '',
+			lastName: lastNameError ?? '',
+			phoneNumber: phoneNumberError ?? '',
+			street: streetError ?? '',
+			houseNumber: houseNumberError ?? '',
+			city: cityError ?? '',
+			postalCode: postalCodeError ?? '',
+			voivodeship: voivodeshipError ?? '',
+			country: countryError ?? '',
+		})
+
+		return !(firstNameError || lastNameError || phoneNumberError || streetError || houseNumberError || cityError || postalCodeError || voivodeshipError || countryError)
+	};
 
 	const handlleCreateAccount = async () => {
 		const signUpData = {
@@ -59,7 +93,9 @@ const AddUserData = () => {
 				voivodeship: personalData.voivodeship,
 			},
 		};
-		mutate(signUpData);
+		if(await validateForm()){
+			mutate(signUpData);
+		}
 	};
 
 	useEffect(() => {
@@ -105,6 +141,8 @@ const AddUserData = () => {
 											firstName: e.target.value,
 										})
 									}
+									error={!!errors.firstName}
+									helperText={errors.firstName}
 								/>
 							</Grid>
 							<Grid item sm={1}></Grid>
@@ -125,6 +163,8 @@ const AddUserData = () => {
 											street: e.target.value,
 										})
 									}
+									error={!!errors.street}
+									helperText={errors.street}
 								/>
 							</Grid>
 
@@ -145,6 +185,8 @@ const AddUserData = () => {
 											lastName: e.target.value,
 										})
 									}
+									error={!!errors.lastName}
+									helperText={errors.lastName}
 								/>
 							</Grid>
 							<Grid item sm={1}></Grid>
@@ -164,44 +206,8 @@ const AddUserData = () => {
 											houseNumber: e.target.value,
 										})
 									}
-								/>
-							</Grid>
-							<Grid item sm={5.5}>
-								<LocalizationProvider dateAdapter={AdapterDayjs}>
-									<DemoContainer components={['DateTimePicker']}>
-										<DateTimePicker
-											label="Date of birth"
-											format="DD/MM/YYYY"
-											views={['year', 'month', 'day']}
-											value={personalData.dateOfBirth}
-											onChange={(newDate) =>
-												setPersonalData({
-													...personalData,
-													dateOfBirth: newDate,
-												})
-											}
-										/>
-									</DemoContainer>
-								</LocalizationProvider>
-							</Grid>
-							<Grid item sm={1}></Grid>
-							<Grid item sm={5.5}>
-								<TextField
-									margin="dense"
-									required
-									fullWidth
-									id="city"
-									label="City"
-									name="city"
-									autoComplete="address-line3"
-									autoFocus
-									value={personalData.city}
-									onChange={(e) =>
-										setPersonalData({
-											...personalData,
-											city: e.target.value,
-										})
-									}
+									error={!!errors.houseNumber}
+									helperText={errors.houseNumber}
 								/>
 							</Grid>
 							<Grid item sm={5.5}>
@@ -229,9 +235,33 @@ const AddUserData = () => {
 											phoneNumber: parseInt(e.target.value, 10),
 										})
 									}
+									error={!!errors.phoneNumber}
+									helperText={errors.phoneNumber}
 								/>
 							</Grid>
 							<Grid item sm={1}></Grid>
+							<Grid item sm={5.5}>
+								<TextField
+									margin="dense"
+									required
+									fullWidth
+									id="city"
+									label="City"
+									name="city"
+									autoComplete="address-line3"
+									autoFocus
+									value={personalData.city}
+									onChange={(e) =>
+										setPersonalData({
+											...personalData,
+											city: e.target.value,
+										})
+									}
+									error={!!errors.city}
+									helperText={errors.city}
+								/>
+							</Grid>
+							<Grid item sm={6.5}></Grid>
 							<Grid item sm={5.5}>
 								<TextField
 									margin="dense"
@@ -249,6 +279,8 @@ const AddUserData = () => {
 											postalCode: e.target.value,
 										})
 									}
+									error={!!errors.postalCode}
+									helperText={errors.postalCode}
 								/>
 							</Grid>
 							<Grid item sm={6.5}></Grid>
@@ -269,6 +301,9 @@ const AddUserData = () => {
 											voivodeship: e.target.value,
 										})
 									}
+									error={!!errors.voivodeship}
+									helperText={errors.voivodeship}
+									
 								/>
 							</Grid>
 							<Grid item sm={6.5}>
@@ -293,6 +328,8 @@ const AddUserData = () => {
 											country: e.target.value,
 										})
 									}
+									error={!!errors.country}
+									helperText={errors.country}
 								/>
 							</Grid>
 						</Grid>
