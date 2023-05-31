@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+	Alert,
 	Button,
 	Dialog,
 	DialogActions,
@@ -16,7 +17,10 @@ import AppContainer from '../../common/AppContainer';
 import AppDataGrid from '../../common/AppDataGrid';
 import { IGuestList } from '../../../shared/interfaces/guest-list.interface';
 import { useMutation } from 'react-query';
-import { getGuestsService } from '../../../services/guestListService';
+import {
+	addGuestService,
+	getGuestsService,
+} from '../../../services/guestListService';
 
 // sprawdzanie czy celebration bo tam są jeszcze stoliki na backendzie jezeli jest private to table = null
 const celebration = true;
@@ -32,6 +36,12 @@ const GuestList = () => {
 		data: getGuestData,
 		isSuccess: getGuestSuccess,
 	} = useMutation(getGuestsService);
+
+	const {
+		mutate: addGuestMutate,
+		data: addGuestData,
+		isSuccess: addGuestSuccess,
+	} = useMutation(addGuestService);
 
 	const columns: GridColDef[] = [
 		{ field: 'id', headerName: '#', width: 60 },
@@ -147,9 +157,28 @@ const GuestList = () => {
 	};
 
 	const handleAddGuest = async () => {
-		// add guest to rows
-		setOpenDialog(false);
+		const guestEnitity = {
+			name: guest.firstName,
+			surname: guest.lastName,
+			table_number: +guest.table!,
+			list_id: localStorage.getItem(typeParam!),
+		};
+
+		addGuestMutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			guestData: guestEnitity,
+		});
 	};
+
+	useEffect(() => {
+		if (addGuestSuccess) {
+			getGuestMutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				id: typeParam as string,
+			});
+			setOpenDialog(false);
+		}
+	}, [addGuestSuccess]);
 
 	return (
 		<AppContainer
@@ -213,6 +242,9 @@ const GuestList = () => {
 					>
 						Add
 					</Button>
+					{addGuestSuccess && (
+						<Alert severity="success">Gość został dodany!</Alert>
+					)}
 				</DialogActions>
 			</Dialog>
 			<AppDataGrid
