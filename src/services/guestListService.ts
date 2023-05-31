@@ -13,3 +13,11 @@ export const getGuestsService = (data: {
 }) => {
 	return Api.getGuests(data.access_token, data.id);
 };
+
+export const addGuestService = (data: {
+	access_token: string;
+	guestData: any;
+}) => {
+	console.log(data.guestData);
+	return Api.addGuest(data.access_token, data.guestData);
+};
