@@ -19,6 +19,12 @@ export class Api {
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
+	static async checkEmail(email: string){
+		return Api.axiosInstance.get('/user/checkEmail',{
+			params: {email},
+			headers: { 'Access-Control-Allow-Origin': '*' },
+		});
+	}
 	static async refresh(refresh_token: string) {
 		return Api.axiosInstance.get('/auth/refreshToken/', {
 			headers: {
