@@ -53,9 +53,9 @@ const AddUserData = () => {
 		const lastNameError = await Validator.checkRequiredString(personalData.lastName);
 		const phoneNumberError = await Validator.checkPhoneNumber(personalData.phoneNumber);
 		const streetError = await Validator.checkRequiredString(personalData.street);
-		const houseNumberError = await Validator.checkRequiredString(personalData.houseNumber);
+		const houseNumberError = await Validator.checkHouseNumber(personalData.houseNumber);
 		const cityError = await Validator.checkRequiredString(personalData.city);
-		const postalCodeError = await Validator.checkRequiredString(personalData.postalCode);
+		const postalCodeError = await Validator.checkPostalCode(personalData.postalCode);
 		const voivodeshipError = await Validator.checkRequiredString(personalData.voivodeship);
 		const countryError = await Validator.checkRequiredString(personalData.country);
 		
@@ -104,7 +104,7 @@ const AddUserData = () => {
 
 	return (
 		<Box>
-			<Navbar />
+			<Navbar hideMenu />
 			<Box
 				sx={{
 					display: 'flex',
@@ -192,6 +192,7 @@ const AddUserData = () => {
 							<Grid item sm={1}></Grid>
 							<Grid item sm={5.5}>
 								<TextField
+									required
 									margin="dense"
 									fullWidth
 									id="houseNumber"
