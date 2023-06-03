@@ -31,7 +31,7 @@ export class Validator {
             message = 'This field is required';
             return message;
         } else if(password !== repeatPassword){
-            message = 'passwords are not equal';
+            message = 'Passwords are not equal';
             return message;
         }
         return message;
@@ -42,7 +42,9 @@ export class Validator {
         if(validator.isEmpty(data)){
             message = 'This field is required';
             return message;
-        } 
+        } else if (validator.isNumeric(data)){
+            message = 'This field have to contain letters'
+        }
         return message;
     }
 
@@ -54,7 +56,32 @@ export class Validator {
         } else if (!validator.isMobilePhone(phoneNumber.toString(), 'pl-PL')){
             message = 'Invalid phone number';
             return message;
-        }
+        } 
+        return message;
+    }
+
+    static async checkHouseNumber(houseNumber: string): Promise<string | null>{
+        let message: string | null = null;
+        const pattern = /^[1-9]\d*(\s*[-/]\s*[1-9]\d*)?(\s?[a-zA-Z])?$/;
+        if(validator.isEmpty(houseNumber)){
+            message = 'This field is required';
+            return message;
+        } else if (!validator.matches(houseNumber, pattern)){
+            message = 'Invalid house number';
+            return message;
+        } 
+        return message;
+    }
+
+    static async checkPostalCode(postalCode: string): Promise<string | null>{
+        let message: string | null = null;
+        if(validator.isEmpty(postalCode)){
+            message = 'This field is required';
+            return message;
+        } else if (!validator.isPostalCode(postalCode, 'PL')){
+            message = 'Invalid postal code';
+            return message;
+        } 
         return message;
     }
 }
