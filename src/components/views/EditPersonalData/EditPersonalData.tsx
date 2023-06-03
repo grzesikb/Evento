@@ -136,27 +136,6 @@ const EditPersonalData = () => {
               }
             />
           </Grid>
-          <Grid item sm={1}></Grid>
-          <Grid item sm={5.5}>
-            <TextField
-              defaultValue={personalData.city}
-              margin="dense"
-              required
-              fullWidth
-              id="city"
-              label="City"
-              name="city"
-              autoComplete="address-line3"
-              autoFocus
-              value={personalData.city}
-              onChange={(e) =>
-                setPersonalData({
-                  ...personalData,
-                  city: e.target.value,
-                })
-              }
-            />
-          </Grid>
           <Grid item sm={5.5}>
             <TextField
               defaultValue={personalData.phoneNumber}
@@ -186,6 +165,27 @@ const EditPersonalData = () => {
             />
           </Grid>
           <Grid item sm={1}></Grid>
+          <Grid item sm={5.5}>
+            <TextField
+              defaultValue={personalData.city}
+              margin="dense"
+              required
+              fullWidth
+              id="city"
+              label="City"
+              name="city"
+              autoComplete="address-line3"
+              autoFocus
+              value={personalData.city}
+              onChange={(e) =>
+                setPersonalData({
+                  ...personalData,
+                  city: e.target.value,
+                })
+              }
+            />
+          </Grid>
+          <Grid item sm={6.5}></Grid>
           <Grid item sm={5.5}>
             <TextField
               defaultValue={personalData.postalCode}
