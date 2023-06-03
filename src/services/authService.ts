@@ -14,3 +14,6 @@ export const refreshService = async (refresh_token: string) => {
 export const identifyService = async (access_token: string) => {
 	return Api.identify(access_token);
 };
+export const checkEmailService = async (email: string)=>{
+	return Api.checkEmail(email)
+}
