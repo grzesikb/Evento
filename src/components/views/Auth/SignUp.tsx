@@ -1,10 +1,12 @@
-import { useState, MouseEvent } from 'react';
+import { useState, MouseEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, TextField } from '@mui/material';
+import { Box, Alert, TextField } from '@mui/material';
 import Form from './AuthForm';
 import Navbar from '../../common/Navbar/Navbar';
 import { IAuthSignIn } from '../../../shared/interfaces/auth.interface';
 import {Validator} from '../../../tools/Validator';
+import { useMutation } from 'react-query';
+import {checkEmailService} from '../../../services/authService';
 
 const SignUp = () => {
 	const navigate = useNavigate();
@@ -19,6 +21,14 @@ const SignUp = () => {
 		password: '',
 		repeatPassword: '',
 	});
+
+	const {
+		mutate,
+		isSuccess,
+		data: responseData,
+		isError,
+		error,
+	} = useMutation(checkEmailService);
 
 	const validateForm = async () => {
 		const emailError = await Validator.checkEmail(data.email);
@@ -36,9 +46,13 @@ const SignUp = () => {
 		e.preventDefault();
 		console.log(data);
 		if(await validateForm()){
-			navigate('/auth/add-user-data' as never, { state: data } as never);
+			mutate(data.email)
 		}
 	};
+
+	useEffect(() => {
+		isSuccess && navigate('/auth/add-user-data' as never, { state: data } as never);
+	}, [isSuccess, navigate]);
 
 	return (
 		<Box>
@@ -91,6 +105,9 @@ const SignUp = () => {
 					error={!!errors.repeatPassword}
 					helperText={errors.repeatPassword}
 				/>
+				{isError && (
+          		<Alert sx={{ maxWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
+        		)}
 			</Form>
 		</Box>
 	);
