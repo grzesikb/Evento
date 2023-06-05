@@ -7,6 +7,10 @@ export const signUpService = async (data: any) => {
 export const signInService = async (data: any) => {
 	return Api.signin(data);
 };
+
+export const signInGoogleService = async (data: any) => {
+	return Api.signInGoogle(data);
+};
 export const refreshService = async (refresh_token: string) => {
 	console.log(refresh_token);
 	return Api.refresh(refresh_token);
