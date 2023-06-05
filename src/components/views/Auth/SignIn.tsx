@@ -18,12 +18,14 @@ import { IAuth } from '../../../shared/interfaces/auth.interface';
 import { useMutation } from 'react-query';
 import {
 	identifyService,
-	refreshService,
+	refreshService, signInGoogleService,
 	signInService,
 } from '../../../services/authService';
 import UserContext from '../../../contexts/context/UserContext';
 import { UserActions } from '../../../shared/interfaces/user.interface';
 import { useNavigate } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const SignIn = () => {
 	const [data, setData] = useState<IAuth>({
@@ -58,6 +60,14 @@ const SignIn = () => {
 	} = useMutation(signInService);
 
 	const {
+		mutate: googleMutate,
+		isSuccess: googleSuccess,
+		data: googleResponse,
+		isError: googleIsError,
+		error: googleError,
+	} = useMutation(signInGoogleService);
+
+	const {
 		mutate: refreshMutate,
 		isSuccess: refreshSuccess,
 		data: refreshData,
@@ -86,6 +96,12 @@ const SignIn = () => {
 		}
 	}, [isSuccess, responseData]);
 
+	useEffect(() => {
+		if (googleSuccess && googleSuccess) {
+			console.log(googleResponse.data);
+			if(googleResponse) refreshMutate(googleResponse.data.refresh_token);
+		}
+	}, [googleSuccess, googleResponse]);
 	useEffect(() => {
 		if (refreshSuccess) {
 			localStorage.setItem('accessToken', refreshData.data.access_token);
@@ -170,6 +186,17 @@ const SignIn = () => {
         {isError && (
           <Alert sx={{ minWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
         )}
+				<GoogleOAuthProvider clientId="643015372662-hkj0n07rm68jit3cfs95tg37f65a775d.apps.googleusercontent.com">
+					<GoogleLogin
+						onSuccess={(credentialResponse : any)=> {
+							console.log(credentialResponse);
+							googleMutate(credentialResponse.credential)
+						}}
+						onError={() => {
+							console.log('Login Failed');
+						}}
+					/>
+				</GoogleOAuthProvider>
 			</Form>
 		</Box>
 	);
