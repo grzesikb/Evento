@@ -19,6 +19,11 @@ export class Api {
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
+	static async signInGoogle(data: any) {
+		return Api.axiosInstance.get('/auth/google_auth?token='+ data,{
+			headers: { 'Access-Control-Allow-Origin': '*' },
+		});
+	}
 	static async checkEmail(email: string){
 		return Api.axiosInstance.get('/user/checkEmail',{
 			params: {email},
