@@ -30,7 +30,6 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 	const [data, setData] = useState<IOrder>({
 		name: '',
 		startDate: props.startDate,
-		finishDate: props.finishDate,
 		type: '2',
 		status: '',
 		additionalInfo: '',
@@ -54,7 +53,6 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 			security: data.securityOption,
 			type: +data.type!,
 			start_date: data.startDate,
-			end_date: data.finishDate,
 			additional_info: data.additionalInfo,
 			status: 1,
 			artist_name: data.artist,
@@ -101,7 +99,7 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 					color: 'grey',
 				}}
 			>
-				{`Selected dates: ${props.startDate} - ${props.finishDate}`}
+				{`Selected date: ${props.startDate}`}
 			</Typography>
 			<Box component="form">
 				<Grid container>
