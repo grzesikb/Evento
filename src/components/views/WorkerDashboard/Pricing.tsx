@@ -24,7 +24,6 @@ const Pricing = () => {
   const [data, setData] = useState<IOrder>({
     name: '',
     startDate: null,
-    finishDate: null,
     type: '',
     status: '',
     additionalInfo: '',
@@ -51,7 +50,6 @@ const Pricing = () => {
     setData({
       name: 'Wesele Ani i Jakuba',
       startDate: '16:00 31.06.2023',
-      finishDate: '17:00 31.06.2023',
       type: 'Celebration',
       status: 'inProgress',
       additionalInfo:
@@ -71,7 +69,7 @@ const Pricing = () => {
       id: null,
       name: data.name,
       startDate: data.startDate,
-      finishDate: data.finishDate,
+      finishDate: paymentDetails.finishDate,
       cost: '',
     });
   }, []);
@@ -133,7 +131,7 @@ const Pricing = () => {
               Finish date:
             </Typography>
             <Typography variant="h6" sx={{ fontSize: 16 }}>
-              {data.finishDate}
+              Nie wiem czy tu ma byc orderu czy platnosci
             </Typography>
           </Grid>
 
