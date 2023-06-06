@@ -1,7 +1,6 @@
 export interface IOrder {
   name: string;
   startDate: string | null | undefined;
-  finishDate: string | null | undefined;
   type: string;
   status: string;
   additionalInfo?: string;
@@ -19,7 +18,6 @@ export interface IOrder {
 
 export interface IOrderDatesProps {
   startDate?: string | null | undefined;
-  finishDate?: string | null | undefined;
 }
 
 export interface IOrderEventsDataGrid {
@@ -27,6 +25,5 @@ export interface IOrderEventsDataGrid {
   id: string;
   name: string;
   startDate: string;
-  finishDate: string;
   status: string;
 }
