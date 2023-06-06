@@ -110,9 +110,6 @@ const SignIn = () => {
 			identifyMutate(refreshData.data.access_token);
 		}
 	}, [refreshSuccess]);
-	// if (state.user) {
-	// 	navigate('../../home');
-	// }
 
 	useEffect(() => {
 		if (identifySuccess) {
@@ -186,17 +183,19 @@ const SignIn = () => {
         {isError && (
           <Alert sx={{ minWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
         )}
-				<GoogleOAuthProvider clientId="643015372662-hkj0n07rm68jit3cfs95tg37f65a775d.apps.googleusercontent.com">
-					<GoogleLogin
-						onSuccess={(credentialResponse : any)=> {
-							console.log(credentialResponse);
-							googleMutate(credentialResponse.credential)
-						}}
-						onError={() => {
-							console.log('Login Failed');
-						}}
-					/>
-				</GoogleOAuthProvider>
+				<Box sx={{minWidth: '350px', mt: 2, display: 'flex', justifyContent: 'center'}}>
+					<GoogleOAuthProvider clientId="643015372662-hkj0n07rm68jit3cfs95tg37f65a775d.apps.googleusercontent.com">
+						<GoogleLogin
+							onSuccess={(credentialResponse : any)=> {
+								console.log(credentialResponse);
+								googleMutate(credentialResponse.credential)
+							}}
+							onError={() => {
+								console.log('Login Failed');
+							}}
+						/>
+					</GoogleOAuthProvider>
+				</Box>
 			</Form>
 		</Box>
 	);
