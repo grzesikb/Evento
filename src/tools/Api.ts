@@ -93,6 +93,13 @@ export class Api {
 		});
 	}
 
+	static async checkDate(date: string){
+		return Api.axiosInstance.post('/order/check_date',null,{
+			params: {date},
+			headers: { 'Access-Control-Allow-Origin': '*' },
+		});
+	}
+
 	static async createGuestList(access_token: string, data: any) {
 		return Api.axiosInstance.post('/guestList/', data, {
 			headers: {
