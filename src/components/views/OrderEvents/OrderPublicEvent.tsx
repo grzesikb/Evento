@@ -28,7 +28,6 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 	const [data, setData] = useState<IOrder>({
 		name: '',
 		startDate: props.startDate,
-		finishDate: props.finishDate,
 		type: '1',
 		status: '1',
 		additionalInfo: '',
@@ -54,7 +53,6 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 			security: data.securityOption,
 			type: +data.type!,
 			start_date: data.startDate,
-			end_date: data.finishDate,
 			additional_info: data.additionalInfo,
 			status: 1,
 			artist_name: data.artist,
@@ -64,6 +62,7 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 			catering: data.cateringOption,
 			number_of_seats: +data.numberOfSeats!,
 		};
+		console.log(orderEntity.start_date)
 
 		// add order
 		mutate({
@@ -103,7 +102,7 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 					color: 'grey',
 				}}
 			>
-				{`Selected dates: ${props.startDate} - ${props.finishDate}`}
+				{`Selected date: ${props.startDate}`}
 			</Typography>
 
 			<Box component="form">
