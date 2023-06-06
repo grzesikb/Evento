@@ -30,7 +30,6 @@ const EditOrder = () => {
 	const [data, setData] = useState<IOrder>({
 		name: '',
 		startDate: null,
-		finishDate: null,
 		type: '',
 		status: '',
 		additionalInfo: '',
@@ -75,7 +74,6 @@ const EditOrder = () => {
 				setData({
 					name: orderDetails.name,
 					startDate: orderDetails.start_date,
-					finishDate: orderDetails.end_date,
 					type: convertType(orderDetails.type) as string,
 					status: statusFormatter(orderDetails.status) as string,
 					additionalInfo: orderDetails.additional_info,
@@ -102,7 +100,6 @@ const EditOrder = () => {
 			security: data.securityOption,
 			type: 1,
 			start_date: data.startDate,
-			end_date: data.finishDate,
 			additional_info: data.additionalInfo,
 			status: 1,
 			artist_name: data.artist,
@@ -132,7 +129,7 @@ const EditOrder = () => {
 		<AppContainer
 			back="/app/dashboard"
 			label={`Edit order: ${typeParam}`}
-			additionalLabel={`Type: ${data.type} | Date: ${data.startDate} - ${data.finishDate}`}
+			additionalLabel={`Type: ${data.type} | Date: ${data.startDate}`}
 			navbar
 		>
 			<Box component="form">
