@@ -50,7 +50,6 @@ const UserEvents = () => {
 		{ field: 'id', headerName: 'ID', width: 70, sortable: false },
 		{ field: 'name', headerName: 'Name', width: 230 },
 		{ field: 'startDate', headerName: 'Start Date', width: 150 },
-		{ field: 'finishDate', headerName: 'Finish Date', width: 150 },
 		{
 			field: 'status',
 			headerName: 'Status',
@@ -143,7 +142,6 @@ const UserEvents = () => {
 					id: item.id,
 					name: item.name,
 					startDate: item.start_date,
-					finishDate: item.end_date,
 					status: statusFormatter(+item.status),
 				});
 			});
@@ -164,49 +162,6 @@ const UserEvents = () => {
 			handleClose();
 		}
 	}, [deleteSuccess]);
-
-	const rows = [
-		{
-			lp: 1,
-			id: '43dsr6',
-			name: 'Impreza studencka',
-			startDate: '21:00 08.08.2023',
-			finishDate: '22:00 08.08.2023',
-			status: 'Finished',
-		},
-		{
-			lp: 2,
-			id: '24sd4s',
-			name: 'Wesele Ani i Jakuba',
-			startDate: '16:00 31.06.2023',
-			finishDate: '17:00 31.06.2023',
-			status: 'inProgress',
-		},
-		{
-			lp: 3,
-			id: '9bad2s',
-			name: 'Konferencja ABW',
-			startDate: '18:00 20.06.2023',
-			finishDate: '19:00 20.06.2023',
-			status: 'Verification',
-		},
-		{
-			lp: 4,
-			id: '1bsdfg',
-			name: 'Zebranie Grzybiarzy',
-			startDate: '20:00 19.06.2023',
-			finishDate: '21:00 19.06.2023',
-			status: 'Payments',
-		},
-		{
-			lp: 5,
-			id: '1bsdf5',
-			name: 'Zebranie Pszczelarzy',
-			startDate: '21:00 21.06.2023',
-			finishDate: '23:00 21.06.2023',
-			status: 'Offer',
-		},
-	];
 
 	const theme = useTheme();
 	const [openDialog, setOpenDialog] = useState<{
