@@ -33,10 +33,13 @@ import { useMutation } from 'react-query';
 import { identifyService } from './services/authService';
 import UserContext from './contexts/context/UserContext';
 import { UserActions } from './shared/interfaces/user.interface';
+import { PaymentActions } from './shared/interfaces/payment.interface';
+import PaymentContext from './contexts/context/PaymentContext';
 
 const App = () => {
 	const { theme } = useContext(SettingsContext);
 	const { state, dispatch } = useContext(UserContext);
+	const { dispatch: paymentDispatch } = useContext(PaymentContext);
 
 	const { mutate, data, isSuccess, isError } = useMutation(identifyService);
 
@@ -45,6 +48,16 @@ const App = () => {
 			dispatch({ type: UserActions.LOAD_USER, payload: undefined });
 		} else {
 			mutate(localStorage.getItem('accessToken') as string);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (localStorage.getItem('paymentData')) {
+			console.log(JSON.parse(localStorage.getItem('paymentData') as string));
+			paymentDispatch({
+				type: PaymentActions.CREATE_DATA,
+				payload: JSON.parse(localStorage.getItem('paymentData') as string),
+			});
 		}
 	}, []);
 
