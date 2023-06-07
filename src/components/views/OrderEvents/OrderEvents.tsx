@@ -1,17 +1,13 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useState, MouseEvent} from 'react';
 import {
   Alert,
   Box,
   Button,
-  Collapse,
   Grid,
   TextField,
   Typography,
 } from '@mui/material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
-/* ATTENTION. Older version of @mui/x-date-pickers-pro used because 
-it has a better time picker and the new one doesn't have. Don't upgrade */
 import { useMutation } from 'react-query';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -21,7 +17,7 @@ import OrderCelebrationEvent from './OrderCelebrationEvent';
 import AppContainer from '../../common/AppContainer';
 import { IOrderDatesProps } from '../../../shared/interfaces/order.interface';
 import { checkDateService } from '../../../services/eventService';
-import dayjs from 'dayjs';
+import { Validator } from '../../../tools/Validator';
 
 interface IProps {
   type: string;
@@ -37,6 +33,10 @@ const OrderEvent = () => {
   });
 
   const [date, setDate] = useState<string>('')
+
+  const [errors, setErrors] = useState({
+		date: '',
+	});
 
   const {
 		mutate,
@@ -59,11 +59,18 @@ const OrderEvent = () => {
     }
   };
 
+  const validateDate = async () => {
+		const dateError = await Validator.checkDate(date);
+		setErrors({
+			date: dateError ?? '',
+		})
+		return !(dateError)
+	};
+
   const onSubmit = async (e: MouseEvent) => {
 		e.preventDefault();
-    
-    if(date){
-      mutate(date)
+    if (await validateDate()) {
+        mutate(date);
     }
 	};
 
@@ -111,7 +118,9 @@ const OrderEvent = () => {
                   <DatePicker
                     inputFormat="DD.MM.YYYY"
                     renderInput={(propsTextField) => (
-                      <TextField {...propsTextField} />
+                      <TextField {...propsTextField} 
+                        error={!!errors.date}
+                        helperText={errors.date}/>
                     )}
                     label="Date of event*"
                     value={data.startDate}
@@ -152,7 +161,7 @@ const OrderEvent = () => {
               <Grid item sm={5.5}></Grid>
             </Grid>
             {isError && (
-              <Alert sx={{ minWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
+              <Alert sx={{ minWidth: '350px', mt: 1, mb: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
             )}
 
               <Button
