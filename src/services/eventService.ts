@@ -37,3 +37,7 @@ export const checkDateService = async (date: string)=>{
 	return Api.checkDate(date)
 }
 
+export const getDatesService = async ()=>{
+	return Api.getDates()
+}
+
