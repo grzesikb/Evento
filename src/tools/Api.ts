@@ -20,13 +20,13 @@ export class Api {
 		});
 	}
 	static async signInGoogle(data: any) {
-		return Api.axiosInstance.get('/auth/google_auth?token='+ data,{
+		return Api.axiosInstance.get('/auth/google_auth?token=' + data, {
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
-	static async checkEmail(email: string){
-		return Api.axiosInstance.get('/user/checkEmail',{
-			params: {email},
+	static async checkEmail(email: string) {
+		return Api.axiosInstance.get('/user/checkEmail', {
+			params: { email },
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
@@ -93,15 +93,15 @@ export class Api {
 		});
 	}
 
-	static async checkDate(date: string){
-		return Api.axiosInstance.post('/order/check_date',null,{
-			params: {date},
+	static async checkDate(date: string) {
+		return Api.axiosInstance.post('/order/check_date', null, {
+			params: { date },
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
 
-	static async getDates(){
-		return Api.axiosInstance.get('/order/validation/get_orders_dates',{
+	static async getDates() {
+		return Api.axiosInstance.get('/order/validation/get_orders_dates', {
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
@@ -126,6 +126,15 @@ export class Api {
 
 	static async addGuest(access_token: string, data: any) {
 		return Api.axiosInstance.post('/guest/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async editUserProfile(access_token: string, data: any) {
+		return Api.axiosInstance.post('/user/update', data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				Authorization: `Bearer ${access_token}`,
