@@ -16,7 +16,7 @@ import OrderPrivateEvent from './OrderPrivateEvent';
 import OrderCelebrationEvent from './OrderCelebrationEvent';
 import AppContainer from '../../common/AppContainer';
 import { IOrderDatesProps } from '../../../shared/interfaces/order.interface';
-import { checkDateService } from '../../../services/eventService';
+import { checkDateService, getDatesService } from '../../../services/eventService';
 import { Validator } from '../../../tools/Validator';
 
 interface IProps {
@@ -33,6 +33,19 @@ const OrderEvent = () => {
   });
 
   const [date, setDate] = useState<string>('')
+  const [blockedDates, setBlockedDates] = useState<string[]>([]);
+
+  useEffect(()=>{
+    const fetchBlockedDates = async ()=>{
+      try{
+        const response = await getDatesService();
+        setBlockedDates(response.data.payload);
+      } catch (error){
+        console.log(error)
+      }
+    }
+    fetchBlockedDates();
+  },[])
 
   const [errors, setErrors] = useState({
 		date: '',
@@ -45,6 +58,7 @@ const OrderEvent = () => {
 		isError,
 		error,
 	} = useMutation(checkDateService);
+
 
   const checkType = async () => {
     const queryString = window.location.search;
@@ -86,6 +100,15 @@ const OrderEvent = () => {
     }
   },[data.startDate])
 
+  const shouldDisableDate = (date: string) => {
+    for (const blockedDate of blockedDates){
+      if(blockedDate === new Date(date).toLocaleDateString()){
+        return true
+      }
+    }
+    return false
+  };
+
   return (
     <Box>
       {isSuccess ? (
@@ -117,8 +140,9 @@ const OrderEvent = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     inputFormat="DD.MM.YYYY"
-                    renderInput={(propsTextField) => (
-                      <TextField {...propsTextField} 
+                    renderInput={(params) => (
+                      <TextField {...params}
+                        inputProps={{...params.inputProps, readOnly: true}}
                         error={!!errors.date}
                         helperText={errors.date}/>
                     )}
@@ -131,6 +155,7 @@ const OrderEvent = () => {
                       })
                     }
                     disablePast
+                    shouldDisableDate={shouldDisableDate}
                   />
                 </LocalizationProvider>
               </Grid>
