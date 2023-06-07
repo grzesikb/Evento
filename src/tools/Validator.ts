@@ -84,4 +84,16 @@ export class Validator {
         } 
         return message;
     }
+
+    static async checkDate(date: string): Promise<string | null>{
+        let message: string | null = null;
+        if(validator.isEmpty(date)){
+            message = 'This field is required';
+            return message;
+        } else if (validator.isBefore(date, new Date().toLocaleDateString())){
+            message = 'You cannot choose a past date';
+            return message;
+        } 
+        return message;
+    }
 }
