@@ -150,4 +150,22 @@ export class Api {
 			},
 		});
 	}
+
+	static async createPaymentData(access_token: string, data: any) {
+		return Api.axiosInstance.post('/payment', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async updatePaymentData(access_token: string, data: any) {
+		return Api.axiosInstance.post('/payment/update', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
