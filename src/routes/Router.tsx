@@ -5,7 +5,7 @@ import {
 	RouterProvider,
 	createBrowserRouter,
 } from 'react-router-dom';
-import { Payment } from '@mui/icons-material';
+import Payment from '../components/views/UserAcitons/Payment';
 import AccountSettings from '../components/views/AccountSettings/AccountSettings';
 import AdminDashboard from '../components/views/AdminDashboard/AdminDashboard';
 import EditAppEmails from '../components/views/AdminDashboard/EditAppEmails';
@@ -23,6 +23,7 @@ import Pricing from '../components/views/WorkerDashboard/Pricing';
 import WorkerDashboard from '../components/views/WorkerDashboard/WorkerDashboard';
 import GuestRoute from './GuestRoute';
 import AuthRoute from './AuthRoute';
+import Success from '../components/views/PaymentStatus/Success';
 
 const Router = () => {
 	const { state } = useContext(UserContext);
@@ -104,6 +105,10 @@ const Router = () => {
 				{
 					path: 'edit-app-emails',
 					element: <EditAppEmails />,
+				},
+				{
+					path: 'payment/success',
+					element: <Success />,
 				},
 			],
 		},
