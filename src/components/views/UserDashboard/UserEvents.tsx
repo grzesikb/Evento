@@ -95,13 +95,6 @@ const UserEvents = () => {
 					>
 						<GroupAddIcon />
 					</IconButton>
-
-					<IconButton
-						onClick={() => setOpenDialog({ open: true, orderID: params.id })}
-						title="Delete"
-					>
-						<DeleteIcon color="error" />
-					</IconButton>
 				</div>
 			),
 		},
