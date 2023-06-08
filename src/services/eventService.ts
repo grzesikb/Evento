@@ -33,11 +33,14 @@ export const deleteEventService = async (data: {
 	return Api.deleteEvent(data.access_token, data.id);
 };
 
-export const checkDateService = async (date: string)=>{
-	return Api.checkDate(date)
-}
+export const checkDateService = async (date: string) => {
+	return Api.checkDate(date);
+};
 
-export const getDatesService = async ()=>{
-	return Api.getDates()
-}
+export const getDatesService = async () => {
+	return Api.getDates();
+};
 
+export const getAllEventsService = async (access_token: string) => {
+	return Api.getAllEvents(access_token);
+};
