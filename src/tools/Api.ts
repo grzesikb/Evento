@@ -168,4 +168,22 @@ export class Api {
 			},
 		});
 	}
+
+	static async getAllEvents(access_token: string) {
+		return Api.axiosInstance.get('/order/', {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async deleteGuest(access_token: string, id: string) {
+		return Api.axiosInstance.delete('/guest/' + id, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
