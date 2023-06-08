@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Grid, Paper, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,6 +8,14 @@ import {
 	IPaymentDetails,
 	IPaymentInfo,
 } from '../../../shared/interfaces/payment.interface';
+import { loadStripe } from '@stripe/stripe-js';
+import { useMutation } from 'react-query';
+import { eventDetailService } from '../../../services/eventService';
+// Make sure to call `loadStripe` outside of a component’s render to avoid
+// recreating the `Stripe` object on every render.
+const stripePromise = loadStripe(
+	'pk_test_51NGhtFCx3j1gch1GW7UZ1fU5YAc9Cw1hvRPmehqnNmIeqlECsQxft8xdNnTRUzH5LjfdRqNVZLNptk23VCY8GgV200Ll4DxgVl'
+);
 
 // eslint-disable react/prop-types
 const Payment = () => {
@@ -19,11 +27,30 @@ const Payment = () => {
 	// sprawdzanie czy jest metoda płatności podpięta
 	const isPaymentMethod = true;
 
+	const { mutate, isSuccess, data } = useMutation(eventDetailService);
+
+	useEffect(() => {
+		mutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			id: typeParam as string,
+		});
+	}, []);
+
+	useEffect(() => {
+		if (isSuccess) {
+			setPaymentDetails({
+				id: typeParam as string,
+				name: data.data.payload[0].name,
+				startDate: data.data.payload[0].start_date,
+				cost: 69000,
+			});
+		}
+	}, [isSuccess]);
+
 	const [paymentDetails, setPaymentDetails] = useState<IPaymentDetails>({
 		id: typeParam,
 		name: '',
 		startDate: '',
-		finishDate: '',
 		cost: '',
 	});
 
@@ -36,28 +63,50 @@ const Payment = () => {
 		id: '',
 	});
 
-	React.useEffect(() => {
-		setPaymentDetails({
-			id: typeParam,
-			name: 'Wesele ani i Jakuba',
-			startDate: '16:00 31.06.2023',
-			finishDate: '17:00 31.06.2023',
-			cost: 2500,
-		});
-		setPayment({
-			name: 'Bartłomiej Gruszka',
-			surname: '',
-			number: '',
-			CCV: '',
-			expiration_date: '' as string,
-			id: '',
-		});
+	useEffect(() => {
+		if (localStorage.getItem('paymentData')) {
+			const paymentData = JSON.parse(
+				localStorage.getItem('paymentData') as string
+			);
+			setPayment({
+				name: paymentData.name,
+				surname: paymentData.surname,
+				number: paymentData.number,
+				CCV: paymentData.CCV,
+				expiration_date: paymentData.expiration_date,
+				id: paymentData.id,
+			});
+		} else {
+			setPayment({
+				name: '',
+				surname: '',
+				number: '',
+				CCV: '',
+				expiration_date: '' as string,
+				id: '' as string,
+			});
+		}
 	}, []);
 
 	const navigate = useNavigate();
 
 	const handlePayment = async () => {
-		navigate('/app/dashboard');
+		const stripe = await stripePromise;
+		await stripe?.redirectToCheckout({
+			lineItems: [
+				{
+					price: 'price_1NGlbMCx3j1gch1GdFcCsYoy', // Replace with the ID of your price
+					quantity: 1,
+				},
+			],
+			mode: 'payment',
+			successUrl: 'http://127.0.0.1:3000/app/payment/success',
+			cancelUrl: 'https://127.0.0.1/cancel',
+		});
+
+		// If `redirectToCheckout` fails due to a browser or network
+		// error, display the localized error message to your customer
+		// using `error.message`.
 	};
 
 	const handleRejectPayment = async () => {
@@ -74,15 +123,11 @@ const Payment = () => {
 				<Grid item xs={12}>
 					{`Name:  ${paymentDetails.name}`}
 				</Grid>
-				<Grid item xs={12}>
-					{`Name:  ${paymentDetails.name}`}
-				</Grid>
+
 				<Grid item xs={12}>
 					{`Start date:  ${paymentDetails.startDate}`}
 				</Grid>
-				<Grid item xs={12}>
-					{`Finish date:  ${paymentDetails.finishDate}`}
-				</Grid>
+
 				<Grid item xs={12} sx={{ mt: 2 }}>
 					Cost:
 				</Grid>
@@ -98,11 +143,22 @@ const Payment = () => {
 						<Grid item xs={12} sx={{ mt: 3 }}>
 							Pament Method:
 							<Paper sx={{ padding: 4, mt: 1, borderRadius: 4 }}>
-								<div>{payment.name}</div>
-								<div>{payment.surname}</div>
-								<div>{payment.number}</div>
-								<div>{payment.expiration_date as string}</div>
-								<div>{payment.CCV}</div>
+								<div>
+									<b>Name:</b> {payment.name}
+								</div>
+								<div>
+									<b>Surname:</b> {payment.surname}
+								</div>
+								<div>
+									<b>Number:</b> {payment.number}
+								</div>
+								<div>
+									<b>Expiration time: </b>
+									{payment.expiration_date as string}
+								</div>
+								<div>
+									<b>CCV:</b> {payment.CCV}
+								</div>
 							</Paper>
 						</Grid>
 						<Button
