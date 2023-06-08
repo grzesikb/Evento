@@ -62,9 +62,9 @@ const Router = () => {
 				{
 					path: 'dashboard',
 					element:
-						(role === 'User' && <UserDashboard />) ||
-						(role === 'Worker' && <WorkerDashboard />) ||
-						(role === 'Admin' && <AdminDashboard />),
+						(state?.user && state?.user.role === 1 && <UserDashboard />) ||
+						(state?.user && state?.user.role === 2 && <WorkerDashboard />) ||
+						(state?.user && state?.user.role === 3 && <AdminDashboard />),
 				},
 				{
 					path: 'edit-personal-data',
