@@ -21,6 +21,7 @@ import {
 	addGuestService,
 	getGuestsService,
 } from '../../../services/guestListService';
+import { deleteGuestService } from '../../../services/guestService';
 
 // sprawdzanie czy celebration bo tam są jeszcze stoliki na backendzie jezeli jest private to table = null
 const celebration = true;
@@ -43,6 +44,12 @@ const GuestList = () => {
 		isSuccess: addGuestSuccess,
 	} = useMutation(addGuestService);
 
+	const {
+		mutate: deleteGuestMutate,
+		data: deleteGuestData,
+		isSuccess: deleteGuestSuccess,
+	} = useMutation(deleteGuestService);
+
 	const columns: GridColDef[] = [
 		{ field: 'id', headerName: '#', width: 60 },
 		{
@@ -59,7 +66,7 @@ const GuestList = () => {
 			sortable: false,
 			renderCell: (params: GridRenderCellParams<any>) => (
 				<IconButton
-					onClick={() => console.log(`usuwanie guesta po ${params.id}`)}
+					onClick={() => deleteGuestHandler(params.id as string)}
 					title="Delete Guest"
 				>
 					<DeleteIcon color="error" />
@@ -67,6 +74,14 @@ const GuestList = () => {
 			),
 		},
 	];
+
+	const deleteGuestHandler = (id: string) => {
+		setGuests(guests.filter((guest) => guest.id !== id));
+		deleteGuestMutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			id,
+		});
+	};
 
 	useEffect(() => {
 		getGuestMutate({
@@ -119,7 +134,7 @@ const GuestList = () => {
 			sortable: false,
 			renderCell: (params: GridRenderCellParams<any>) => (
 				<IconButton
-					onClick={() => console.log(`usuwanie guesta po ${params.id}`)}
+					onClick={() => deleteGuestHandler(params.id as string)}
 					title="Delete Guest"
 				>
 					<DeleteIcon color="error" />
@@ -252,6 +267,9 @@ const GuestList = () => {
 				columns={celebration ? columnsCelebration : columns}
 				exportOption
 			/>
+			{deleteGuestSuccess && (
+				<Alert severity="success">Gość został usuniety</Alert>
+			)}
 		</AppContainer>
 	);
 };
