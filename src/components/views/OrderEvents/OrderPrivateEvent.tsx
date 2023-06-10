@@ -20,9 +20,16 @@ import {
 } from '../../../shared/interfaces/order.interface';
 import { useMutation } from 'react-query';
 import { createEventService } from '../../../services/eventService';
+import { Validator } from '../../../tools/Validator';
 
 const OrderPrivateEvent = (props: IOrderDatesProps) => {
 	const { mutate, isSuccess } = useMutation(createEventService);
+
+	const [errors, setErrors] = useState({
+		name: '',
+		numberOfSeats: '',
+		companyName: ''
+	});
 
 	const [data, setData] = useState<IOrder>({
 		name: '',
@@ -42,6 +49,19 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 		types: '',
 	});
 
+	const validateForm = async () => {
+		const nameError = await Validator.checkRequiredString(data.name);
+		const numberOfSeatsError = await Validator.checkRequiredNumber(data.numberOfSeats, 'private');
+		const companyNameError = await Validator.checkRequiredString(data.companyName);
+		
+		setErrors({
+			name: nameError ?? '',
+			numberOfSeats: numberOfSeatsError ?? '',
+			companyName: companyNameError ?? '',
+		})
+		return !(nameError || numberOfSeatsError || companyNameError)
+	};
+
 	const navigate = useNavigate();
 	const handleOrderEvent = async () => {
 		const orderEntity = {
@@ -59,11 +79,12 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 			catering: data.cateringOption,
 			number_of_seats: +data.numberOfSeats!,
 		};
-
-		mutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			orderData: orderEntity,
-		});
+		if(await validateForm()){
+			mutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				orderData: orderEntity,
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -110,6 +131,8 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 							name="name"
 							value={data.name}
 							onChange={(e) => setData({ ...data, name: e.target.value })}
+							error={!!errors.name}
+							helperText={errors.name}
 						/>
 					</Grid>
 					<Grid item sm={0.5}></Grid>
@@ -125,6 +148,8 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 							onChange={(e) =>
 								setData({ ...data, numberOfSeats: e.target.value })
 							}
+							error={!!errors.numberOfSeats}
+							helperText={errors.numberOfSeats}
 						/>
 					</Grid>
 
@@ -140,6 +165,8 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 							onChange={(e) =>
 								setData({ ...data, companyName: e.target.value })
 							}
+							error={!!errors.companyName}
+							helperText={errors.companyName}
 						/>
 					</Grid>
 
