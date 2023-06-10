@@ -24,9 +24,15 @@ import {
 } from '../../../shared/interfaces/order.interface';
 import { useMutation } from 'react-query';
 import { createEventService } from '../../../services/eventService';
+import { Validator } from '../../../tools/Validator';
 
 const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 	const { mutate, isSuccess } = useMutation(createEventService);
+	const [errors, setErrors] = useState({
+		name: '',
+		numberOfSeats: '',
+		cateringName: '',
+	});
 	const [data, setData] = useState<IOrder>({
 		name: '',
 		startDate: props.startDate,
@@ -40,10 +46,21 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 		minAge: '',
 		numberOfSeats: '',
 		companyName: '',
-		cateringOption: false,
+		cateringOption: true,
 		cateringName: '',
-		types: '',
 	});
+
+	const validateForm = async () => {
+		const nameError = await Validator.checkRequiredString(data.name);
+		const numberOfSeatsError = await Validator.checkRequiredNumber(data.numberOfSeats, 'celebration');
+		const cateringNameError = await Validator.checkRequiredString(data.cateringName);
+		setErrors({
+			name: nameError ?? '',
+			numberOfSeats: numberOfSeatsError ?? '',
+			cateringName: cateringNameError ?? '',
+		})
+		return !(nameError || numberOfSeatsError || cateringNameError)
+	};
 
 	const navigate = useNavigate();
 	const handleOrderEvent = async () => {
@@ -63,10 +80,12 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 			number_of_seats: +data.numberOfSeats!,
 		};
 
-		mutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			orderData: orderEntity,
-		});
+		if(await validateForm()){
+			mutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				orderData: orderEntity,
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -113,6 +132,8 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 							name="name"
 							value={data.name}
 							onChange={(e) => setData({ ...data, name: e.target.value })}
+							error={!!errors.name}
+							helperText={errors.name}
 						/>
 					</Grid>
 					<Grid item sm={0.5}></Grid>
@@ -128,6 +149,8 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 							onChange={(e) =>
 								setData({ ...data, numberOfSeats: e.target.value })
 							}
+							error={!!errors.numberOfSeats}
+							helperText={errors.numberOfSeats}
 						/>
 					</Grid>
 
@@ -143,35 +166,10 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 							onChange={(e) =>
 								setData({ ...data, cateringName: e.target.value })
 							}
+							error={!!errors.cateringName}
+							helperText={errors.cateringName}
 						/>
 					</Grid>
-					<Grid item sm={12} sx={{ mt: 1, mb: 1 }}>
-						<FormControl fullWidth>
-							<InputLabel id="types-label">Type *</InputLabel>
-							<Select
-								labelId="types-label"
-								id="types"
-								label="Type"
-								value={data.types}
-								required
-								onChange={(e) =>
-									setData({
-										...data,
-										types: e.target.value as
-											| ''
-											| 'Birthdays'
-											| 'Name days'
-											| 'Bachelorette parties',
-									})
-								}
-							>
-								<MenuItem value={1}>Birthdays</MenuItem>
-								<MenuItem value={2}>Name days</MenuItem>
-								<MenuItem value={3}>Bachelorette parties</MenuItem>
-							</Select>
-						</FormControl>
-					</Grid>
-
 					<Grid item sm={12}>
 						<TextField
 							margin="dense"
