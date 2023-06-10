@@ -37,7 +37,7 @@ export class Validator {
         return message;
     }
 
-    static async checkRequiredString(data: string): Promise<string | null>{
+    static async checkRequiredString(data: any): Promise<string | null>{
         let message: string | null = null;
         if(validator.isEmpty(data)){
             message = 'This field is required';
@@ -89,6 +89,41 @@ export class Validator {
         let message: string | null = null;
         if(validator.isEmpty(date)){
             message = 'This field is required';
+            return message;
+        }
+        return message;
+    }
+
+    static async checkRequiredNumber(data: any, eventType: string): Promise<string | null>{
+        let message: string | null = null;
+        const maxNumber = eventType==='public' ? 1000 : 100;
+        const minNumber = eventType==='public' ? 100 : 10
+        if(validator.isEmpty(data)){
+            message = 'This field is required';
+            return message;
+        } else if(!validator.isNumeric(data)){
+            message = 'This field must be a number';
+            return message;
+        } else if(!validator.isInt(data)){
+            message = 'Integers only';
+            return message;
+        } else if(data > maxNumber){
+            message = `Maximum number is ${maxNumber}`;
+            return message;
+        } else if(data < minNumber){
+            message = `Minimum number is ${minNumber}`;
+            return message;
+        }
+        return message;
+    }
+
+    static async checkAge(age: any): Promise<string | null>{
+        let message: string | null = null;
+        if(!validator.isNumeric(age)){
+            message = 'Age must be a number';
+            return message;
+        } else if(age < 18 || age > 30){
+            message = 'Age is too high or low';
             return message;
         }
         return message;
