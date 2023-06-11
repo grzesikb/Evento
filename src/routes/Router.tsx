@@ -24,6 +24,8 @@ import WorkerDashboard from '../components/views/WorkerDashboard/WorkerDashboard
 import GuestRoute from './GuestRoute';
 import AuthRoute from './AuthRoute';
 import Success from '../components/views/PaymentStatus/Success';
+import Invoice from "../components/views/WorkerDashboard/Invoice";
+import InvoiceItem from "../components/views/WorkerDashboard/InvoiceItem";
 
 const Router = () => {
 	const { state } = useContext(UserContext);
@@ -85,6 +87,14 @@ const Router = () => {
 				{
 					path: 'order-details',
 					element: <OrderDetails />,
+				},
+				{
+					path: 'invoice',
+					element: <Invoice />,
+				},
+				{
+					path: 'invoice-item',
+					element: <InvoiceItem />,
 				},
 				{
 					path: 'edit-order',
