@@ -28,6 +28,7 @@ const EditOrder = () => {
 	const typeParam = urlParams.get('id');
 
 	const [data, setData] = useState<IOrder>({
+		id:'',
 		name: '',
 		startDate: null,
 		type: '',
@@ -72,6 +73,7 @@ const EditOrder = () => {
 				const orderDetails = responseData.data.payload[0];
 				console.log(orderDetails);
 				setData({
+					id:'',
 					name: orderDetails.name,
 					startDate: orderDetails.start_date,
 					type: convertType(orderDetails.type) as string,
