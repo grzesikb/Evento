@@ -1,4 +1,5 @@
 export interface IOrder {
+  id?:string;
   name: string;
   startDate: string | null | undefined;
   type: string;
@@ -13,6 +14,7 @@ export interface IOrder {
   companyName?: string;
   cateringOption?: boolean | undefined;
   cateringName?: string;
+  clientId?: string;
   types?: 'Birthdays' | 'Name days' | 'Bachelorette parties' | '';
 }
 
