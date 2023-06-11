@@ -24,6 +24,7 @@ const OrderDetails = () => {
 	} = useMutation(eventDetailService);
 
 	const [data, setData] = useState<IOrder>({
+		id:'',
 		name: '',
 		startDate: null,
 		type: '',
@@ -55,6 +56,7 @@ const OrderDetails = () => {
 				const orderDetails = responseData.data.payload[0];
 				console.log(orderDetails);
 				setData({
+					id:'',
 					name: orderDetails.name,
 					startDate: orderDetails.start_date,
 					type: convertType(orderDetails.type) as string,
@@ -115,7 +117,7 @@ const OrderDetails = () => {
 						</Grid>
 						<Grid item xs={1}></Grid>
 						<Grid item xs={5.5} sx={{ mt: 2 }}>
-							
+
 						</Grid>
 
 						<Grid item xs={5.5} sx={{ mt: 2 }}>
