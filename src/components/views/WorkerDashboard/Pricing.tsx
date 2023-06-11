@@ -22,6 +22,7 @@ const Pricing = () => {
 	const typeParam = urlParams.get('id');
 
 	const [data, setData] = useState<IOrder>({
+		id: '',
 		name: '',
 		startDate: null,
 		type: '',
@@ -48,6 +49,7 @@ const Pricing = () => {
 
 	React.useEffect(() => {
 		setData({
+			id: '',
 			name: 'Wesele Ani i Jakuba',
 			startDate: '16:00 31.06.2023',
 			type: 'Celebration',
