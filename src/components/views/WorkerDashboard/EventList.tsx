@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import ReceiptIcon from '@mui/icons-material/Receipt';
 import {
-	DataGrid,
 	GridColDef,
 	GridRenderCellParams,
 	GridRowId,
@@ -27,13 +27,19 @@ import AppDataGrid from '../../common/AppDataGrid';
 import { useMutation } from 'react-query';
 import {
 	deleteEventService,
-	getAllEventsService,
+	getAllEventsService, getInvoice,
 } from '../../../services/eventService';
 import { statusFormatter } from '../../../tools/StatusFormatter';
 import { createGuestListService } from '../../../services/guestListService';
 
 const EventList = () => {
 	const navigate = useNavigate();
+	const {
+		mutate: muteInvoice,
+		data: invoiceForOrderData,
+		isSuccess: isInvoiceSuccess,
+		isError: isInvoiceError,
+	} = useMutation(getInvoice);
 
 	const {
 		mutate: guestListMutate,
@@ -50,6 +56,7 @@ const EventList = () => {
 
 	const { mutate, data, isSuccess } = useMutation(getAllEventsService);
 	const [events, setEvents] = useState<any[]>([]);
+	const [lastClickedOrderId, setLastClickedOrderId] = useState('');
 
 	const handleCreateGuestList = async (id: string) => {
 		localStorage.setItem('order_id', id);
@@ -59,6 +66,17 @@ const EventList = () => {
 			orderData: { order_id: id },
 		});
 	};
+
+	useEffect(()=>{
+		console.log(invoiceForOrderData, 'Test');
+		const order_id = invoiceForOrderData?.data.payload.order_id;
+		const invoice_id = invoiceForOrderData?.data.payload.id;
+		if(isInvoiceSuccess) navigate(`/app/invoice-item?invoice_id=${invoice_id}&order_id=${order_id}`);
+	},[isInvoiceSuccess])
+
+	useEffect(()=>{
+		if(isInvoiceError) navigate(`/app/invoice?id=${lastClickedOrderId}`)
+	},[isInvoiceError])
 
 	useEffect(() => {
 		const order_id = localStorage.getItem('order_id');
@@ -118,6 +136,19 @@ const EventList = () => {
 						title="Pricing"
 					>
 						<RequestQuoteIcon />
+					</IconButton>
+
+					<IconButton
+						onClick={() => {
+							setLastClickedOrderId(params.id as string)
+							muteInvoice({
+								access_token: localStorage.getItem('accessToken') as string,
+								invoiceData: params.id as string
+							})
+						}}
+						title="Invoice"
+					>
+						<ReceiptIcon />
 					</IconButton>
 
 					<IconButton
