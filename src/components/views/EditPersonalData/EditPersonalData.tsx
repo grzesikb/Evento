@@ -12,6 +12,7 @@ import { IPersonalData } from '../../../shared/interfaces/person.interface';
 import UserContext from '../../../contexts/context/UserContext';
 import { useMutation } from 'react-query';
 import { editUserProfileService } from '../../../services/userService';
+import { Validator } from '../../../tools/Validator';
 
 const EditPersonalData = () => {
 	const { state } = useContext(UserContext);
@@ -28,6 +29,44 @@ const EditPersonalData = () => {
 		voivodeship: state?.user ? state?.user.address_data.voivodeship : '',
 		country: state?.user ? state?.user.address_data.country : '',
 	});
+
+	const [errors, setErrors] = useState({
+		firstName: '',
+		lastName: '',
+		phoneNumber: '',
+		street: '',
+		houseNumber: '',
+		city: '',
+		postalCode: '',
+		voivodeship: '',
+		country: '',
+	});
+	
+	const validateForm = async () => {
+		const firstNameError = await Validator.checkRequiredString(personalData.firstName);
+		const lastNameError = await Validator.checkRequiredString(personalData.lastName);
+		const phoneNumberError = await Validator.checkPhoneNumber(personalData.phoneNumber);
+		const streetError = await Validator.checkRequiredString(personalData.street);
+		const houseNumberError = await Validator.checkHouseNumber(personalData.houseNumber);
+		const cityError = await Validator.checkRequiredString(personalData.city);
+		const postalCodeError = await Validator.checkPostalCode(personalData.postalCode);
+		const voivodeshipError = await Validator.checkRequiredString(personalData.voivodeship);
+		const countryError = await Validator.checkRequiredString(personalData.country);
+		
+		setErrors({
+			firstName: firstNameError ?? '',
+			lastName: lastNameError ?? '',
+			phoneNumber: phoneNumberError ?? '',
+			street: streetError ?? '',
+			houseNumber: houseNumberError ?? '',
+			city: cityError ?? '',
+			postalCode: postalCodeError ?? '',
+			voivodeship: voivodeshipError ?? '',
+			country: countryError ?? '',
+		})
+
+		return !(firstNameError || lastNameError || phoneNumberError || streetError || houseNumberError || cityError || postalCodeError || voivodeshipError || countryError)
+	};
 
 	const navigate = useNavigate();
 
@@ -49,11 +88,12 @@ const EditPersonalData = () => {
 				voivodeship: personalData.voivodeship,
 			},
 		};
-
-		mutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			userData: dataToUpdate,
-		});
+		if(await validateForm()){
+			mutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				userData: dataToUpdate,
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -90,6 +130,8 @@ const EditPersonalData = () => {
 									firstName: e.target.value,
 								})
 							}
+							error={!!errors.firstName}
+							helperText={errors.firstName}
 						/>
 					</Grid>
 					<Grid item sm={1}></Grid>
@@ -111,6 +153,8 @@ const EditPersonalData = () => {
 									street: e.target.value,
 								})
 							}
+							error={!!errors.street}
+							helperText={errors.street}
 						/>
 					</Grid>
 
@@ -132,6 +176,8 @@ const EditPersonalData = () => {
 									lastName: e.target.value,
 								})
 							}
+							error={!!errors.lastName}
+							helperText={errors.lastName}
 						/>
 					</Grid>
 					<Grid item sm={1}></Grid>
@@ -152,6 +198,8 @@ const EditPersonalData = () => {
 									houseNumber: e.target.value,
 								})
 							}
+							error={!!errors.houseNumber}
+							helperText={errors.houseNumber}
 						/>
 					</Grid>
 					<Grid item sm={5.5}>
@@ -180,6 +228,8 @@ const EditPersonalData = () => {
 									phoneNumber: parseInt(e.target.value, 10),
 								})
 							}
+							error={!!errors.phoneNumber}
+							helperText={errors.phoneNumber}
 						/>
 					</Grid>
 					<Grid item sm={1}></Grid>
@@ -201,6 +251,8 @@ const EditPersonalData = () => {
 									city: e.target.value,
 								})
 							}
+							error={!!errors.city}
+							helperText={errors.city}
 						/>
 					</Grid>
 					<Grid item sm={6.5}></Grid>
@@ -222,6 +274,8 @@ const EditPersonalData = () => {
 									postalCode: e.target.value,
 								})
 							}
+							error={!!errors.postalCode}
+							helperText={errors.postalCode}
 						/>
 					</Grid>
 					<Grid item sm={6.5}></Grid>
@@ -243,6 +297,8 @@ const EditPersonalData = () => {
 									voivodeship: e.target.value,
 								})
 							}
+							error={!!errors.voivodeship}
+							helperText={errors.voivodeship}
 						/>
 					</Grid>
 					<Grid item sm={6.5}>
@@ -268,6 +324,8 @@ const EditPersonalData = () => {
 									country: e.target.value,
 								})
 							}
+							error={!!errors.country}
+							helperText={errors.country}
 						/>
 					</Grid>
 				</Grid>
