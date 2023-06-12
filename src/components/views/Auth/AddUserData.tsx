@@ -102,6 +102,7 @@ const AddUserData = () => {
 		isSuccess && navigate('/auth/signin');
 	}, [isSuccess, navigate]);
 
+
 	return (
 		<Box>
 			<Navbar hideMenu />
