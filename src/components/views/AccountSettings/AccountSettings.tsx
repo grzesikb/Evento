@@ -8,6 +8,7 @@ import AppContainer from '../../common/AppContainer';
 import { IAccountSettings } from '../../../shared/interfaces/auth.interface';
 import { useMutation } from 'react-query';
 import { changePasswordService } from '../../../services/userService';
+import { Validator } from '../../../tools/Validator';
 
 const AccountSettings = () => {
 	const [accountSettings, setAccountSettings] = useState<IAccountSettings>({
@@ -20,15 +21,43 @@ const AccountSettings = () => {
 		changePasswordService
 	);
 
+	const [errors, setErrors] = useState({
+		oldPassword: '',
+		newPassword: '',
+		repeatPassword: '',
+	});
+
+	const [samePasswords, setSamePasswords] = useState(false)
+
+	const validateForm = async () => {
+		const oldPasswordError = await Validator.checkPassword(accountSettings.oldPassword, false);
+		const newPasswordError = await Validator.checkPassword(accountSettings.newPassword, true);
+		const repeatPasswordError = await Validator.checkRepeatPassword(accountSettings.newPassword, accountSettings.repeatPassword);
+		setErrors({
+			oldPassword: oldPasswordError ?? '',
+			newPassword: newPasswordError ?? '',
+			repeatPassword: repeatPasswordError ?? '',
+		})
+
+		return !(oldPasswordError || newPasswordError || repeatPasswordError)
+	};
+
 	const navigate = useNavigate();
 	const handleResetPassword = async () => {
-		mutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			userData: {
-				password: accountSettings.newPassword,
-				old_password: accountSettings.oldPassword,
-			},
-		});
+		setSamePasswords(false)
+		if(await validateForm()){
+			if(accountSettings.oldPassword === accountSettings.newPassword){
+				setSamePasswords(true)
+			} else {
+				mutate({
+					access_token: localStorage.getItem('accessToken') as string,
+					userData: {
+						password: accountSettings.newPassword,
+						old_password: accountSettings.oldPassword,
+					},
+				});
+			}		
+		}
 	};
 
 	useEffect(() => {
@@ -64,6 +93,9 @@ const AccountSettings = () => {
 									oldPassword: e.target.value,
 								})
 							}
+							error={!!errors.oldPassword}
+							helperText={errors.oldPassword}
+							type="password"
 						/>
 					</Grid>
 					<Grid item sm={12}>
@@ -81,6 +113,9 @@ const AccountSettings = () => {
 									newPassword: e.target.value,
 								})
 							}
+							error={!!errors.newPassword}
+							helperText={errors.newPassword}
+							type="password"
 						/>
 					</Grid>
 					<Grid item sm={12}>
@@ -98,6 +133,9 @@ const AccountSettings = () => {
 									repeatPassword: e.target.value,
 								})
 							}
+							error={!!errors.repeatPassword}
+							helperText={errors.repeatPassword}
+							type="password"
 						/>
 					</Grid>
 				</Grid>
@@ -110,12 +148,15 @@ const AccountSettings = () => {
 				</Button>
 			</Box>
 			{isSuccess && data.data.payload === null && (
-				<Alert severity="success">
-					Profil został edytowany! Za chwile nastąpi odświeżenie...
+				<Alert sx={{mt: 2}} severity="success">
+					The profile has been edited! Page will be refreshed in a moment....
 				</Alert>
 			)}
 			{isSuccess && data.data.payload === 'Unauthorized' && (
-				<Alert severity="error">Błędne stare hasło</Alert>
+				<Alert sx={{mt: 2}} severity="error">Wrong old password</Alert>
+			)}
+			{samePasswords &&(
+				<Alert sx={{mt: 2}} severity="error">Old and new passwords are the same</Alert>
 			)}
 		</AppContainer>
 	);
