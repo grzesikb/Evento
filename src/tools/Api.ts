@@ -213,4 +213,13 @@ export class Api {
 			},
 		});
 	}
+
+	static async createPersonalData(access_token: string, data: any) {
+		return Api.axiosInstance.post('/user/create-personal-data', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 }
