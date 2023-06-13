@@ -152,11 +152,12 @@ const AccountSettings = () => {
 					The profile has been edited! Page will be refreshed in a moment....
 				</Alert>
 			)}
-			{isSuccess && data.data.payload === 'Unauthorized' && (
-				<Alert sx={{mt: 2}} severity="error">Wrong old password</Alert>
-			)}
-			{samePasswords &&(
-				<Alert sx={{mt: 2}} severity="error">Old and new passwords are the same</Alert>
+			{samePasswords ? (
+			<Alert sx={{ mt: 2 }} severity="error">Old and new passwords are the same</Alert>
+			) : (
+			isSuccess && data.data.payload === 'Unauthorized' && (
+				<Alert sx={{ mt: 2 }} severity="error">Wrong old password</Alert>
+			)
 			)}
 		</AppContainer>
 	);
