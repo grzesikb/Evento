@@ -13,6 +13,7 @@ export interface IUser {
 	role: number;
 	address_data: IAddressData;
 	personal_data: IPersonalData;
+	login_method: string;
 }
 export interface IAddressData {
 	city: string;
