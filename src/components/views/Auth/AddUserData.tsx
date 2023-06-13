@@ -15,14 +15,20 @@ import { IPersonalData } from '../../../shared/interfaces/person.interface';
 import { signUpService } from '../../../services/authService';
 import { useMutation } from 'react-query';
 import { Validator } from '../../../tools/Validator';
+import { createPersonalDataService } from '../../../services/userService';
 
-const AddUserData = () => {
+interface IAddUserDataProps{
+	isCreateAccount: any;
+}
+
+const AddUserData = ({isCreateAccount}:IAddUserDataProps) => {
 	const navigate = useNavigate();
 	const { state } = useLocation();
 
 	const [registerError, setRegisterError] = useState('');
 
 	const { mutate, isSuccess, isError, error } = useMutation(signUpService);
+	const { mutate:createPersonalDataMutate, isSuccess:createPersonalDataSuccess, isError:createPersonalDataIsError, error:createPersonalDataError} = useMutation(createPersonalDataService);
 
 	const [personalData, setPersonalData] = useState<IPersonalData>({
 		firstName: '',
@@ -74,33 +80,55 @@ const AddUserData = () => {
 		return !(firstNameError || lastNameError || phoneNumberError || streetError || houseNumberError || cityError || postalCodeError || voivodeshipError || countryError)
 	};
 
-	const handlleCreateAccount = async () => {
-		const signUpData = {
-			email: state.email,
-			password: state.password,
-			role: 1,
-			personal_data: {
-				first_name: personalData.firstName,
-				last_name: personalData.lastName,
-				phone: personalData.phoneNumber,
-			},
-			address: {
-				street: personalData.street,
-				postal_code: personalData.postalCode,
-				city: personalData.city,
-				house_number: personalData.houseNumber,
-				country: personalData.country,
-				voivodeship: personalData.voivodeship,
-			},
-		};
-		if(await validateForm()){
-			mutate(signUpData);
-		}
+	const handleClick = async () => {
+		if(isCreateAccount){
+			const signUpData = {
+				email: state.email,
+				password: state.password,
+				role: 1,
+				personal_data: {
+					first_name: personalData.firstName,
+					last_name: personalData.lastName,
+					phone: personalData.phoneNumber,
+				},
+				address: {
+					street: personalData.street,
+					postal_code: personalData.postalCode,
+					city: personalData.city,
+					house_number: personalData.houseNumber,
+					country: personalData.country,
+					voivodeship: personalData.voivodeship,
+				},
+			};
+			if(await validateForm()){
+				mutate(signUpData);
+			}
+		} else{
+			const createPersonalData = {
+				personal_data: {
+					first_name: personalData.firstName,
+					last_name: personalData.lastName,
+					phone: personalData.phoneNumber,
+				},
+				address: {
+					street: personalData.street,
+					postal_code: personalData.postalCode,
+					city: personalData.city,
+					house_number: personalData.houseNumber,
+					country: personalData.country,
+					voivodeship: personalData.voivodeship,
+				},
+			};
+			if(await validateForm()){
+				createPersonalDataMutate({access_token: localStorage.getItem('accessToken') as string, userData: createPersonalData});
+			}
+		}	
 	};
 
 	useEffect(() => {
-		isSuccess && navigate('/auth/signin');
-	}, [isSuccess, navigate]);
+		isSuccess && isCreateAccount && navigate('/auth/signin');
+		createPersonalDataSuccess && !isCreateAccount && setTimeout(()=> window.location.replace('http://localhost:3000/'), 3000);
+	}, [isSuccess, navigate, createPersonalDataSuccess]);
 
 
 	return (
@@ -339,7 +367,7 @@ const AddUserData = () => {
 							variant="contained"
 							endIcon={<SendIcon />}
 							sx={{ fontWeight: 600 }}
-							onClick={handlleCreateAccount}
+							onClick={handleClick}
 						>
 							Add personal details
 						</Button>
@@ -348,6 +376,11 @@ const AddUserData = () => {
 			</Box>
 			{isError && (
 				<Alert severity="error">{(error as any).response.data.detail}</Alert>
+			)}
+			{createPersonalDataSuccess && (
+				<Alert sx={{mt: 2}} severity="success">
+					The personal data completed! Page will be refreshed in a moment....
+				</Alert>
 			)}
 		</Box>
 	);
