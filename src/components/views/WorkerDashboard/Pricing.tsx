@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
+	Alert,
 	Box,
 	Button,
 	Grid,
@@ -13,6 +14,14 @@ import AppContainer from '../../common/AppContainer';
 import { IOrder } from '../../../shared/interfaces/order.interface';
 import StatusChip from '../../common/StatusChip';
 import { IPaymentDetails } from '../../../shared/interfaces/payment.interface';
+import { useMutation } from 'react-query';
+import {
+	eventDetailService,
+	setPriceService,
+	updateEventService,
+} from '../../../services/eventService';
+import { statusFormatter } from '../../../tools/StatusFormatter';
+import { convertType } from '../../../tools/TypeConverter';
 
 // eslint-disable react/prop-types
 const Pricing = () => {
@@ -20,6 +29,20 @@ const Pricing = () => {
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
+
+	const {
+		mutate,
+		data: responseData,
+		isSuccess,
+		isLoading,
+	} = useMutation(eventDetailService);
+
+	const {
+		mutate: editMutate,
+		data: editData,
+		isSuccess: editSuccess,
+		isLoading: editLoading,
+	} = useMutation(setPriceService);
 
 	const [data, setData] = useState<IOrder>({
 		id: '',
@@ -38,43 +61,51 @@ const Pricing = () => {
 		cateringOption: false,
 		cateringName: '',
 		types: '',
+		price: 0,
 	});
+
 	const [paymentDetails, setPaymentDetails] = useState<IPaymentDetails>({
 		id: null,
 		name: '',
 		startDate: '',
-
 		cost: '',
 	});
 
-	React.useEffect(() => {
-		setData({
-			id: '',
-			name: 'Wesele Ani i Jakuba',
-			startDate: '16:00 31.06.2023',
-			type: 'Celebration',
-			status: 'inProgress',
-			additionalInfo:
-				'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id pharetra urna, in rhoncus lorem. Nunc bibendum orci at ex iaculis faucibus.',
-			securityOption: true,
-			barOption: true,
-			artist: '',
-			maxPeople: '',
-			minAge: '',
-			numberOfSeats: 32,
-			companyName: '',
-			cateringOption: false,
-			cateringName: 'PawełCatering',
-			types: 'Birthdays',
-		});
-		setPaymentDetails({
-			id: null,
-			name: data.name,
-			startDate: data.startDate,
-
-			cost: '',
+	useEffect(() => {
+		mutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			id: typeParam as string,
 		});
 	}, []);
+
+	useEffect(() => {
+		if (isSuccess) {
+			console.log(responseData);
+			if (responseData.data.payload.length > 0) {
+				const orderDetails = responseData.data.payload[0];
+				console.log(orderDetails);
+				setData({
+					id: '',
+					name: orderDetails.name,
+					startDate: orderDetails.start_date,
+					type: orderDetails.type,
+					status: orderDetails.status,
+					additionalInfo: orderDetails.additional_info,
+					securityOption: orderDetails.security,
+					barOption: orderDetails.bar_option,
+					artist: orderDetails.artist_name,
+					maxPeople: orderDetails.max_nr_of_people,
+					minAge: orderDetails.minimal_age,
+					numberOfSeats: orderDetails.number_of_seats,
+					companyName: orderDetails.company_name,
+					cateringOption: orderDetails.catering,
+					cateringName: orderDetails.company_name,
+					price: orderDetails.cost,
+					types: 'Birthdays',
+				});
+			}
+		}
+	}, [isSuccess]);
 
 	// tylko do testów czy wszystko działa
 	React.useEffect(() => {
@@ -84,8 +115,34 @@ const Pricing = () => {
 	const navigate = useNavigate();
 
 	const handleSendQuote = async () => {
-		navigate('/app/dashboard');
+		const dataToUpdate = {
+			name: data.name,
+			bar_option: data.barOption,
+			security: data.securityOption,
+			type: data.type,
+			start_date: data.startDate,
+			additional_info: data.additionalInfo,
+			status: data.status,
+			artist_name: data.artist,
+			max_nr_of_people: data.maxPeople,
+			minimal_age: data.minAge,
+			company_name: data.companyName,
+			catering: data.cateringOption,
+			number_of_seats: data.numberOfSeats,
+			cost: +data.price!,
+
+			id: typeParam,
+		};
+		console.log(dataToUpdate);
+		editMutate({
+			access_token: localStorage.getItem('accessToken') as string,
+			orderData: dataToUpdate,
+		});
 	};
+
+	useEffect(() => {
+		console.log(editData);
+	}, [editSuccess]);
 
 	const handleRejectOrder = async () => {
 		navigate('/app/dashboard');
@@ -115,7 +172,7 @@ const Pricing = () => {
 							Type:
 						</Typography>
 						<Typography variant="h6" sx={{ fontSize: 16 }}>
-							{data.type}
+							{data.type ? convertType(+data.type) : data.type}
 						</Typography>
 					</Grid>
 
@@ -141,7 +198,9 @@ const Pricing = () => {
 						<Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
 							Status:
 						</Typography>
-						<StatusChip type={data.status} />
+						<StatusChip
+							type={data ? (statusFormatter(+data.status) as string) : ''}
+						/>
 					</Grid>
 					<Grid item xs={1}></Grid>
 
@@ -278,10 +337,8 @@ const Pricing = () => {
 					id="price"
 					label="Price (zł)"
 					name="price"
-					value={paymentDetails.cost}
-					onChange={(e) =>
-						setPaymentDetails({ ...paymentDetails, cost: e.target.value })
-					}
+					value={data.price}
+					onChange={(e) => setData({ ...data, price: +e.target.value })}
 					sx={{ mt: 3 }}
 				/>
 				<Button
@@ -304,6 +361,9 @@ const Pricing = () => {
 					Reject the order
 				</Button>
 			</Box>
+			{editSuccess && (
+				<Alert severity="success">Price saved successfully!</Alert>
+			)}
 		</AppContainer>
 	);
 };
