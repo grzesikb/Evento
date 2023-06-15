@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	Alert,
@@ -17,18 +17,21 @@ import { IOrder } from '../../../shared/interfaces/order.interface';
 import { useMutation } from 'react-query';
 import {
 	eventDetailService,
+	setPriceService,
 	updateEventService,
 } from '../../../services/eventService';
 import { statusFormatter } from '../../../tools/StatusFormatter';
 import { convertType } from '../../../tools/TypeConverter';
+import UserContext from '../../../contexts/context/UserContext';
 
 const EditOrder = () => {
+	const { state } = useContext(UserContext);
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const typeParam = urlParams.get('id');
 
 	const [data, setData] = useState<IOrder>({
-		id:'',
+		id: '',
 		name: '',
 		startDate: null,
 		type: '',
@@ -44,6 +47,7 @@ const EditOrder = () => {
 		cateringOption: false,
 		cateringName: '',
 		types: '',
+		price: 0,
 	});
 
 	const {
@@ -57,7 +61,9 @@ const EditOrder = () => {
 		mutate: updateMutate,
 		data: updateData,
 		isSuccess: updateSuccess,
-	} = useMutation(updateEventService);
+	} = useMutation(
+		state!.user?.role === 2 ? setPriceService : updateEventService
+	);
 
 	useEffect(() => {
 		mutate({
@@ -73,7 +79,7 @@ const EditOrder = () => {
 				const orderDetails = responseData.data.payload[0];
 				console.log(orderDetails);
 				setData({
-					id:'',
+					id: '',
 					name: orderDetails.name,
 					startDate: orderDetails.start_date,
 					type: convertType(orderDetails.type) as string,
@@ -88,6 +94,7 @@ const EditOrder = () => {
 					companyName: orderDetails.company_name,
 					cateringOption: orderDetails.catering,
 					cateringName: orderDetails.company_name,
+					price: orderDetails.cost,
 					types: 'Birthdays',
 				});
 			}
@@ -110,6 +117,7 @@ const EditOrder = () => {
 			company_name: data.companyName,
 			catering: data.cateringOption,
 			number_of_seats: data.numberOfSeats,
+			cost: data.price,
 			id: typeParam,
 		};
 
