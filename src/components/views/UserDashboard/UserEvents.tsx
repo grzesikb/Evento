@@ -82,12 +82,14 @@ const UserEvents = () => {
 					</IconButton>
 
 					{/* tutaj musi być fetch danych bo status jest potrzebny (płatność dostępna po weryfikacji) */}
-					<IconButton
-						onClick={() => navigate(`/app/payment?id=${params.id}`)}
-						title="Payment"
-					>
-						<PaymentIcon />
-					</IconButton>
+					{orders.find((item) => item.id === params.id).cost && (
+						<IconButton
+							onClick={() => navigate(`/app/payment?id=${params.id}`)}
+							title="Payment"
+						>
+							<PaymentIcon />
+						</IconButton>
+					)}
 
 					<IconButton
 						onClick={() => handleCreateGuestList(params.id as string)}
@@ -136,6 +138,7 @@ const UserEvents = () => {
 					name: item.name,
 					startDate: item.start_date,
 					status: statusFormatter(+item.status),
+					cost: item.cost,
 				});
 			});
 
