@@ -11,6 +11,9 @@ import { eventDetailService } from '../../../services/eventService';
 const Success = () => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
+	const cost = urlParams.get('cost');
+	const name = urlParams.get('name');
+	const date = urlParams.get('date');
 
 	const { mutate, isSuccess, data } = useMutation(eventDetailService);
 
@@ -61,17 +64,17 @@ const Success = () => {
 					Cost:
 				</Grid>
 				<Grid item xs={12} sx={{ fontSize: 25, fontWeight: 700 }}>
-					{`${paymentDetails.cost}zł`}
+					{`${cost}zł`}
 				</Grid>
 				<Grid item xs={12} sx={{ mt: 4 }}>
 					Order:
 				</Grid>
 				<Grid item xs={5.5}>
-					Name: {paymentDetails.name}
+					Name: {name}
 				</Grid>
 				<Grid item xs={1}></Grid>
 				<Grid item xs={5.5}>
-					Date: {paymentDetails.startDate}
+					Date: {date}
 				</Grid>
 				<Button
 					variant="contained"
