@@ -156,7 +156,7 @@ const EventList = () => {
 			width: 250,
 			renderCell: (params: GridRenderCellParams<any>) => (
 				<>
-					{isLoading ? (
+					{isLoading || mutation.isLoading ? (
 						<CircularProgress />
 					) : (
 						<FormControl>
