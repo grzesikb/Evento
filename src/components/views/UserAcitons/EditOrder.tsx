@@ -20,8 +20,8 @@ import {
 	setPriceService,
 	updateEventService,
 } from '../../../services/eventService';
-import { statusFormatter } from '../../../tools/StatusFormatter';
-import { convertType } from '../../../tools/TypeConverter';
+import { statusFormatter, statusGetter } from '../../../tools/StatusFormatter';
+import { convertType, typeGetter } from '../../../tools/TypeConverter';
 import UserContext from '../../../contexts/context/UserContext';
 
 const EditOrder = () => {
@@ -107,10 +107,10 @@ const EditOrder = () => {
 			name: data.name,
 			bar_option: data.barOption,
 			security: data.securityOption,
-			type: 1,
+			type: typeGetter(data.type),
 			start_date: data.startDate,
 			additional_info: data.additionalInfo,
-			status: 1,
+			status: statusGetter(data.status),
 			artist_name: data.artist,
 			max_nr_of_people: data.maxPeople,
 			minimal_age: data.minAge,
