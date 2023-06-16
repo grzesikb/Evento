@@ -101,7 +101,7 @@ const Payment = () => {
 				},
 			],
 			mode: 'payment',
-			successUrl: 'http://127.0.0.1:3000/app/payment/success',
+			successUrl: `http://127.0.0.1:3000/app/payment/success?id=${paymentDetails.id}&cost=${paymentDetails.cost}&name=${paymentDetails.name}&date=${paymentDetails.startDate}`,
 			cancelUrl: 'https://127.0.0.1/cancel',
 		});
 
