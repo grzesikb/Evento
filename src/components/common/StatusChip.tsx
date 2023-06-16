@@ -1,37 +1,30 @@
-import { Chip } from "@mui/material";
-import React from "react";
+import { Chip } from '@mui/material';
+import React from 'react';
 
 interface IProps {
-  type: string;
+	type: string;
 }
 const StatusChip = ({ type }: IProps) => {
-  return (
-    <div>
-      {type === "inProgress" && (
-        <Chip label="In progress" size="small" color="success" />
-      )}
-      {type === "Verification" && (
-        <Chip label="Waiting for verification" size="small" color="warning" />
-      )}
-      {type === "Payments" && (
-        <Chip
-          label="Pending payment"
-          size="small"
-          color="primary"
-          sx={{ backgroundColor: "dodgerblue" }}
-        />
-      )}
-      {type === "Offer" && (
-        <Chip
-          label="Pending Offer Confirmation"
-          size="small"
-          color="primary"
-          sx={{ backgroundColor: "firebrick" }}
-        />
-      )}
-      {type === "Finished" && <Chip label="Finished" size="small" />}
-    </div>
-  );
+	return (
+		<div>
+			{type === 'Submitted' && (
+				<Chip label="Submitted" size="small" color="success" />
+			)}
+			{type === 'Wait for payment' && (
+				<Chip label="Waiting for payment" size="small" color="warning" />
+			)}
+			{type === 'Payments accepted' && (
+				<Chip
+					label="Payment accepted"
+					size="small"
+					color="primary"
+					sx={{ backgroundColor: 'dodgerblue' }}
+				/>
+			)}
+
+			{type === 'Finished' && <Chip label="Finished" size="small" />}
+		</div>
+	);
 };
 
 export default StatusChip;
