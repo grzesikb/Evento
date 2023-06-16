@@ -37,6 +37,10 @@ const Payment = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log(window.location.pathname);
+	}, []);
+
+	useEffect(() => {
 		if (isSuccess) {
 			setPaymentDetails({
 				id: typeParam as string,
@@ -101,8 +105,8 @@ const Payment = () => {
 				},
 			],
 			mode: 'payment',
-			successUrl: `http://127.0.0.1:3000/app/payment/success?id=${paymentDetails.id}&cost=${paymentDetails.cost}&name=${paymentDetails.name}&date=${paymentDetails.startDate}`,
-			cancelUrl: 'https://127.0.0.1/cancel',
+			successUrl: `http://localhost:3000/app/payment/success?id=${paymentDetails.id}&cost=${paymentDetails.cost}`,
+			cancelUrl: 'http://localhost:3000/app/dashboard',
 		});
 
 		// If `redirectToCheckout` fails due to a browser or network
