@@ -12,8 +12,6 @@ const Success = () => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
 	const cost = urlParams.get('cost');
-	const name = urlParams.get('name');
-	const date = urlParams.get('date');
 
 	const { mutate, isSuccess, data } = useMutation(eventDetailService);
 
@@ -70,11 +68,11 @@ const Success = () => {
 					Order:
 				</Grid>
 				<Grid item xs={5.5}>
-					Name: {name}
+					Name: Płatność za zamówione wydarzenie
 				</Grid>
 				<Grid item xs={1}></Grid>
 				<Grid item xs={5.5}>
-					Date: {date}
+					Date: {paymentDetails.startDate}
 				</Grid>
 				<Button
 					variant="contained"
