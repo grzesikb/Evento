@@ -1,281 +1,262 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 // eslint-disable-next-line import/no-extraneous-dependencies
-import ReceiptIcon from '@mui/icons-material/Receipt';
+import ReceiptIcon from "@mui/icons-material/Receipt";
+import { GridColDef, GridRenderCellParams, GridRowId } from "@mui/x-data-grid";
 import {
-	GridColDef,
-	GridRenderCellParams,
-	GridRowId,
-} from '@mui/x-data-grid';
-import {
-	Button,
-	Dialog,
-	DialogActions,
-	DialogTitle,
-	IconButton,
-	useTheme,
-} from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
-import { useNavigate } from 'react-router-dom';
+  Button,
+  Dialog,
+  DialogActions,
+  DialogTitle,
+  FormControl,
+  IconButton,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  useTheme,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
+import DeleteIcon from "@mui/icons-material/Delete";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import { useNavigate } from "react-router-dom";
 
-import StatusChip from '../../common/StatusChip';
-import AppDataGrid from '../../common/AppDataGrid';
-import { useMutation } from 'react-query';
+import StatusChip from "../../common/StatusChip";
+import AppDataGrid from "../../common/AppDataGrid";
+import { useMutation } from "react-query";
 import {
-	deleteEventService,
-	getAllEventsService, getInvoice,
-} from '../../../services/eventService';
-import { statusFormatter } from '../../../tools/StatusFormatter';
-import { createGuestListService } from '../../../services/guestListService';
+  deleteEventService,
+  getAllEventsService,
+  getInvoice,
+} from "../../../services/eventService";
+import { statusFormatter, statuses } from "../../../tools/StatusFormatter";
+import { createGuestListService } from "../../../services/guestListService";
 
 const EventList = () => {
-	const navigate = useNavigate();
-	const {
-		mutate: muteInvoice,
-		data: invoiceForOrderData,
-		isSuccess: isInvoiceSuccess,
-		isError: isInvoiceError,
-	} = useMutation(getInvoice);
+  const navigate = useNavigate();
+  const {
+    mutate: muteInvoice,
+    data: invoiceForOrderData,
+    isSuccess: isInvoiceSuccess,
+    isError: isInvoiceError,
+  } = useMutation(getInvoice);
 
-	const {
-		mutate: guestListMutate,
-		isSuccess: guestListSuccess,
-		data: guestListData,
-		isError: guestListError,
-	} = useMutation(createGuestListService);
+  const {
+    mutate: guestListMutate,
+    isSuccess: guestListSuccess,
+    data: guestListData,
+    isError: guestListError,
+  } = useMutation(createGuestListService);
 
-	const {
-		mutate: deleteMutate,
-		isSuccess: deleteSuccess,
-		data: deleteData,
-	} = useMutation(deleteEventService);
+  const {
+    mutate: deleteMutate,
+    isSuccess: deleteSuccess,
+    data: deleteData,
+  } = useMutation(deleteEventService);
 
-	const { mutate, data, isSuccess } = useMutation(getAllEventsService);
-	const [events, setEvents] = useState<any[]>([]);
-	const [lastClickedOrderId, setLastClickedOrderId] = useState('');
+  const { mutate, data, isSuccess } = useMutation(getAllEventsService);
+  const [events, setEvents] = useState<any[]>([]);
+  const [lastClickedOrderId, setLastClickedOrderId] = useState("");
 
-	const handleCreateGuestList = async (id: string) => {
-		localStorage.setItem('order_id', id);
+  const handleCreateGuestList = async (id: string) => {
+    localStorage.setItem("order_id", id);
 
-		await guestListMutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			orderData: { order_id: id },
-		});
-	};
+    await guestListMutate({
+      access_token: localStorage.getItem("accessToken") as string,
+      orderData: { order_id: id },
+    });
+  };
 
-	useEffect(()=>{
-		console.log(invoiceForOrderData, 'Test');
-		const order_id = invoiceForOrderData?.data.payload.order_id;
-		const invoice_id = invoiceForOrderData?.data.payload.id;
-		if(isInvoiceSuccess) navigate(`/app/invoice-item?invoice_id=${invoice_id}&order_id=${order_id}`);
-	},[isInvoiceSuccess])
+  useEffect(() => {
+    console.log(invoiceForOrderData, "Test");
+    const order_id = invoiceForOrderData?.data.payload.order_id;
+    const invoice_id = invoiceForOrderData?.data.payload.id;
+    if (isInvoiceSuccess)
+      navigate(
+        `/app/invoice-item?invoice_id=${invoice_id}&order_id=${order_id}`
+      );
+  }, [isInvoiceSuccess]);
 
-	useEffect(()=>{
-		if(isInvoiceError) navigate(`/app/invoice?id=${lastClickedOrderId}`)
-	},[isInvoiceError])
+  useEffect(() => {
+    if (isInvoiceError) navigate(`/app/invoice?id=${lastClickedOrderId}`);
+  }, [isInvoiceError]);
 
-	useEffect(() => {
-		const order_id = localStorage.getItem('order_id');
-		if (guestListSuccess) {
-			localStorage.setItem(order_id!, guestListData.data.payload.id);
-		}
-		if (guestListSuccess || guestListError)
-			navigate(`/app/guest-list?id=${order_id}`);
-	}, [guestListSuccess, guestListError]);
+  useEffect(() => {
+    const order_id = localStorage.getItem("order_id");
+    if (guestListSuccess) {
+      localStorage.setItem(order_id!, guestListData.data.payload.id);
+    }
+    if (guestListSuccess || guestListError)
+      navigate(`/app/guest-list?id=${order_id}`);
+  }, [guestListSuccess, guestListError]);
 
-	const columns: GridColDef[] = [
-		{ field: 'lp', headerName: '#', width: 60 },
-		{ field: 'id', headerName: 'ID', width: 70, sortable: false },
-		{ field: 'name', headerName: 'Name', width: 230 },
-		{ field: 'startDate', headerName: 'Start Date', width: 150 },
-		{ field: 'finishDate', headerName: 'Finish Date', width: 150 },
-		{
-			field: 'status',
-			headerName: 'Status',
-			sortable: false,
-			width: 200,
-			renderCell: (params: GridRenderCellParams<any>) => (
-				<StatusChip type={params.value} />
-			),
-			// valueGetter: (params: GridValueGetterParams) =>
-			//   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-		},
-		{
-			field: 'action',
-			headerName: 'Actions',
-			width: 220,
-			sortable: false,
-			renderCell: (params: GridRenderCellParams<any>) => (
-				<div>
-					<IconButton
-						onClick={() => navigate(`/app/order-details?id=${params.id}`)}
-						title="Details"
-					>
-						<ArticleOutlinedIcon />
-					</IconButton>
-					<IconButton
-						onClick={() => navigate(`/app/edit-order?id=${params.id}`)}
-						title="Edit"
-					>
-						<EditIcon />
-					</IconButton>
+  const [status, setStatus] = useState<string>("");
 
-					<IconButton
-						onClick={() => handleCreateGuestList(params.id as string)}
-						title="Guest list"
-					>
-						<PeopleAltIcon />
-					</IconButton>
+  const columns: GridColDef[] = [
+    { field: "lp", headerName: "#", width: 60 },
+    { field: "id", headerName: "ID", width: 70, sortable: false },
+    { field: "name", headerName: "Name", width: 230 },
+    { field: "startDate", headerName: "Start Date", width: 150 },
+    { field: "finishDate", headerName: "Finish Date", width: 150 },
+    {
+      field: "status",
+      headerName: "Status",
+      sortable: false,
+      width: 250,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <>
+          <FormControl>
+            <Select
+              id="status-select"
+              value={status}
+              defaultValue={params.value}
+              onChange={(e) => setStatus(e.target.value)}
+              input={<OutlinedInput id="status-select" />}
+              renderValue={(selected) => <StatusChip type={selected} />}
+            >
+              {statuses.map((name) => (
+                <MenuItem key={name} value={name}>
+                  {name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </>
+      ),
+      // valueGetter: (params: GridValueGetterParams) =>
+      //   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+    },
+    {
+      field: "action",
+      headerName: "Actions",
+      width: 220,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams<any>) => (
+        <div>
+          <IconButton
+            onClick={() => navigate(`/app/order-details?id=${params.id}`)}
+            title="Details"
+          >
+            <ArticleOutlinedIcon />
+          </IconButton>
+          <IconButton
+            onClick={() => navigate(`/app/edit-order?id=${params.id}`)}
+            title="Edit"
+          >
+            <EditIcon />
+          </IconButton>
 
-					<IconButton
-						onClick={() => navigate(`/app/pricing?id=${params.id}`)}
-						title="Pricing"
-					>
-						<RequestQuoteIcon />
-					</IconButton>
+          <IconButton
+            onClick={() => handleCreateGuestList(params.id as string)}
+            title="Guest list"
+          >
+            <PeopleAltIcon />
+          </IconButton>
 
-					<IconButton
-						onClick={() => {
-							setLastClickedOrderId(params.id as string)
-							muteInvoice({
-								access_token: localStorage.getItem('accessToken') as string,
-								invoiceData: params.id as string
-							})
-						}}
-						title="Invoice"
-					>
-						<ReceiptIcon />
-					</IconButton>
+          <IconButton
+            onClick={() => navigate(`/app/pricing?id=${params.id}`)}
+            title="Pricing"
+          >
+            <RequestQuoteIcon />
+          </IconButton>
 
-					<IconButton
-						onClick={() => setOpenDialog({ open: true, orderID: params.id })}
-						title="Delete"
-					>
-						<DeleteIcon color="error" />
-					</IconButton>
-				</div>
-			),
-		},
-	];
-	const rows = [
-		{
-			lp: 1,
-			id: '43dsr6',
-			name: 'Impreza studencka',
-			startDate: '21:00 08.08.2023',
-			finishDate: '22:00 08.08.2023',
-			status: 'Finished',
-		},
-		{
-			lp: 2,
-			id: '24sd4s',
-			name: 'Wesele Ani i Jakuba',
-			startDate: '16:00 31.06.2023',
-			finishDate: '17:00 31.06.2023',
-			status: 'inProgress',
-		},
-		{
-			lp: 3,
-			id: '9bad2s',
-			name: 'Konferencja ABW',
-			startDate: '18:00 20.06.2023',
-			finishDate: '19:00 20.06.2023',
-			status: 'Verification',
-		},
-		{
-			lp: 4,
-			id: '1bsdfg',
-			name: 'Zebranie Grzybiarzy',
-			startDate: '20:00 19.06.2023',
-			finishDate: '21:00 19.06.2023',
-			status: 'Payments',
-		},
-		{
-			lp: 5,
-			id: '1bsdf5',
-			name: 'Zebranie Pszczelarzy',
-			startDate: '21:00 21.06.2023',
-			finishDate: '23:00 21.06.2023',
-			status: 'Offer',
-		},
-	];
+          <IconButton
+            onClick={() => {
+              setLastClickedOrderId(params.id as string);
+              muteInvoice({
+                access_token: localStorage.getItem("accessToken") as string,
+                invoiceData: params.id as string,
+              });
+            }}
+            title="Invoice"
+          >
+            <ReceiptIcon />
+          </IconButton>
 
-	useEffect(() => {
-		mutate(localStorage.getItem('accessToken') as string);
-	}, []);
+          <IconButton
+            onClick={() => setOpenDialog({ open: true, orderID: params.id })}
+            title="Delete"
+          >
+            <DeleteIcon color="error" />
+          </IconButton>
+        </div>
+      ),
+    },
+  ];
 
-	useEffect(() => {
-		if (isSuccess) {
-			const events = data.data.payload;
-			const formattedEvents: any[] = [];
+  useEffect(() => {
+    mutate(localStorage.getItem("accessToken") as string);
+  }, []);
 
-			events.map((event: any, index: number) => {
-				formattedEvents.push({
-					lp: index,
-					id: event.id,
-					name: event.name,
-					startDate: event.start_date,
-					finishDate: event.start_date,
-					status: statusFormatter(event.status),
-				});
-			});
-			setEvents(formattedEvents);
-		}
-	}, [isSuccess]);
+  useEffect(() => {
+    if (isSuccess) {
+      const events = data.data.payload;
+      const formattedEvents: any[] = [];
 
-	const theme = useTheme();
-	const [openDialog, setOpenDialog] = useState<{
-		open: boolean;
-		orderID: GridRowId;
-	}>({
-		open: false,
-		orderID: '',
-	});
+      events.map((event: any, index: number) => {
+        formattedEvents.push({
+          lp: index,
+          id: event.id,
+          name: event.name,
+          startDate: event.start_date,
+          finishDate: event.start_date,
+          status: statusFormatter(event.status),
+        });
+      });
+      setEvents(formattedEvents);
+    }
+  }, [isSuccess]);
 
-	const handleDelete = (id: string) => {
-		deleteMutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			id,
-		});
-	};
+  const theme = useTheme();
+  const [openDialog, setOpenDialog] = useState<{
+    open: boolean;
+    orderID: GridRowId;
+  }>({
+    open: false,
+    orderID: "",
+  });
 
-	const handleClose = () => {
-		setOpenDialog({
-			open: false,
-			orderID: '',
-		});
-	};
+  const handleDelete = (id: string) => {
+    deleteMutate({
+      access_token: localStorage.getItem("accessToken") as string,
+      id,
+    });
+  };
 
-	return (
-		<div>
-			<AppDataGrid rows={events} columns={columns} label="Orders" mb={10} />
-			<Dialog open={openDialog.open} onClose={handleClose}>
-				<DialogTitle>
-					Are you sure you want to cancel the order: {openDialog.orderID}
-				</DialogTitle>
+  const handleClose = () => {
+    setOpenDialog({
+      open: false,
+      orderID: "",
+    });
+  };
 
-				<DialogActions>
-					<Button
-						onClick={handleClose}
-						sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
-					>
-						No
-					</Button>
-					<Button
-						onClick={() => handleDelete(openDialog.orderID as string)}
-						variant="contained"
-						color="error"
-					>
-						Yes
-					</Button>
-				</DialogActions>
-			</Dialog>
-		</div>
-	);
+  return (
+    <div>
+      <AppDataGrid rows={events} columns={columns} label="Orders" mb={10} />
+      <Dialog open={openDialog.open} onClose={handleClose}>
+        <DialogTitle>
+          Are you sure you want to cancel the order: {openDialog.orderID}
+        </DialogTitle>
+
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            sx={{ color: theme.palette.mode === "dark" ? "#fff" : "#000" }}
+          >
+            No
+          </Button>
+          <Button
+            onClick={() => handleDelete(openDialog.orderID as string)}
+            variant="contained"
+            color="error"
+          >
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
 };
 
 export default EventList;
