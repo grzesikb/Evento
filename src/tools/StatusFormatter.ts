@@ -8,6 +8,8 @@ export const statusFormatter = (statusNumber: number) => {
 			return 'Payments accepted';
 		case 4:
 			return 'Finished';
+		case 5:
+			return 'Rejected';
 	}
 };
 export const statusGetter = (statusText: string) => {
@@ -20,6 +22,8 @@ export const statusGetter = (statusText: string) => {
 			return 3;
 		case 'Finished':
 			return 4;
+		case 'Rejected':
+			return 5;
 	}
 };
 
@@ -28,4 +32,5 @@ export const statuses = [
 	'Wait for payment',
 	'Payments accepted',
 	'Finished',
+	'Rejected'
 ];
