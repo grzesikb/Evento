@@ -15,6 +15,5 @@ export const deleteWorkerService = async (data: {
 	accessToken: string;
 	id: string;
 }) => {
-	console.log(data.id);
 	return Api.deleteWorker(data.accessToken, data.id);
 };
