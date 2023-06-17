@@ -140,7 +140,7 @@ export class Api {
 	}
 
 	static async getDates() {
-		return Api.axiosInstance.get('/order/validation/get_orders_dates', {
+		return Api.axiosInstance.get('/order/validation/orders_dates', {
 			headers: { 'Access-Control-Allow-Origin': '*' },
 		});
 	}
