@@ -339,8 +339,8 @@ const EditPersonalData = () => {
 				</Button>
 			</Box>
 			{isSuccess && (
-				<Alert severity="success">
-					Profil został edytowany! Za chwile nastąpi odświeżenie...
+				<Alert sx={{mt: 2}} severity="success">
+					The profile has been edited! Page will be refreshed in a moment....
 				</Alert>
 			)}
 		</AppContainer>
