@@ -55,6 +55,7 @@ const Invoice = () => {
         cateringName: '',
         clientId: '',
         types: '',
+        payment_token: ''
     });
 
     const {
@@ -101,6 +102,7 @@ const Invoice = () => {
                     cateringName: orderDetails.company_name,
                     clientId: orderDetails.client_id,
                     types: 'Birthdays',
+                    payment_token: orderDetails.payment_token
                 });
                 setInvoiceData(prevState => ({
                     ...prevState,
