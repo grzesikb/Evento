@@ -109,11 +109,6 @@ const Pricing = () => {
 		}
 	}, [isSuccess]);
 
-	// tylko do testów czy wszystko działa
-	React.useEffect(() => {
-		console.log(data);
-	}, [data]);
-
 	const navigate = useNavigate();
 
 	const handleSendQuote = async () => {
@@ -135,7 +130,6 @@ const Pricing = () => {
 			payment_token: data.payment_token,
 			id: typeParam,
 		};
-		console.log(dataToUpdate);
 		editMutate({
 			access_token: localStorage.getItem('accessToken') as string,
 			orderData: dataToUpdate,
@@ -143,7 +137,11 @@ const Pricing = () => {
 	};
 
 	useEffect(() => {
-		console.log(editData);
+		if(editSuccess){
+			setTimeout(() => {
+				navigate('/app/dashboard');
+			}, 3000);
+		}
 	}, [editSuccess]);
 
 	const handleRejectOrder = async () => {
@@ -332,7 +330,7 @@ const Pricing = () => {
 					id="price"
 					label="Price (zł)"
 					name="price"
-					value={data.price}
+					value={data.price ? data.price : ''}
 					onChange={(e) => setData({ ...data, price: +e.target.value })}
 					sx={{ mt: 3 }}
 				/>
@@ -343,21 +341,9 @@ const Pricing = () => {
 				>
 					Send quote
 				</Button>
-				<Button
-					variant="text"
-					sx={{
-						fontWeight: 600,
-						mt: 3,
-						ml: 2,
-						color: theme.palette.mode === 'dark' ? '#fff' : '#000',
-					}}
-					onClick={handleRejectOrder}
-				>
-					Reject the order
-				</Button>
 			</Box>
 			{editSuccess && (
-				<Alert severity="success">Price saved successfully!</Alert>
+				<Alert sx={{mt:2}} severity="success">Price saved successfully! Page will be refreshed in a moment...</Alert>
 			)}
 		</AppContainer>
 	);
