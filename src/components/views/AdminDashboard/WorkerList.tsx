@@ -12,11 +12,11 @@ import {
 const WorkerList = () => {
 	const [workers, setWorkers] = useState<any[]>([]);
 	const columns: GridColDef[] = [
-		{ field: 'id', headerName: '#', width: 60 },
+		{ field: 'id', headerName: 'ID', width: 475 },
 		{
 			field: 'email',
 			headerName: 'Email',
-			width: 230,
+			width: 475,
 			sortable: false,
 			editable: true,
 		},
