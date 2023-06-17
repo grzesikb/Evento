@@ -107,6 +107,7 @@ const Payment = () => {
 			mode: 'payment',
 			successUrl: `http://localhost:3000/app/payment/success?id=${paymentDetails.id}&cost=${paymentDetails.cost}`,
 			cancelUrl: 'http://localhost:3000/app/dashboard',
+			clientReferenceId: typeParam!
 		});
 
 		// If `redirectToCheckout` fails due to a browser or network
