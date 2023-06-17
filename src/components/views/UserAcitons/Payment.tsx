@@ -67,7 +67,6 @@ const Payment = () => {
 		id: '',
 	});
 
-	console.log(paymentDetails);
 	useEffect(() => {
 		if (localStorage.getItem('paymentData')) {
 			const paymentData = JSON.parse(
