@@ -17,6 +17,7 @@ export interface IOrder {
 	clientId?: string;
 	types?: 'Birthdays' | 'Name days' | 'Bachelorette parties' | '';
 	price?: number;
+	payment_token?: string;
 }
 
 export interface IOrderDatesProps {
