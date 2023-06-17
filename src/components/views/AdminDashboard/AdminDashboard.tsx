@@ -26,6 +26,7 @@ const AdminDashboard = () => {
 		firstName: '',
 		lastName: '',
 		password: '',
+		repeatPassword: '',
 	});
 
 	const handleCloseDialog = async () => {
@@ -94,6 +95,19 @@ const AdminDashboard = () => {
 							value={worker.password}
 							onChange={(e) =>
 								setWorker({ ...worker, password: e.target.value })
+							}
+						/>
+
+						<TextField
+							margin="dense"
+							id="repeatPassword"
+							label="Repeat your password"
+							type="password"
+							fullWidth
+							required
+							value={worker.repeatPassword}
+							onChange={(e) =>
+								setWorker({ ...worker, repeatPassword: e.target.value })
 							}
 						/>
 					</DialogContent>
