@@ -143,7 +143,7 @@ const GuestList = () => {
 			name: guest.firstName,
 			surname: guest.lastName,
 			table_number: 1,
-			list_id: localStorage.getItem(typeParam!),
+			order_id: typeParam,
 		};
 
 		if(await validateForm()){
