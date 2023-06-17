@@ -22,15 +22,19 @@ import {
 	getGuestsService,
 } from '../../../services/guestListService';
 import { deleteGuestService } from '../../../services/guestService';
-
-// sprawdzanie czy celebration bo tam są jeszcze stoliki na backendzie jezeli jest private to table = null
-const celebration = true;
+import { Validator } from '../../../tools/Validator';
 
 const GuestList = () => {
 	const [guests, setGuests] = useState<any[]>([]);
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const typeParam = urlParams.get('id');
+	const [showAddGuestSuccess, setShowAddGuestSuccess] = useState(false);
+	const [showDeleteGuestSuccess, setShowDeleteGuestSuccess] = useState(false);
+	const [errors, setErrors] = useState({
+		firstName: '',
+		lastName: '',
+	});
 
 	const {
 		mutate: getGuestMutate,
@@ -50,8 +54,18 @@ const GuestList = () => {
 		isSuccess: deleteGuestSuccess,
 	} = useMutation(deleteGuestService);
 
+	const validateForm = async () => {
+		const firstNameError = await Validator.checkRequiredString(guest.firstName);
+		const lastNameError = await Validator.checkRequiredString(guest.lastName);
+		setErrors({
+			firstName: firstNameError ?? '',
+			lastName: lastNameError ?? '',
+		})
+		return !(firstNameError || lastNameError)
+	};
+
 	const columns: GridColDef[] = [
-		{ field: 'id', headerName: '#', width: 60 },
+		{ field: 'id', headerName: 'ID', width: 80 },
 		{
 			field: 'fisrtName',
 			headerName: 'First Name',
@@ -110,53 +124,6 @@ const GuestList = () => {
 			isMounted = false;
 		};
 	}, [getGuestSuccess]);
-
-	const columnsCelebration: GridColDef[] = [
-		{ field: 'id', headerName: '#', width: 60 },
-		{
-			field: 'fisrtName',
-			headerName: 'First Name',
-			width: 230,
-			editable: true,
-		},
-		{ field: 'lastName', headerName: 'Last Name', width: 230, editable: true },
-		{
-			field: 'table',
-			headerName: 'Table',
-			width: 100,
-			sortable: false,
-			editable: true,
-		},
-		{
-			field: 'actions',
-			headerName: 'Actions',
-			width: 100,
-			sortable: false,
-			renderCell: (params: GridRenderCellParams<any>) => (
-				<IconButton
-					onClick={() => deleteGuestHandler(params.id as string)}
-					title="Delete Guest"
-				>
-					<DeleteIcon color="error" />
-				</IconButton>
-			),
-		},
-	];
-	const rows = [
-		{
-			id: 1,
-			fisrtName: 'Bartek',
-			lastName: 'Grzesik',
-			table: '1',
-		},
-		{
-			id: 2,
-			fisrtName: 'Jakub',
-			lastName: 'Wrona',
-			table: '1',
-		},
-	];
-
 	const theme = useTheme();
 	const [openDialog, setOpenDialog] = useState<boolean>(false);
 
@@ -175,25 +142,48 @@ const GuestList = () => {
 		const guestEnitity = {
 			name: guest.firstName,
 			surname: guest.lastName,
-			table_number: +guest.table!,
+			table_number: 1,
 			list_id: localStorage.getItem(typeParam!),
 		};
 
-		addGuestMutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			guestData: guestEnitity,
-		});
+		if(await validateForm()){
+			addGuestMutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				guestData: guestEnitity,
+			});
+		}
 	};
 
 	useEffect(() => {
 		if (addGuestSuccess) {
+			setOpenDialog(false);
 			getGuestMutate({
 				access_token: localStorage.getItem('accessToken') as string,
 				id: typeParam as string,
 			});
-			setOpenDialog(false);
+			setGuest({
+				id: '',
+				firstName: '',
+				lastName: '',
+				table: undefined,
+			})
+			setShowAddGuestSuccess(true);
+
+			setTimeout(() => {
+				setShowAddGuestSuccess(false);
+			}, 1000);
 		}
 	}, [addGuestSuccess]);
+
+	useEffect(() => {
+		if (deleteGuestSuccess) {
+			setShowDeleteGuestSuccess(true);
+
+			setTimeout(() => {
+				setShowDeleteGuestSuccess(false);
+			}, 1000);
+		}
+	}, [deleteGuestSuccess]);
 
 	return (
 		<AppContainer
@@ -220,6 +210,8 @@ const GuestList = () => {
 						required
 						value={guest.firstName}
 						onChange={(e) => setGuest({ ...guest, firstName: e.target.value })}
+						error={!!errors.firstName}
+						helperText={errors.firstName}
 					/>
 					<TextField
 						margin="dense"
@@ -230,19 +222,9 @@ const GuestList = () => {
 						required
 						value={guest.lastName}
 						onChange={(e) => setGuest({ ...guest, lastName: e.target.value })}
+						error={!!errors.lastName}
+						helperText={errors.lastName}
 					/>
-					{celebration && (
-						<TextField
-							margin="dense"
-							id="table"
-							label="Table"
-							type="table"
-							fullWidth
-							required
-							value={guest.table}
-							onChange={(e) => setGuest({ ...guest, table: e.target.value })}
-						/>
-					)}
 				</DialogContent>
 				<DialogActions>
 					<Button
@@ -257,20 +239,21 @@ const GuestList = () => {
 					>
 						Add
 					</Button>
-					{addGuestSuccess && (
-						<Alert severity="success">Gość został dodany!</Alert>
-					)}
 				</DialogActions>
 			</Dialog>
 			<AppDataGrid
 				rows={guests}
-				columns={celebration ? columnsCelebration : columns}
+				columns={columns}
 				exportOption
 			/>
-			{deleteGuestSuccess && (
-				<Alert severity="success">Gość został usuniety</Alert>
+			{showAddGuestSuccess && (
+				<Alert sx={{mt: 2}} severity="success">Guest added!</Alert>
+			)}
+			{showDeleteGuestSuccess && (
+				<Alert sx={{mt: 2}} severity="success">Guest deleted!</Alert>
 			)}
 		</AppContainer>
+		
 	);
 };
 
