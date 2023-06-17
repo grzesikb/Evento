@@ -196,20 +196,25 @@ const EventList = () => {
 					>
 						<ArticleOutlinedIcon />
 					</IconButton>
-					<IconButton
-						onClick={() => navigate(`/app/edit-order?id=${params.id}`)}
-						title="Edit"
-					>
-						<EditIcon />
-					</IconButton>
-
-					<IconButton
+					{events.find((item) => item.id === params.id).status==='Submitted' &&
+						<IconButton
+							onClick={() => navigate(`/app/edit-order?id=${params.id}`)}
+							title="Edit"
+						>
+							<EditIcon />
+						</IconButton>
+					}
+					{events.find((item) => item.id === params.id).status!=='Rejected' &&
+						<IconButton
 						onClick={() => handleCreateGuestList(params.id as string)}
 						title="Guest list"
 					>
 						<PeopleAltIcon />
 					</IconButton>
-					{events.find((item) => item.id === params.id).status!=='Payments accepted' &&
+					}
+
+					
+					{events.find((item) => item.id === params.id).status==='Wait for payment' &&
 					(<IconButton
 						onClick={() => navigate(`/app/pricing?id=${params.id}`)}
 						title="Pricing"
@@ -217,9 +222,19 @@ const EventList = () => {
 						<RequestQuoteIcon />
 					</IconButton>)
 					}
-					
 
-					<IconButton
+					{events.find((item) => item.id === params.id).status==='Submitted' &&
+					(<IconButton
+						onClick={() => navigate(`/app/pricing?id=${params.id}`)}
+						title="Pricing"
+					>
+						<RequestQuoteIcon />
+					</IconButton>)
+					}
+
+
+					{events.find((item) => item.id === params.id).status==='Payments accepted'&&
+					(<IconButton
 						onClick={() => {
 							setLastClickedOrderId(params.id as string);
 							muteInvoice({
@@ -230,8 +245,24 @@ const EventList = () => {
 						title="Invoice"
 					>
 						<ReceiptIcon />
-					</IconButton>
+					</IconButton>)
+					}
 
+					{events.find((item) => item.id === params.id).status==='Finished' &&
+					(<IconButton
+						onClick={() => {
+							setLastClickedOrderId(params.id as string);
+							muteInvoice({
+								access_token: localStorage.getItem('accessToken') as string,
+								invoiceData: params.id as string,
+							});
+						}}
+						title="Invoice"
+					>
+						<ReceiptIcon />
+					</IconButton>)
+					}
+					
 					<IconButton
 						onClick={() => setOpenDialog({ open: true, orderID: params.id })}
 						title="Delete"
