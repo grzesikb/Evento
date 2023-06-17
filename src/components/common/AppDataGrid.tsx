@@ -134,7 +134,7 @@ export const CustomNoRowsOverlay = () => {
           </g>
         </g>
       </svg>
-      <Box sx={{ mt: 1 }}>You dont have any orders yet</Box>
+      <Box sx={{ mt: 1 }}>No data to display</Box>
     </StyledGridOverlay>
   );
 };
