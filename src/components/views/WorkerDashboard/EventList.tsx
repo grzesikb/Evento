@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import ReceiptIcon from '@mui/icons-material/Receipt';
 import { GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import {
+	Alert,
 	Button,
 	CircularProgress,
 	Dialog,
@@ -146,14 +147,13 @@ const EventList = () => {
 	const columns: GridColDef[] = [
 		{ field: 'lp', headerName: '#', width: 60 },
 		{ field: 'id', headerName: 'ID', width: 70, sortable: false },
-		{ field: 'name', headerName: 'Name', width: 230 },
+		{ field: 'name', headerName: 'Name', width: 200 },
 		{ field: 'startDate', headerName: 'Start Date', width: 150 },
-		{ field: 'finishDate', headerName: 'Finish Date', width: 150 },
 		{
 			field: 'status',
 			headerName: 'Status',
 			sortable: false,
-			width: 250,
+			width: 200,
 			renderCell: (params: GridRenderCellParams<any>) => (
 				<>
 					{isLoading || mutation.isLoading ? (
@@ -186,7 +186,7 @@ const EventList = () => {
 		{
 			field: 'action',
 			headerName: 'Actions',
-			width: 220,
+			width: 300,
 			sortable: false,
 			renderCell: (params: GridRenderCellParams<any>) => (
 				<div>
@@ -209,13 +209,15 @@ const EventList = () => {
 					>
 						<PeopleAltIcon />
 					</IconButton>
-
-					<IconButton
+					{events.find((item) => item.id === params.id).status!=='Payments accepted' &&
+					(<IconButton
 						onClick={() => navigate(`/app/pricing?id=${params.id}`)}
 						title="Pricing"
 					>
 						<RequestQuoteIcon />
-					</IconButton>
+					</IconButton>)
+					}
+					
 
 					<IconButton
 						onClick={() => {
@@ -258,6 +260,7 @@ const EventList = () => {
 					startDate: event.start_date,
 					finishDate: event.start_date,
 					status: statusFormatter(event.status),
+					payment_token: event.payment_token
 				});
 			});
 			setEvents(formattedEvents);
@@ -279,6 +282,11 @@ const EventList = () => {
 			id,
 		});
 	};
+	useEffect(() => {
+		if (deleteSuccess) {
+			window.location.reload();
+		}
+	}, [deleteSuccess]);
 
 	const handleClose = () => {
 		setOpenDialog({
@@ -311,6 +319,11 @@ const EventList = () => {
 					</Button>
 				</DialogActions>
 			</Dialog>
+			{deleteSuccess && (
+				<Alert sx={{mt: 2}} severity="success">
+					Order deleted! Page will be refreshed in a moment...
+				</Alert>
+			)}
 		</div>
 	);
 };
