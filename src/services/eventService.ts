@@ -16,7 +16,6 @@ export const createEventService = async (data: {
 	access_token: string;
 	orderData: any;
 }) => {
-	console.log(data);
 	return Api.createEvent(data.access_token, data.orderData);
 };
 
