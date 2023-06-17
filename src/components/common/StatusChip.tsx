@@ -23,6 +23,7 @@ const StatusChip = ({ type }: IProps) => {
 			)}
 
 			{type === 'Finished' && <Chip label="Finished" size="small" />}
+			{type === 'Rejected' && <Chip label="Rejected" size="small" color="error" />}
 		</div>
 	);
 };
