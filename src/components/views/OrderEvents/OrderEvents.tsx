@@ -39,7 +39,7 @@ const OrderEvent = () => {
     const fetchBlockedDates = async ()=>{
       try{
         const response = await getDatesService();
-        setBlockedDates(response.data.payload);
+        setBlockedDates(response.data.payload);  
       } catch (error){
         console.log(error)
       }

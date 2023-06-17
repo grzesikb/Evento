@@ -23,6 +23,7 @@ import {
 	createEventService,
 	userEventsService,
 } from '../../../services/eventService';
+import { Validator } from '../../../tools/Validator';
 
 const OrderPublicEvent = (props: IOrderDatesProps) => {
 	const [data, setData] = useState<IOrder>({
@@ -46,6 +47,26 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 	const navigate = useNavigate();
 	const { mutate, isSuccess } = useMutation(createEventService);
 
+	const [errors, setErrors] = useState({
+		name: '',
+		maxPeople: '',
+		age: ''
+	});
+
+	const validateForm = async () => {
+		const nameError = await Validator.checkRequiredString(data.name);
+		const maxPeopleError = await Validator.checkRequiredNumber(data.maxPeople, 'public');
+		const ageError = data.minAge ? await Validator.checkAge(data.minAge) : '';
+		
+		
+		setErrors({
+			name: nameError ?? '',
+			maxPeople: maxPeopleError ?? '',
+			age: ageError ?? '',
+		})
+		return !(nameError || maxPeopleError || ageError)
+	};
+
 	const handleOrderEvent = async () => {
 		const orderEntity = {
 			name: data.name,
@@ -64,11 +85,12 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 		};
 
 		// add order
-		mutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			orderData: orderEntity,
-		});
-		///navigate('/app/dashboard');
+		if(await validateForm()){
+			mutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				orderData: orderEntity,
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -116,12 +138,13 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 							name="name"
 							value={data.name}
 							onChange={(e) => setData({ ...data, name: e.target.value })}
+							error={!!errors.name}
+							helperText={errors.name}
 						/>
 					</Grid>
 					<Grid item sm={12}>
 						<TextField
 							margin="dense"
-							required
 							fullWidth
 							id="artist"
 							label="Artist Names"
@@ -143,6 +166,8 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 							name="maxPeople"
 							value={data.maxPeople}
 							onChange={(e) => setData({ ...data, maxPeople: e.target.value })}
+							error={!!errors.maxPeople}
+							helperText={errors.maxPeople}
 						/>
 					</Grid>
 					<Grid item sm={1}></Grid>
@@ -153,9 +178,10 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 							id="minAge"
 							label="Minimal Age"
 							name="minAge"
-							helperText="Minimum age of a person to let him or her into the party"
 							value={data.minAge}
 							onChange={(e) => setData({ ...data, minAge: e.target.value })}
+							error={!!errors.age}
+							helperText={errors.age ? errors.age : "Minimum age of a person to let him or her into the party"}
 						/>
 					</Grid>
 					<Grid item sm={12}>
