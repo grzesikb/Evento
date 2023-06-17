@@ -145,8 +145,7 @@ const OrderDetails = () => {
 										Maximum number of people:
 									</Typography>
 									<Typography variant="h6" sx={{ fontSize: 16 }}>
-										{data.numberOfSeats}
-										{/* maxPeople */}
+										{data.maxPeople}
 									</Typography>
 								</Grid>
 								<Grid item sx={{ ml: 5 }}>
@@ -154,8 +153,7 @@ const OrderDetails = () => {
 										Minimal age:
 									</Typography>
 									<Typography variant="h6" sx={{ fontSize: 16 }}>
-										{data.types}
-										{/* minAge */}
+										{data.minAge ? data.minAge : 'Not specified'}
 									</Typography>
 								</Grid>
 								<Grid item sx={{ ml: 10 }}>
@@ -163,8 +161,7 @@ const OrderDetails = () => {
 										Artist:
 									</Typography>
 									<Typography variant="h6" sx={{ fontSize: 16 }}>
-										{data.cateringName}
-										{/* artist */}
+										{data.artist}
 									</Typography>
 								</Grid>
 							</Box>
@@ -185,7 +182,6 @@ const OrderDetails = () => {
 									</Typography>
 									<Typography variant="h6" sx={{ fontSize: 16 }}>
 										{data.numberOfSeats}
-										{/* numberOfSeats */}
 									</Typography>
 								</Grid>
 								<Grid item sx={{ ml: 5 }}>
@@ -193,8 +189,7 @@ const OrderDetails = () => {
 										Company name:
 									</Typography>
 									<Typography variant="h6" sx={{ fontSize: 16 }}>
-										{data.types}
-										{/* companyName */}
+										{data.companyName}
 									</Typography>
 								</Grid>
 							</Box>
@@ -242,7 +237,7 @@ const OrderDetails = () => {
 							<Typography variant="h6" sx={{ fontSize: 16 }}>
 								{data.barOption && ' Bar service option, '}
 								{data.securityOption && ' Security option, '}
-								{/* detailedData.cateringOption && ' Catering option, ' */}
+								{data.cateringOption && ' Catering option, '}
 							</Typography>
 						</Grid>
 						<Grid item xs={12} sx={{ mt: 2 }}>
@@ -250,7 +245,7 @@ const OrderDetails = () => {
 								Additional info:
 							</Typography>
 							<Typography variant="h6" sx={{ fontSize: 16 }}>
-								{data.additionalInfo}
+								{data.additionalInfo ? data.additionalInfo : 'Not specified'}
 							</Typography>
 						</Grid>
 					</>
