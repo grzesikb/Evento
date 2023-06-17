@@ -48,6 +48,7 @@ const EditOrder = () => {
 		cateringName: '',
 		types: '',
 		price: 0,
+		payment_token: ''
 	});
 
 	const {
@@ -96,6 +97,7 @@ const EditOrder = () => {
 					cateringName: orderDetails.company_name,
 					price: orderDetails.cost,
 					types: 'Birthdays',
+					payment_token: orderDetails.payment_token
 				});
 			}
 		}
@@ -119,6 +121,7 @@ const EditOrder = () => {
 			number_of_seats: data.numberOfSeats,
 			cost: data.price,
 			id: typeParam,
+			payment_token: data.payment_token
 		};
 
 		updateMutate({
