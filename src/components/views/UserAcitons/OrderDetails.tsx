@@ -40,6 +40,7 @@ const OrderDetails = () => {
 		cateringOption: false,
 		cateringName: '',
 		types: '',
+		price: 0
 	});
 
 	useEffect(() => {
@@ -54,7 +55,6 @@ const OrderDetails = () => {
 			console.log(responseData);
 			if (responseData.data.payload.length > 0) {
 				const orderDetails = responseData.data.payload[0];
-				console.log(orderDetails);
 				setData({
 					id:'',
 					name: orderDetails.name,
@@ -72,6 +72,7 @@ const OrderDetails = () => {
 					cateringOption: orderDetails.catering,
 					cateringName: orderDetails.company_name,
 					types: 'Birthdays',
+					price: orderDetails.cost
 				});
 			}
 		}
@@ -161,7 +162,7 @@ const OrderDetails = () => {
 										Artist:
 									</Typography>
 									<Typography variant="h6" sx={{ fontSize: 16 }}>
-										{data.artist}
+										{data.artist ? data.artist : 'Not specified'}
 									</Typography>
 								</Grid>
 							</Box>
@@ -245,9 +246,18 @@ const OrderDetails = () => {
 								Additional info:
 							</Typography>
 							<Typography variant="h6" sx={{ fontSize: 16 }}>
-								{data.additionalInfo ? data.additionalInfo : 'Not specified'}
+								{data.additionalInfo ? data.additionalInfo : ''}
 							</Typography>
 						</Grid>
+						{data.price!==null && (
+						<Grid item xs={12} sx={{ mt: 2 }}>
+							<Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
+								Cost:
+							</Typography>
+							<Typography variant="h6" sx={{ fontSize: 16 }}>
+								{data.price} zł
+							</Typography>
+						</Grid>)}
 					</>
 				) : (
 					<CircularProgress />
