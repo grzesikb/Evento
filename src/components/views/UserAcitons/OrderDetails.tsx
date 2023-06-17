@@ -13,9 +13,6 @@ const OrderDetails = () => {
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const typeParam = urlParams.get('id');
-
-	console.log(typeParam);
-
 	const {
 		mutate,
 		data: responseData,
@@ -52,7 +49,6 @@ const OrderDetails = () => {
 
 	useEffect(() => {
 		if (isSuccess) {
-			console.log(responseData);
 			if (responseData.data.payload.length > 0) {
 				const orderDetails = responseData.data.payload[0];
 				setData({
