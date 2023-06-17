@@ -8,4 +8,5 @@ export interface IWorkersList {
 	firstName: string;
 	lastName: string;
 	password: string;
+	repeatPassword: string;
 }
