@@ -130,48 +130,6 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 							}
 						/>
 					</Grid>
-
-					<Grid item sm={12}>
-						<TextField
-							margin="dense"
-							required
-							fullWidth
-							id="cateringName"
-							label="Catering Name"
-							name="cateringName"
-							value={data.cateringName}
-							onChange={(e) =>
-								setData({ ...data, cateringName: e.target.value })
-							}
-						/>
-					</Grid>
-					<Grid item sm={12} sx={{ mt: 1, mb: 1 }}>
-						<FormControl fullWidth>
-							<InputLabel id="types-label">Type *</InputLabel>
-							<Select
-								labelId="types-label"
-								id="types"
-								label="Type"
-								value={data.types}
-								required
-								onChange={(e) =>
-									setData({
-										...data,
-										types: e.target.value as
-											| ''
-											| 'Birthdays'
-											| 'Name days'
-											| 'Bachelorette parties',
-									})
-								}
-							>
-								<MenuItem value={1}>Birthdays</MenuItem>
-								<MenuItem value={2}>Name days</MenuItem>
-								<MenuItem value={3}>Bachelorette parties</MenuItem>
-							</Select>
-						</FormControl>
-					</Grid>
-
 					<Grid item sm={12}>
 						<TextField
 							margin="dense"
@@ -220,6 +178,21 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 								}
 								label="Security and bodyguards"
 							/>
+							<FormControlLabel
+								control={
+									<Checkbox
+										color="success"
+										value={data.cateringOption}
+										onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+											setData({
+												...data,
+												cateringOption: event.target.checked,
+											})
+										}
+									/>
+								}
+								label="Catering package"
+							/>
 						</FormGroup>
 					</Grid>
 					<Grid item sm={12}>
@@ -239,8 +212,8 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 				</Button>
 			</Box>
 			{isSuccess && (
-				<Alert severity="success">
-					Wydarzenie zostało utowrzone! Za chwile nastąpi przekierowanie...
+				<Alert sx={{mt: 2}} severity="success">
+					The event has been created! You are about to be redirected...
 				</Alert>
 			)}
 		</AppContainer>
