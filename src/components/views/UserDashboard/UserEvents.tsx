@@ -30,7 +30,7 @@ import { createGuestListService } from '../../../services/guestListService';
 
 const UserEvents = () => {
 	const navigate = useNavigate();
-
+	const [orderId, setOrderId] = useState<any>();
 	const { mutate, isSuccess, data, isLoading } = useMutation(userEventsService);
 	const {
 		mutate: guestListMutate,
@@ -91,7 +91,7 @@ const UserEvents = () => {
 					{orders.find((item) => item.id === params.id).type!==1 && orders.find((item) => item.id === params.id).status!=='Rejected' &&(
 						<IconButton
 						onClick={() => handleCreateGuestList(params.id as string)}
-						title="Create guest list"
+						title="Guest list"
 						>
 							<GroupAddIcon />
 						</IconButton>
@@ -102,8 +102,7 @@ const UserEvents = () => {
 	];
 
 	const handleCreateGuestList = async (id: string) => {
-		localStorage.setItem('order_id', id);
-
+		await setOrderId(id)
 		await guestListMutate({
 			access_token: localStorage.getItem('accessToken') as string,
 			orderData: { order_id: id },
@@ -111,12 +110,8 @@ const UserEvents = () => {
 	};
 
 	useEffect(() => {
-		const order_id = localStorage.getItem('order_id');
-		if (guestListSuccess) {
-			localStorage.setItem(order_id!, guestListData.data.payload.id);
-		}
 		if (guestListSuccess || guestListError)
-			navigate(`/app/guest-list?id=${order_id}`);
+			navigate(`/app/guest-list?id=${orderId}`);
 	}, [guestListSuccess, guestListError]);
 
 	useEffect(() => {
