@@ -75,10 +75,8 @@ const EditOrder = () => {
 
 	useEffect(() => {
 		if (isSuccess) {
-			console.log(responseData);
 			if (responseData.data.payload.length > 0) {
 				const orderDetails = responseData.data.payload[0];
-				console.log(orderDetails);
 				setData({
 					id: '',
 					name: orderDetails.name,
@@ -397,8 +395,8 @@ const EditOrder = () => {
 				</Button>
 			</Box>
 			{updateSuccess && (
-				<Alert severity="success">
-					Wydarzenie zostało edytowane! Za chwile nastąpi przekierowanie...
+				<Alert sx={{mt:2}} severity="success">
+					Order updated! You will be redirected in a moment...
 				</Alert>
 			)}
 		</AppContainer>
