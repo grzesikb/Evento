@@ -62,7 +62,6 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 			catering: data.cateringOption,
 			number_of_seats: +data.numberOfSeats!,
 		};
-		console.log(orderEntity.start_date)
 
 		// add order
 		mutate({
@@ -216,8 +215,8 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 				</Button>
 			</Box>
 			{isSuccess && (
-				<Alert severity="success">
-					Wydarzenie zostało utowrzone! Za chwile nastąpi przekierowanie...
+				<Alert sx={{mt: 2}} severity="success">
+					The event has been created! You are about to be redirected...
 				</Alert>
 			)}
 		</AppContainer>
