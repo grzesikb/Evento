@@ -157,22 +157,6 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 					<Grid item sm={12}>
 						<TextField
 							margin="dense"
-							required
-							fullWidth
-							id="cateringName"
-							label="Catering Name"
-							name="cateringName"
-							value={data.cateringName}
-							onChange={(e) =>
-								setData({ ...data, cateringName: e.target.value })
-							}
-							error={!!errors.cateringName}
-							helperText={errors.cateringName}
-						/>
-					</Grid>
-					<Grid item sm={12}>
-						<TextField
-							margin="dense"
 							fullWidth
 							id="additionalInfo"
 							label="Aditional info / Expectations"
@@ -218,6 +202,21 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 								}
 								label="Security and bodyguards"
 							/>
+							<FormControlLabel
+								control={
+									<Checkbox
+										color="success"
+										value={data.cateringOption}
+										onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+											setData({
+												...data,
+												cateringOption: event.target.checked,
+											})
+										}
+									/>
+								}
+								label="Catering package"
+							/>
 						</FormGroup>
 					</Grid>
 					<Grid item sm={12}>
@@ -237,8 +236,8 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 				</Button>
 			</Box>
 			{isSuccess && (
-				<Alert severity="success">
-					Wydarzenie zostało utowrzone! Za chwile nastąpi przekierowanie...
+				<Alert sx={{mt: 2}} severity="success">
+					The event has been created! You are about to be redirected...
 				</Alert>
 			)}
 		</AppContainer>

@@ -13,3 +13,10 @@ export const changePasswordService = async (data: {
 }) => {
 	return Api.changePassword(data.access_token, data.userData);
 };
+
+export const createPersonalDataService = async (data: {
+	access_token: string;
+	userData: any;
+}) => {
+	return Api.createPersonalData(data.access_token, data.userData)
+}

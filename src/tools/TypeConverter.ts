@@ -10,3 +10,16 @@ export const convertType = (id: number) => {
 			return 'Private';
 	}
 };
+
+export const typeGetter = (id: string) => {
+	switch (id) {
+		case 'Public':
+			return 1;
+
+		case 'Occasional':
+			return 2;
+
+		case 'Private':
+			return 3;
+	}
+};

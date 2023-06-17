@@ -1,4 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
+import { InvoiceCreateI } from '../shared/interfaces/invoice.interface';
+import { InvoiceItemCreateI } from '../shared/interfaces/invoiceItem.interface';
 
 export class Api {
 	private static axiosInstance: AxiosInstance;
@@ -84,6 +86,43 @@ export class Api {
 		});
 	}
 
+	static async setPrice(access_token: string, data: any) {
+		return Api.axiosInstance.post('/order/update_by_worker/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async createInvoice(access_token: string, data: InvoiceCreateI) {
+		return Api.axiosInstance.post('/invoice/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async createInvoiceItem(
+		access_token: string,
+		data: InvoiceItemCreateI
+	) {
+		return Api.axiosInstance.post('/invoice_item/', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+	static async getInvoice(access_token: string, data: string) {
+		return Api.axiosInstance.get(`/invoice/${data}`, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
 	static async deleteEvent(access_token: string, id: string) {
 		return Api.axiosInstance.delete('/order/' + id, {
 			headers: {
@@ -180,6 +219,42 @@ export class Api {
 
 	static async deleteGuest(access_token: string, id: string) {
 		return Api.axiosInstance.delete('/guest/' + id, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async createPersonalData(access_token: string, data: any) {
+		return Api.axiosInstance.post('/user/create-personal-data', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async createWorker(access_token: string, data: any) {
+		return Api.axiosInstance.post('/user/addWorker', data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async getWorker(access_token: string) {
+		return Api.axiosInstance.get('/user/worker/workers', {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
+	static async deleteWorker(access_token: string, id: string) {
+		return Api.axiosInstance.delete('/user/worker/' + id, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
 				Authorization: `Bearer ${access_token}`,

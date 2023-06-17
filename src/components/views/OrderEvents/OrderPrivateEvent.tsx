@@ -255,8 +255,8 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 				</Button>
 			</Box>
 			{isSuccess && (
-				<Alert severity="success">
-					Wydarzenie zostało utowrzone! Za chwile nastąpi przekierowanie...
+				<Alert sx={{mt: 2}} severity="success">
+					The event has been created! You are about to be redirected...
 				</Alert>
 			)}
 		</AppContainer>

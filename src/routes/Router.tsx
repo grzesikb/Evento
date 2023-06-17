@@ -24,6 +24,9 @@ import WorkerDashboard from '../components/views/WorkerDashboard/WorkerDashboard
 import GuestRoute from './GuestRoute';
 import AuthRoute from './AuthRoute';
 import Success from '../components/views/PaymentStatus/Success';
+import Invoice from "../components/views/WorkerDashboard/Invoice";
+import InvoiceItem from "../components/views/WorkerDashboard/InvoiceItem";
+import { userActions } from '../contexts/actions/user.actions';
 
 const Router = () => {
 	const { state } = useContext(UserContext);
@@ -51,7 +54,7 @@ const Router = () => {
 				},
 				{
 					path: 'add-user-data',
-					element: <AddUserData />,
+					element: <AddUserData isCreateAccount={true} />,
 				},
 			],
 		},
@@ -76,7 +79,7 @@ const Router = () => {
 				},
 				{
 					path: 'account-settings',
-					element: <AccountSettings />,
+					element: state?.user?.login_method==='Google' ? <Navigate to="/" replace /> : <AccountSettings />,
 				},
 				{
 					path: 'order-event',
@@ -85,6 +88,14 @@ const Router = () => {
 				{
 					path: 'order-details',
 					element: <OrderDetails />,
+				},
+				{
+					path: 'invoice',
+					element: <Invoice />,
+				},
+				{
+					path: 'invoice-item',
+					element: <InvoiceItem />,
 				},
 				{
 					path: 'edit-order',
@@ -109,6 +120,10 @@ const Router = () => {
 				{
 					path: 'payment/success',
 					element: <Success />,
+				},
+				{
+					path: 'add-user-data',
+					element: state?.user?.personal_data! ? <Navigate to="/" replace /> : <AddUserData isCreateAccount={false}/>,
 				},
 			],
 		},

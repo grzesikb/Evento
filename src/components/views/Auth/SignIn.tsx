@@ -104,6 +104,7 @@ const SignIn = () => {
 	}, [googleSuccess, googleResponse]);
 	useEffect(() => {
 		if (refreshSuccess) {
+
 			localStorage.setItem('accessToken', refreshData.data.access_token);
 			localStorage.setItem('refreshToken', refreshData.data.refresh_token);
 
@@ -114,7 +115,6 @@ const SignIn = () => {
 	useEffect(() => {
 		if (identifySuccess) {
 			dispatch({ type: UserActions.LOAD_USER, payload: identifyData.data });
-			console.log(identifyData);
 		}
 	}, [identifySuccess]);
 

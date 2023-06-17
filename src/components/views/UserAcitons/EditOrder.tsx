@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	Alert,
@@ -17,17 +17,21 @@ import { IOrder } from '../../../shared/interfaces/order.interface';
 import { useMutation } from 'react-query';
 import {
 	eventDetailService,
+	setPriceService,
 	updateEventService,
 } from '../../../services/eventService';
-import { statusFormatter } from '../../../tools/StatusFormatter';
-import { convertType } from '../../../tools/TypeConverter';
+import { statusFormatter, statusGetter } from '../../../tools/StatusFormatter';
+import { convertType, typeGetter } from '../../../tools/TypeConverter';
+import UserContext from '../../../contexts/context/UserContext';
 
 const EditOrder = () => {
+	const { state } = useContext(UserContext);
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const typeParam = urlParams.get('id');
 
 	const [data, setData] = useState<IOrder>({
+		id: '',
 		name: '',
 		startDate: null,
 		type: '',
@@ -43,6 +47,8 @@ const EditOrder = () => {
 		cateringOption: false,
 		cateringName: '',
 		types: '',
+		price: 0,
+		payment_token: ''
 	});
 
 	const {
@@ -56,7 +62,9 @@ const EditOrder = () => {
 		mutate: updateMutate,
 		data: updateData,
 		isSuccess: updateSuccess,
-	} = useMutation(updateEventService);
+	} = useMutation(
+		state!.user?.role === 2 ? setPriceService : updateEventService
+	);
 
 	useEffect(() => {
 		mutate({
@@ -72,6 +80,7 @@ const EditOrder = () => {
 				const orderDetails = responseData.data.payload[0];
 				console.log(orderDetails);
 				setData({
+					id: '',
 					name: orderDetails.name,
 					startDate: orderDetails.start_date,
 					type: convertType(orderDetails.type) as string,
@@ -86,7 +95,9 @@ const EditOrder = () => {
 					companyName: orderDetails.company_name,
 					cateringOption: orderDetails.catering,
 					cateringName: orderDetails.company_name,
+					price: orderDetails.cost,
 					types: 'Birthdays',
+					payment_token: orderDetails.payment_token
 				});
 			}
 		}
@@ -98,17 +109,19 @@ const EditOrder = () => {
 			name: data.name,
 			bar_option: data.barOption,
 			security: data.securityOption,
-			type: 1,
+			type: typeGetter(data.type),
 			start_date: data.startDate,
 			additional_info: data.additionalInfo,
-			status: 1,
+			status: statusGetter(data.status),
 			artist_name: data.artist,
 			max_nr_of_people: data.maxPeople,
 			minimal_age: data.minAge,
 			company_name: data.companyName,
 			catering: data.cateringOption,
 			number_of_seats: data.numberOfSeats,
+			cost: data.price,
 			id: typeParam,
+			payment_token: data.payment_token
 		};
 
 		updateMutate({

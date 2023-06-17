@@ -38,11 +38,6 @@ const UserEvents = () => {
 		data: guestListData,
 		isError: guestListError,
 	} = useMutation(createGuestListService);
-	const {
-		mutate: deleteMutate,
-		isSuccess: deleteSuccess,
-		data: deleteData,
-	} = useMutation(deleteEventService);
 	const [orders, setOrders] = useState<any[]>([]);
 
 	const columns: GridColDef[] = [
@@ -82,19 +77,23 @@ const UserEvents = () => {
 					</IconButton>
 
 					{/* tutaj musi być fetch danych bo status jest potrzebny (płatność dostępna po weryfikacji) */}
-					<IconButton
-						onClick={() => navigate(`/app/payment?id=${params.id}`)}
-						title="Payment"
-					>
-						<PaymentIcon />
-					</IconButton>
+					{orders.find((item) => item.id === params.id).cost && !orders.find((item) => item.id === params.id).payment_token &&(
+						<IconButton
+							onClick={() => navigate(`/app/payment?id=${params.id}`)}
+							title="Payment"
+						>
+							<PaymentIcon />
+						</IconButton>
+					)}
 
-					<IconButton
+					{orders.find((item) => item.id === params.id).type!==1 &&(
+						<IconButton
 						onClick={() => handleCreateGuestList(params.id as string)}
 						title="Create guest list"
-					>
-						<GroupAddIcon />
-					</IconButton>
+						>
+							<GroupAddIcon />
+						</IconButton>
+					)}
 				</div>
 			),
 		},
@@ -136,25 +135,15 @@ const UserEvents = () => {
 					name: item.name,
 					startDate: item.start_date,
 					status: statusFormatter(+item.status),
+					cost: item.cost,
+					payment_token: item.payment_token,
+					type: item.type
 				});
 			});
 
 			setOrders(foremattedOrders);
 		}
 	}, [isSuccess]);
-
-	const handleDelete = (id: string) => {
-		deleteMutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			id,
-		});
-	};
-
-	useEffect(() => {
-		if (deleteSuccess) {
-			handleClose();
-		}
-	}, [deleteSuccess]);
 
 	const theme = useTheme();
 	const [openDialog, setOpenDialog] = useState<{
@@ -184,27 +173,6 @@ const UserEvents = () => {
 						label="Your orders"
 						mb={6}
 					/>
-					<Dialog open={openDialog.open} onClose={handleClose}>
-						<DialogTitle>
-							Are you sure you want to cancel the order: {openDialog.orderID}
-						</DialogTitle>
-
-						<DialogActions>
-							<Button
-								onClick={handleClose}
-								sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
-							>
-								No
-							</Button>
-							<Button
-								onClick={() => handleDelete(openDialog.orderID as string)}
-								variant="contained"
-								color="error"
-							>
-								Yes
-							</Button>
-						</DialogActions>
-					</Dialog>
 				</>
 			)}
 		</div>

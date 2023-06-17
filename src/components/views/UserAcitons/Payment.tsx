@@ -37,12 +37,16 @@ const Payment = () => {
 	}, []);
 
 	useEffect(() => {
+		console.log(window.location.pathname);
+	}, []);
+
+	useEffect(() => {
 		if (isSuccess) {
 			setPaymentDetails({
 				id: typeParam as string,
 				name: data.data.payload[0].name,
 				startDate: data.data.payload[0].start_date,
-				cost: 69000,
+				cost: data.data.payload[0].cost,
 			});
 		}
 	}, [isSuccess]);
@@ -63,6 +67,7 @@ const Payment = () => {
 		id: '',
 	});
 
+	console.log(paymentDetails);
 	useEffect(() => {
 		if (localStorage.getItem('paymentData')) {
 			const paymentData = JSON.parse(
@@ -95,13 +100,14 @@ const Payment = () => {
 		await stripe?.redirectToCheckout({
 			lineItems: [
 				{
-					price: 'price_1NGlbMCx3j1gch1GdFcCsYoy', // Replace with the ID of your price
-					quantity: 1,
+					price: 'price_1NJNYlCx3j1gch1Gs6lGhWny', // Replace with the ID of your price
+					quantity: +paymentDetails.cost,
 				},
 			],
 			mode: 'payment',
-			successUrl: 'http://127.0.0.1:3000/app/payment/success',
-			cancelUrl: 'https://127.0.0.1/cancel',
+			successUrl: `http://localhost:3000/app/payment/success?id=${paymentDetails.id}&cost=${paymentDetails.cost}`,
+			cancelUrl: 'http://localhost:3000/app/dashboard',
+			clientReferenceId: typeParam!
 		});
 
 		// If `redirectToCheckout` fails due to a browser or network

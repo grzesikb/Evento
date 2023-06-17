@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 import React, { useEffect, useState } from 'react';
 // eslint-disable-next-line import/no-extraneous-dependencies
+import ReceiptIcon from '@mui/icons-material/Receipt';
+import { GridColDef, GridRenderCellParams, GridRowId } from '@mui/x-data-grid';
 import {
-	DataGrid,
-	GridColDef,
-	GridRenderCellParams,
-	GridRowId,
-} from '@mui/x-data-grid';
-import {
+	Alert,
 	Button,
+	CircularProgress,
 	Dialog,
 	DialogActions,
 	DialogTitle,
+	FormControl,
 	IconButton,
+	MenuItem,
+	OutlinedInput,
+	Select,
 	useTheme,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -27,13 +29,26 @@ import AppDataGrid from '../../common/AppDataGrid';
 import { useMutation } from 'react-query';
 import {
 	deleteEventService,
+	eventDetailService,
 	getAllEventsService,
+	getInvoice,
+	setPriceService,
 } from '../../../services/eventService';
-import { statusFormatter } from '../../../tools/StatusFormatter';
+import {
+	statusFormatter,
+	statusGetter,
+	statuses,
+} from '../../../tools/StatusFormatter';
 import { createGuestListService } from '../../../services/guestListService';
 
 const EventList = () => {
 	const navigate = useNavigate();
+	const {
+		mutate: muteInvoice,
+		data: invoiceForOrderData,
+		isSuccess: isInvoiceSuccess,
+		isError: isInvoiceError,
+	} = useMutation(getInvoice);
 
 	const {
 		mutate: guestListMutate,
@@ -48,8 +63,48 @@ const EventList = () => {
 		data: deleteData,
 	} = useMutation(deleteEventService);
 
+	const {
+		mutate: updateMutate,
+		data: updateData,
+		isSuccess: updateSuccess,
+		isLoading,
+	} = useMutation(setPriceService);
+
 	const { mutate, data, isSuccess } = useMutation(getAllEventsService);
 	const [events, setEvents] = useState<any[]>([]);
+	const [lastClickedOrderId, setLastClickedOrderId] = useState('');
+
+	const mutation = useMutation({
+		mutationFn: (data: { id: string; option: string }) =>
+			eventDetailService({
+				access_token: localStorage.getItem('accessToken') as string,
+				id: data.id,
+			}),
+		onMutate: () => {},
+		onSuccess(data, variables, context) {
+			console.log(context);
+			console.log(variables);
+			const eventData = data.data.payload[0];
+
+			console.log(variables);
+
+			eventData.status = statusGetter(variables.option);
+
+			updateMutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				orderData: eventData,
+			});
+		},
+		onError(error, variables, context) {},
+	});
+
+	useEffect(() => {
+		if (updateSuccess) {
+			window.location.reload();
+		}
+	}, [updateSuccess]);
+
+	console.log(events);
 
 	const handleCreateGuestList = async (id: string) => {
 		localStorage.setItem('order_id', id);
@@ -61,6 +116,20 @@ const EventList = () => {
 	};
 
 	useEffect(() => {
+		console.log(invoiceForOrderData, 'Test');
+		const order_id = invoiceForOrderData?.data.payload.order_id;
+		const invoice_id = invoiceForOrderData?.data.payload.id;
+		if (isInvoiceSuccess)
+			navigate(
+				`/app/invoice-item?invoice_id=${invoice_id}&order_id=${order_id}`
+			);
+	}, [isInvoiceSuccess]);
+
+	useEffect(() => {
+		if (isInvoiceError) navigate(`/app/invoice?id=${lastClickedOrderId}`);
+	}, [isInvoiceError]);
+
+	useEffect(() => {
 		const order_id = localStorage.getItem('order_id');
 		if (guestListSuccess) {
 			localStorage.setItem(order_id!, guestListData.data.payload.id);
@@ -69,19 +138,47 @@ const EventList = () => {
 			navigate(`/app/guest-list?id=${order_id}`);
 	}, [guestListSuccess, guestListError]);
 
+	const [status, setStatus] = useState<string>('');
+
+	const handleStatusChange = async (id: string, option: string) => {
+		const response = mutation.mutate({ id, option });
+	};
+
 	const columns: GridColDef[] = [
 		{ field: 'lp', headerName: '#', width: 60 },
 		{ field: 'id', headerName: 'ID', width: 70, sortable: false },
-		{ field: 'name', headerName: 'Name', width: 230 },
+		{ field: 'name', headerName: 'Name', width: 200 },
 		{ field: 'startDate', headerName: 'Start Date', width: 150 },
-		{ field: 'finishDate', headerName: 'Finish Date', width: 150 },
 		{
 			field: 'status',
 			headerName: 'Status',
 			sortable: false,
 			width: 200,
 			renderCell: (params: GridRenderCellParams<any>) => (
-				<StatusChip type={params.value} />
+				<>
+					{isLoading || mutation.isLoading ? (
+						<CircularProgress />
+					) : (
+						<FormControl>
+							<Select
+								id="status-select"
+								value={params.row.status}
+								defaultValue={params.row.status}
+								onChange={(e) =>
+									handleStatusChange(params.id.toString(), e.target.value)
+								}
+								input={<OutlinedInput id="status-select" />}
+								renderValue={(selected) => <StatusChip type={selected} />}
+							>
+								{statuses.map((name) => (
+									<MenuItem key={name} value={name}>
+										{name}
+									</MenuItem>
+								))}
+							</Select>
+						</FormControl>
+					)}
+				</>
 			),
 			// valueGetter: (params: GridValueGetterParams) =>
 			//   `${params.row.firstName || ''} ${params.row.lastName || ''}`,
@@ -89,7 +186,7 @@ const EventList = () => {
 		{
 			field: 'action',
 			headerName: 'Actions',
-			width: 220,
+			width: 300,
 			sortable: false,
 			renderCell: (params: GridRenderCellParams<any>) => (
 				<div>
@@ -112,12 +209,27 @@ const EventList = () => {
 					>
 						<PeopleAltIcon />
 					</IconButton>
-
-					<IconButton
+					{events.find((item) => item.id === params.id).status!=='Payments accepted' &&
+					(<IconButton
 						onClick={() => navigate(`/app/pricing?id=${params.id}`)}
 						title="Pricing"
 					>
 						<RequestQuoteIcon />
+					</IconButton>)
+					}
+					
+
+					<IconButton
+						onClick={() => {
+							setLastClickedOrderId(params.id as string);
+							muteInvoice({
+								access_token: localStorage.getItem('accessToken') as string,
+								invoiceData: params.id as string,
+							});
+						}}
+						title="Invoice"
+					>
+						<ReceiptIcon />
 					</IconButton>
 
 					<IconButton
@@ -128,48 +240,6 @@ const EventList = () => {
 					</IconButton>
 				</div>
 			),
-		},
-	];
-	const rows = [
-		{
-			lp: 1,
-			id: '43dsr6',
-			name: 'Impreza studencka',
-			startDate: '21:00 08.08.2023',
-			finishDate: '22:00 08.08.2023',
-			status: 'Finished',
-		},
-		{
-			lp: 2,
-			id: '24sd4s',
-			name: 'Wesele Ani i Jakuba',
-			startDate: '16:00 31.06.2023',
-			finishDate: '17:00 31.06.2023',
-			status: 'inProgress',
-		},
-		{
-			lp: 3,
-			id: '9bad2s',
-			name: 'Konferencja ABW',
-			startDate: '18:00 20.06.2023',
-			finishDate: '19:00 20.06.2023',
-			status: 'Verification',
-		},
-		{
-			lp: 4,
-			id: '1bsdfg',
-			name: 'Zebranie Grzybiarzy',
-			startDate: '20:00 19.06.2023',
-			finishDate: '21:00 19.06.2023',
-			status: 'Payments',
-		},
-		{
-			lp: 5,
-			id: '1bsdf5',
-			name: 'Zebranie Pszczelarzy',
-			startDate: '21:00 21.06.2023',
-			finishDate: '23:00 21.06.2023',
-			status: 'Offer',
 		},
 	];
 
@@ -190,6 +260,7 @@ const EventList = () => {
 					startDate: event.start_date,
 					finishDate: event.start_date,
 					status: statusFormatter(event.status),
+					payment_token: event.payment_token
 				});
 			});
 			setEvents(formattedEvents);
@@ -211,6 +282,11 @@ const EventList = () => {
 			id,
 		});
 	};
+	useEffect(() => {
+		if (deleteSuccess) {
+			window.location.reload();
+		}
+	}, [deleteSuccess]);
 
 	const handleClose = () => {
 		setOpenDialog({
@@ -243,6 +319,11 @@ const EventList = () => {
 					</Button>
 				</DialogActions>
 			</Dialog>
+			{deleteSuccess && (
+				<Alert sx={{mt: 2}} severity="success">
+					Order deleted! Page will be refreshed in a moment...
+				</Alert>
+			)}
 		</div>
 	);
 };

@@ -113,7 +113,7 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
 				<Divider />
 				{permission === 'User' && (
 					<>
-						<MenuItem onClick={() => navigate('/app/edit-personal-data')}>
+						<MenuItem onClick={() => {state?.user?.personal_data ? navigate('/app/edit-personal-data') : navigate('/app/add-user-data')}}>
 							<ListItemIcon>
 								<EditIcon fontSize="small" />
 							</ListItemIcon>
@@ -136,12 +136,12 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
 						Edit app e-mails
 					</MenuItem>
 				)}
-				<MenuItem onClick={() => navigate('/app/account-settings')}>
+				{state?.user?.login_method==='Password' && (<MenuItem onClick={() => navigate('/app/account-settings')}>
 					<ListItemIcon>
 						<ManageAccountsIcon fontSize="small" />
 					</ListItemIcon>
 					Account settings
-				</MenuItem>
+				</MenuItem>)}
 				<MenuItem onClick={() => logoutHandler()}>
 					<ListItemIcon>
 						<Logout fontSize="small" />

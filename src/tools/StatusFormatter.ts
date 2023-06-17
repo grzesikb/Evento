@@ -1,9 +1,31 @@
 export const statusFormatter = (statusNumber: number) => {
 	switch (statusNumber) {
 		case 1:
-			return 'inProgress';
-
+			return 'Submitted';
 		case 2:
-			return 'Verification';
+			return 'Wait for payment';
+		case 3:
+			return 'Payments accepted';
+		case 4:
+			return 'Finished';
 	}
 };
+export const statusGetter = (statusText: string) => {
+	switch (statusText) {
+		case 'Submitted':
+			return 1;
+		case 'Wait for payment':
+			return 2;
+		case 'Payments accepted':
+			return 3;
+		case 'Finished':
+			return 4;
+	}
+};
+
+export const statuses = [
+	'Submitted',
+	'Wait for payment',
+	'Payments accepted',
+	'Finished',
+];

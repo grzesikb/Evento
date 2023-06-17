@@ -18,6 +18,5 @@ export const addGuestService = (data: {
 	access_token: string;
 	guestData: any;
 }) => {
-	console.log(data.guestData);
 	return Api.addGuest(data.access_token, data.guestData);
 };
