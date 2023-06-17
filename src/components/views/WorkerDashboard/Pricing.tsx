@@ -62,6 +62,7 @@ const Pricing = () => {
 		cateringName: '',
 		types: '',
 		price: 0,
+		payment_token: ''
 	});
 
 	const [paymentDetails, setPaymentDetails] = useState<IPaymentDetails>({
@@ -102,6 +103,7 @@ const Pricing = () => {
 					cateringName: orderDetails.company_name,
 					price: orderDetails.cost,
 					types: 'Birthdays',
+					payment_token: orderDetails.payment_token
 				});
 			}
 		}
@@ -122,7 +124,7 @@ const Pricing = () => {
 			type: data.type,
 			start_date: data.startDate,
 			additional_info: data.additionalInfo,
-			status: data.status,
+			status: 2,
 			artist_name: data.artist,
 			max_nr_of_people: data.maxPeople,
 			minimal_age: data.minAge,
@@ -130,7 +132,7 @@ const Pricing = () => {
 			catering: data.cateringOption,
 			number_of_seats: data.numberOfSeats,
 			cost: +data.price!,
-
+			payment_token: data.payment_token,
 			id: typeParam,
 		};
 		console.log(dataToUpdate);
@@ -186,14 +188,7 @@ const Pricing = () => {
 					</Grid>
 					<Grid item xs={1}></Grid>
 					<Grid item xs={5.5} sx={{ mt: 2 }}>
-						<Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
-							Finish date:
-						</Typography>
-						<Typography variant="h6" sx={{ fontSize: 16 }}>
-							Nie wiem czy tu ma byc orderu czy platnosci
-						</Typography>
 					</Grid>
-
 					<Grid item xs={5.5} sx={{ mt: 2 }}>
 						<Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
 							Status:
