@@ -69,15 +69,17 @@ const UserEvents = () => {
 					>
 						<ArticleOutlinedIcon />
 					</IconButton>
+					{orders.find((item) => item.id === params.id).status==='Submitted' &&(
 					<IconButton
 						onClick={() => navigate(`/app/edit-order?id=${params.id}`)}
 						title="Edit"
 					>
 						<EditIcon />
-					</IconButton>
+					</IconButton>)}
+					
 
 					{/* tutaj musi być fetch danych bo status jest potrzebny (płatność dostępna po weryfikacji) */}
-					{orders.find((item) => item.id === params.id).cost && !orders.find((item) => item.id === params.id).payment_token &&(
+					{orders.find((item) => item.id === params.id).cost && !orders.find((item) => item.id === params.id).payment_token && orders.find((item) => item.id === params.id).status!=='Rejected' &&(
 						<IconButton
 							onClick={() => navigate(`/app/payment?id=${params.id}`)}
 							title="Payment"
@@ -86,7 +88,7 @@ const UserEvents = () => {
 						</IconButton>
 					)}
 
-					{orders.find((item) => item.id === params.id).type!==1 &&(
+					{orders.find((item) => item.id === params.id).type!==1 && orders.find((item) => item.id === params.id).status!=='Rejected' &&(
 						<IconButton
 						onClick={() => handleCreateGuestList(params.id as string)}
 						title="Create guest list"
