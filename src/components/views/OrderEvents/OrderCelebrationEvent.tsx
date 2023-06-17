@@ -31,7 +31,6 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 	const [errors, setErrors] = useState({
 		name: '',
 		numberOfSeats: '',
-		cateringName: '',
 	});
 	const [data, setData] = useState<IOrder>({
 		name: '',
@@ -53,13 +52,11 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 	const validateForm = async () => {
 		const nameError = await Validator.checkRequiredString(data.name);
 		const numberOfSeatsError = await Validator.checkRequiredNumber(data.numberOfSeats, 'celebration');
-		const cateringNameError = await Validator.checkRequiredString(data.cateringName);
 		setErrors({
 			name: nameError ?? '',
 			numberOfSeats: numberOfSeatsError ?? '',
-			cateringName: cateringNameError ?? '',
 		})
-		return !(nameError || numberOfSeatsError || cateringNameError)
+		return !(nameError || numberOfSeatsError)
 	};
 
 	const navigate = useNavigate();
