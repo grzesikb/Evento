@@ -20,3 +20,9 @@ export const createPersonalDataService = async (data: {
 }) => {
 	return Api.createPersonalData(data.access_token, data.userData)
 }
+export const GetClientData = async (data: {
+	access_token: string;
+	userData: string;
+}) => {
+	return Api.getClientPersonalData(data.access_token, data.userData)
+}
