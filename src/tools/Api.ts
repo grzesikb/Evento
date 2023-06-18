@@ -235,6 +235,15 @@ export class Api {
 		});
 	}
 
+	static async getClientPersonalData(access_token: string, data: string) {
+		return Api.axiosInstance.get('/user/user_info/'+data, {
+			headers: {
+				'Access-Control-Allow-Origin': '*',
+				Authorization: `Bearer ${access_token}`,
+			},
+		});
+	}
+
 	static async createWorker(access_token: string, data: any) {
 		return Api.axiosInstance.post('/user/addWorker', data, {
 			headers: {
