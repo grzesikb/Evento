@@ -27,6 +27,7 @@ import Success from '../components/views/PaymentStatus/Success';
 import Invoice from "../components/views/WorkerDashboard/Invoice";
 import InvoiceItem from "../components/views/WorkerDashboard/InvoiceItem";
 import { userActions } from '../contexts/actions/user.actions';
+import PrintingInvoice from "../components/views/WorkerDashboard/PrintingInvoice";
 
 const Router = () => {
 	const { state } = useContext(UserContext);
@@ -96,6 +97,10 @@ const Router = () => {
 				{
 					path: 'invoice-item',
 					element: <InvoiceItem />,
+				},
+				{
+					path: 'print-invoice',
+					element: <PrintingInvoice />,
 				},
 				{
 					path: 'edit-order',
