@@ -5,6 +5,12 @@ export interface InvoiceItemI{
     price_per_item: string | undefined;
 }
 
+export interface InvoiceItemPrintI{
+    name: string;
+    count: string | undefined;
+    price_per_item: string | undefined;
+}
+
 export interface InvoiceItemCreateI {
     invoice_id: string;
     name: string;
