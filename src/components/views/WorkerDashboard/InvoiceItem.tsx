@@ -26,6 +26,7 @@ import { convertType } from '../../../tools/TypeConverter';
 import {InvoiceI} from "../../../shared/interfaces/invoice.interface";
 import invoice from "./Invoice";
 import {InvoiceItemCreateI, InvoiceItemI} from "../../../shared/interfaces/invoiceItem.interface";
+import PrintIcon from '@mui/icons-material/Print';
 
 function Textera() {
     return null;
@@ -90,7 +91,7 @@ const InvoiceItem = () => {
                 setInvoiceItems(prevState => ({...prevState, invoice_id: responseData.data.payload.id}))
             }
     }, [isSuccess]);
-    console.log(invoiceItems, 'invoice');
+    console.log(responseData?.data.payload.items, 'items');
 
     const handleEditOrder = async () => {
 
@@ -103,7 +104,11 @@ const InvoiceItem = () => {
             },
         });
     };
-
+    const handlePrintInvoice = async () => {
+        setTimeout(() => {
+            navigate(`/app/print-invoice?invoice_id=${responseData?.data.payload.id}&order_id=${responseData?.data.payload.order_id}`);
+        }, 100);
+    };
     useEffect(() => {
         console.log(createInvoiceItemData?.data);
         if (createInvoiceItemSuccess) {
@@ -193,6 +198,14 @@ const InvoiceItem = () => {
                     onClick={handleEditOrder}
                 >
                     Add Item
+                </Button>
+                <Button
+                    variant="contained"
+                    endIcon={<PrintIcon />}
+                    sx={{ fontWeight: 600 }}
+                    onClick={handlePrintInvoice}
+                >
+                    Print Invoice
                 </Button>
             </Box>
             {createInvoiceItemSuccess && (
