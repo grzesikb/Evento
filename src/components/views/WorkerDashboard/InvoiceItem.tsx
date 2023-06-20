@@ -37,8 +37,6 @@ const InvoiceItem = () => {
     const urlParams = new URLSearchParams(queryString);
     const invoiceId = urlParams.get('invoice_id');
     const orderId = urlParams.get('order_id');
-    console.log(invoiceId)
-    console.log(orderId)
 
     const [invoiceData, setInvoiceData] = useState<InvoiceI>({
         order_id: '',
@@ -110,7 +108,6 @@ const InvoiceItem = () => {
         }, 100);
     };
     useEffect(() => {
-        console.log(createInvoiceItemData?.data);
         if (createInvoiceItemSuccess) {
 
             setTimeout(() => {
