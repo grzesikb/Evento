@@ -7,7 +7,7 @@ import Navbar from '../../common/Navbar/Navbar';
 const UserDashboard = () => {
   return (
     <Box>
-      <Navbar email="pimpek@gmail.com" permission="User" />
+      <Navbar permission="User" />
       <Paper
         variant="outlined"
         sx={{ padding: 6, marginTop: 10, borderRadius: 4 }}
