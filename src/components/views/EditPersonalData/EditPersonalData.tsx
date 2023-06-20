@@ -16,8 +16,6 @@ import { Validator } from '../../../tools/Validator';
 
 const EditPersonalData = () => {
 	const { state } = useContext(UserContext);
-
-	console.log(state);
 	const [personalData, setPersonalData] = useState<IPersonalData>({
 		firstName: state?.user ? state?.user.personal_data.first_name : '',
 		lastName: state?.user ? state?.user.personal_data.last_name : '',
@@ -109,6 +107,7 @@ const EditPersonalData = () => {
 			back="/app/dashboard"
 			label="Edit your personal details"
 			navbar
+			permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
 		>
 			<Box component="form">
 				<Grid container>
