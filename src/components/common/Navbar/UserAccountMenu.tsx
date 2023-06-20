@@ -119,12 +119,6 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
 							</ListItemIcon>
 							Edit Personal Data
 						</MenuItem>
-						<MenuItem onClick={() => navigate('/app/payments-settings')}>
-							<ListItemIcon>
-								<CreditCardIcon fontSize="small" />
-							</ListItemIcon>
-							Payment settings
-						</MenuItem>
 					</>
 				)}
 
