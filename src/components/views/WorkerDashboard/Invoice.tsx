@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Alert,
@@ -23,8 +23,10 @@ import {
 import { statusFormatter } from '../../../tools/StatusFormatter';
 import { convertType } from '../../../tools/TypeConverter';
 import {InvoiceI} from "../../../shared/interfaces/invoice.interface";
+import UserContext from '../../../contexts/context/UserContext';
 
 const Invoice = () => {
+    const { state } = useContext(UserContext);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const typeParam = urlParams.get('id');
@@ -80,10 +82,8 @@ const Invoice = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(responseData);
             if (responseData.data.payload.length > 0) {
                 const orderDetails = responseData.data.payload[0];
-                console.log(orderDetails);
                 setData({
                     id: orderDetails.id,
                     name: orderDetails.name,
@@ -112,7 +112,6 @@ const Invoice = () => {
             }
         }
     }, [isSuccess]);
-    console.log(invoiceData, 'invoice ');
 
     const navigate = useNavigate();
     const handleEditOrder = async () => {
@@ -129,7 +128,6 @@ const Invoice = () => {
     };
 
     useEffect(() => {
-        console.log(createInvoiceData?.data);
         if (createInvoiceSuccess) {
             setTimeout(() => {
                 navigate(`/app/invoice-item?invoice_id=${createInvoiceData.data.payload.id}&order_id=${createInvoiceData.data.payload.order_id}`);
@@ -143,6 +141,7 @@ const Invoice = () => {
             label={`Create Invoice For Order: ${typeParam}`}
             additionalLabel={`Type: ${data.type} | Date: ${data.startDate}`}
             navbar
+            permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
         >
             <Box component="form">
                 <Grid container>
