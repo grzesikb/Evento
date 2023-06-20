@@ -1,32 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {
-	createBrowserRouter,
-	RouterProvider,
-	Navigate,
-	useNavigate,
-} from 'react-router-dom';
+import React, { useContext, useEffect} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container } from '@mui/material';
-import dayjs from 'dayjs';
-
-import UserDashboard from './components/views/UserDashboard/UserDashboard';
 import { SettingsContext } from './contexts/context/SettingsContext';
-import SignIn from './components/views/Auth/SignIn';
-import SignUp from './components/views/Auth/SignUp';
-import AddUserData from './components/views/Auth/AddUserData';
-import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
-import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
-import AccountSettings from './components/views/AccountSettings/AccountSettings';
-import OrderEvent from './components/views/OrderEvents/OrderEvents';
-import OrderDetails from './components/views/UserAcitons/OrderDetails';
-import EditOrder from './components/views/UserAcitons/EditOrder';
-import WorkerDashboard from './components/views/WorkerDashboard/WorkerDashboard';
-import GuestList from './components/views/UserAcitons/GuestList';
-import Payment from './components/views/UserAcitons/Payment';
-import Pricing from './components/views/WorkerDashboard/Pricing';
-import AdminDashboard from './components/views/AdminDashboard/AdminDashboard';
-import EditAppEmails from './components/views/AdminDashboard/EditAppEmails';
 import { Api } from './tools/Api';
 import Router from './routes/Router';
 import { useMutation } from 'react-query';
@@ -48,16 +24,6 @@ const App = () => {
 			dispatch({ type: UserActions.LOAD_USER, payload: undefined });
 		} else {
 			mutate(localStorage.getItem('accessToken') as string);
-		}
-	}, []);
-
-	useEffect(() => {
-		if (localStorage.getItem('paymentData')) {
-			console.log(JSON.parse(localStorage.getItem('paymentData') as string));
-			paymentDispatch({
-				type: PaymentActions.CREATE_DATA,
-				payload: JSON.parse(localStorage.getItem('paymentData') as string),
-			});
 		}
 	}, []);
 
