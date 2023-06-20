@@ -16,7 +16,7 @@ export interface IOrder {
 	cateringName?: string;
 	clientId?: string;
 	types?: 'Birthdays' | 'Name days' | 'Bachelorette parties' | '';
-	price?: number;
+	price?: number | string;
 	payment_token?: string;
 }
 
