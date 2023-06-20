@@ -45,7 +45,7 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 		minAge: '',
 		numberOfSeats: '',
 		companyName: '',
-		cateringOption: true,
+		cateringOption: false,
 		cateringName: '',
 	});
 
@@ -228,6 +228,7 @@ const OrderCelebrationEvent = (props: IOrderDatesProps) => {
 					endIcon={<SendIcon />}
 					sx={{ fontWeight: 600 }}
 					onClick={handleOrderEvent}
+					disabled={isSuccess}
 				>
 					Order celebration event
 				</Button>
