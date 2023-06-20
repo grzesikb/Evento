@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Grid, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,12 +6,14 @@ import AppContainer from '../../common/AppContainer';
 import { IPaymentDetails } from '../../../shared/interfaces/payment.interface';
 import { useMutation } from 'react-query';
 import { eventDetailService } from '../../../services/eventService';
+import UserContext from '../../../contexts/context/UserContext';
 
 // eslint-disable react/prop-types
 const Success = () => {
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
 	const cost = urlParams.get('cost');
+	const { state } = useContext(UserContext);
 
 	const { mutate, isSuccess, data } = useMutation(eventDetailService);
 
@@ -45,6 +47,7 @@ const Success = () => {
 			back="/app/dashboard"
 			label={`Transaction for order: ${paymentDetails.id}`}
 			navbar
+			permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
 		>
 			<Grid container>
 				<Grid
