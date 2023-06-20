@@ -18,7 +18,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../../../contexts/context/UserContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import EmailIcon from '@mui/icons-material/Email';
 
 interface IUserAccountMenuProps {
 	email?: string;
@@ -118,6 +119,12 @@ const UserAccountMenu = (props: IUserAccountMenuProps) => {
 								<EditIcon fontSize="small" />
 							</ListItemIcon>
 							Edit Personal Data
+						</MenuItem>
+						<MenuItem onClick={() => navigate('/app/emails')}>
+							<ListItemIcon>
+								<EmailIcon fontSize="small" />
+							</ListItemIcon>
+							Emails
 						</MenuItem>
 					</>
 				)}
