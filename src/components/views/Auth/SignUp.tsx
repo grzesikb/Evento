@@ -44,7 +44,6 @@ const SignUp = () => {
 	
 	const onSubmit = async (e: MouseEvent) => {
 		e.preventDefault();
-		console.log(data);
 		if(await validateForm()){
 			mutate(data.email)
 		}
