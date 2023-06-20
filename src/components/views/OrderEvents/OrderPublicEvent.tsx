@@ -236,6 +236,7 @@ const OrderPublicEvent = (props: IOrderDatesProps) => {
 					endIcon={<SendIcon />}
 					sx={{ fontWeight: 600 }}
 					onClick={handleOrderEvent}
+					disabled={isSuccess}
 				>
 					Order public event
 				</Button>
