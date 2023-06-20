@@ -125,6 +125,24 @@ export class Validator {
         } else if(age < 18 || age > 30){
             message = 'Age is too high or low';
             return message;
+        } else if(!validator.isInt(age)){
+            message = 'Integers only';
+            return message;
+        }
+        return message;
+    }
+
+    static async checkPrice(price: any): Promise<string | null>{
+        let message: string | null = null;
+        if(!validator.isNumeric(price)){
+            message = 'Price must be a number';
+            return message;
+        } else if(price < 1){
+            message = 'Price is too low';
+            return message;
+        } else if(!validator.isInt(price)){
+            message = 'Integers only';
+            return message;
         }
         return message;
     }
