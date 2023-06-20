@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, TextField } from '@mui/material';
 import AppContainer from '../../common/AppContainer';
 import { IEmailsApp } from '../../../shared/interfaces/admin.interface';
+import UserContext from '../../../contexts/context/UserContext';
 
 const EditAppEmails = () => {
+  const { state } = useContext(UserContext);
   const [emails, setEmails] = useState<IEmailsApp>({
     securityEmail: '',
     accountantEmail: '',
@@ -17,7 +19,11 @@ const EditAppEmails = () => {
   }, []);
 
   return (
-    <AppContainer back="/app/dashboard" label="Edit app emails" navbar>
+    <AppContainer 
+      back="/app/dashboard" 
+      label="Edit app emails"
+      navbar
+      permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}>
       <TextField
         margin="dense"
         required
