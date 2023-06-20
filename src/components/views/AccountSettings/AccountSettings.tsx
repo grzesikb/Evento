@@ -9,8 +9,10 @@ import { IAccountSettings } from '../../../shared/interfaces/auth.interface';
 import { useMutation } from 'react-query';
 import { changePasswordService } from '../../../services/userService';
 import { Validator } from '../../../tools/Validator';
+import UserContext from '../../../contexts/context/UserContext';
 
 const AccountSettings = () => {
+	const { state } = React.useContext(UserContext);
 	const [accountSettings, setAccountSettings] = useState<IAccountSettings>({
 		oldPassword: '',
 		newPassword: '',
@@ -75,7 +77,7 @@ const AccountSettings = () => {
 		}
 	});
 	return (
-		<AppContainer back="/app/dashboard" label="Account Settings" navbar>
+		<AppContainer back="/app/dashboard" label="Account Settings" navbar permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}>
 			<Box component="form">
 				<Grid container sx={{ width: 400 }}>
 					<Grid item sm={12}>
