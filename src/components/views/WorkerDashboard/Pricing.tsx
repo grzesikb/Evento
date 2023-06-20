@@ -22,6 +22,7 @@ import {
 } from '../../../services/eventService';
 import { statusFormatter } from '../../../tools/StatusFormatter';
 import { convertType } from '../../../tools/TypeConverter';
+import { Validator } from '../../../tools/Validator';
 
 // eslint-disable react/prop-types
 const Pricing = () => {
@@ -44,6 +45,10 @@ const Pricing = () => {
 		isLoading: editLoading,
 	} = useMutation(setPriceService);
 
+	const [errors, setErrors] = useState({
+		price: '',
+	});
+
 	const [data, setData] = useState<IOrder>({
 		id: '',
 		name: '',
@@ -65,12 +70,19 @@ const Pricing = () => {
 		payment_token: ''
 	});
 
-	const [paymentDetails, setPaymentDetails] = useState<IPaymentDetails>({
-		id: null,
-		name: '',
-		startDate: '',
-		cost: '',
-	});
+	const validateForm = async () => {
+		if (data.price !== null) {
+			const priceError = await Validator.checkPrice(data.price);
+			setErrors({
+			  price: priceError ?? '',
+			});
+			return !(priceError);
+		} else{
+			setErrors({
+				price: 'This field is required',
+			});
+		}
+	};
 
 	useEffect(() => {
 		mutate({
@@ -81,10 +93,8 @@ const Pricing = () => {
 
 	useEffect(() => {
 		if (isSuccess) {
-			console.log(responseData);
 			if (responseData.data.payload.length > 0) {
 				const orderDetails = responseData.data.payload[0];
-				console.log(orderDetails);
 				setData({
 					id: '',
 					name: orderDetails.name,
@@ -130,10 +140,12 @@ const Pricing = () => {
 			payment_token: data.payment_token,
 			id: typeParam,
 		};
-		editMutate({
-			access_token: localStorage.getItem('accessToken') as string,
-			orderData: dataToUpdate,
-		});
+		if(await validateForm()){
+			editMutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				orderData: dataToUpdate,
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -144,9 +156,6 @@ const Pricing = () => {
 		}
 	}, [editSuccess]);
 
-	const handleRejectOrder = async () => {
-		navigate('/app/dashboard');
-	};
 	return (
 		<AppContainer
 			back="/app/dashboard"
@@ -199,7 +208,7 @@ const Pricing = () => {
 
 					{/* ---------------- Detailed data ---------------- */}
 
-					{data.type === 'Public' && (
+					{convertType(+data.type) === 'Public' && (
 						<Box
 							sx={{
 								display: 'flex',
@@ -214,8 +223,7 @@ const Pricing = () => {
 									Maximum number of people:
 								</Typography>
 								<Typography variant="h6" sx={{ fontSize: 16 }}>
-									{data.numberOfSeats}
-									{/* maxPeople */}
+									{data.maxPeople}
 								</Typography>
 							</Grid>
 							<Grid item sx={{ ml: 5 }}>
@@ -223,8 +231,7 @@ const Pricing = () => {
 									Minimal age:
 								</Typography>
 								<Typography variant="h6" sx={{ fontSize: 16 }}>
-									{data.types}
-									{/* minAge */}
+									{data.minAge}
 								</Typography>
 							</Grid>
 							<Grid item sx={{ ml: 10 }}>
@@ -232,8 +239,7 @@ const Pricing = () => {
 									Artist:
 								</Typography>
 								<Typography variant="h6" sx={{ fontSize: 16 }}>
-									{data.cateringName}
-									{/* artist */}
+									{data.artist}
 								</Typography>
 							</Grid>
 						</Box>
@@ -330,9 +336,11 @@ const Pricing = () => {
 					id="price"
 					label="Price (zł)"
 					name="price"
-					value={data.price ? data.price : ''}
-					onChange={(e) => setData({ ...data, price: +e.target.value })}
+					value={data.price ?? ''}
+					onChange={(e) => setData({ ...data, price: e.target.value })}
 					sx={{ mt: 3 }}
+					error={!!errors.price}
+					helperText={errors.price}
 				/>
 				<Button
 					variant="contained"
