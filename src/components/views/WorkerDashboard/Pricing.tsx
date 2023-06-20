@@ -73,7 +73,7 @@ const Pricing = () => {
 
 	const validateForm = async () => {
 		if (data.price !== null) {
-			const priceError = await Validator.checkPrice(data.price);
+			const priceError = await Validator.checkPrice(data.price?.toString());
 			setErrors({
 			  price: priceError ?? '',
 			});
@@ -196,8 +196,7 @@ const Pricing = () => {
 						</Typography>
 					</Grid>
 					<Grid item xs={1}></Grid>
-					<Grid item xs={5.5} sx={{ mt: 2 }}>
-					</Grid>
+					
 					<Grid item xs={5.5} sx={{ mt: 2 }}>
 						<Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
 							Status:
@@ -206,7 +205,7 @@ const Pricing = () => {
 							type={data ? (statusFormatter(+data.status) as string) : ''}
 						/>
 					</Grid>
-					<Grid item xs={1}></Grid>
+					
 
 					{/* ---------------- Detailed data ---------------- */}
 
