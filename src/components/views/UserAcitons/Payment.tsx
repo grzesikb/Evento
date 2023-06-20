@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid, Paper, useTheme } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogTitle, Grid, Paper, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import AppContainer from '../../common/AppContainer';
@@ -10,24 +10,57 @@ import {
 } from '../../../shared/interfaces/payment.interface';
 import { loadStripe } from '@stripe/stripe-js';
 import { useMutation } from 'react-query';
-import { eventDetailService } from '../../../services/eventService';
-// Make sure to call `loadStripe` outside of a component’s render to avoid
-// recreating the `Stripe` object on every render.
+import { eventDetailService, setPriceService } from '../../../services/eventService';
+import {
+	statusFormatter,
+	statusGetter,
+	statuses,
+} from '../../../tools/StatusFormatter';
 const stripePromise = loadStripe(
 	'pk_test_51NGhtFCx3j1gch1GW7UZ1fU5YAc9Cw1hvRPmehqnNmIeqlECsQxft8xdNnTRUzH5LjfdRqNVZLNptk23VCY8GgV200Ll4DxgVl'
 );
 
-// eslint-disable react/prop-types
 const Payment = () => {
 	const theme = useTheme();
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
 
-	// sprawdzanie czy jest metoda płatności podpięta
 	const isPaymentMethod = true;
 
 	const { mutate, isSuccess, data } = useMutation(eventDetailService);
+
+	const {
+		mutate: updateMutate,
+		data: updateData,
+		isSuccess: updateSuccess,
+		isLoading,
+	} = useMutation(setPriceService);
+
+	const [openDialog, setOpenDialog] = useState<{
+		open: boolean;
+	}>({
+		open: false,
+	});
+
+	const mutation = useMutation({
+		mutationFn: (data: { id: string; option: string }) =>
+			eventDetailService({
+				access_token: localStorage.getItem('accessToken') as string,
+				id: data.id,
+			}),
+		onMutate: () => {},
+		onSuccess(data, variables, context) {
+			const eventData = data.data.payload[0];
+			eventData.status = statusGetter(variables.option);
+
+			updateMutate({
+				access_token: localStorage.getItem('accessToken') as string,
+				orderData: eventData,
+			});
+		},
+		onError(error, variables, context) {},
+	});
 
 	useEffect(() => {
 		mutate({
@@ -58,40 +91,6 @@ const Payment = () => {
 		cost: '',
 	});
 
-	const [payment, setPayment] = useState<IPaymentInfo>({
-		name: '',
-		surname: '',
-		number: '',
-		expiration_date: '' as string,
-		CCV: '',
-		id: '',
-	});
-
-	useEffect(() => {
-		if (localStorage.getItem('paymentData')) {
-			const paymentData = JSON.parse(
-				localStorage.getItem('paymentData') as string
-			);
-			setPayment({
-				name: paymentData.name,
-				surname: paymentData.surname,
-				number: paymentData.number,
-				CCV: paymentData.CCV,
-				expiration_date: paymentData.expiration_date,
-				id: paymentData.id,
-			});
-		} else {
-			setPayment({
-				name: '',
-				surname: '',
-				number: '',
-				CCV: '',
-				expiration_date: '' as string,
-				id: '' as string,
-			});
-		}
-	}, []);
-
 	const navigate = useNavigate();
 
 	const handlePayment = async () => {
@@ -108,14 +107,17 @@ const Payment = () => {
 			cancelUrl: 'http://localhost:3000/app/dashboard',
 			clientReferenceId: typeParam!
 		});
-
-		// If `redirectToCheckout` fails due to a browser or network
-		// error, display the localized error message to your customer
-		// using `error.message`.
 	};
 
 	const handleRejectPayment = async () => {
+		const response = await mutation.mutate({ id: paymentDetails?.id!, option: 'Rejected'});
 		navigate('/app/dashboard');
+	};
+
+	const handleClose = () => {
+		setOpenDialog({
+			open: false,
+		});
 	};
 
 	return (
@@ -124,6 +126,27 @@ const Payment = () => {
 			label={`Payment order: ${typeParam}`}
 			navbar
 		>
+			<Dialog open={openDialog.open} onClose={handleClose}>
+				<DialogTitle>
+					Are you sure you want to reject order?
+				</DialogTitle>
+
+				<DialogActions>
+					<Button
+						onClick={handleClose}
+						sx={{ color: theme.palette.mode === 'dark' ? '#fff' : '#000' }}
+					>
+						No
+					</Button>
+					<Button
+						onClick={() => handleRejectPayment()}
+						variant="contained"
+						color="error"
+					>
+						Yes
+					</Button>
+				</DialogActions>
+			</Dialog>
 			<Grid container>
 				<Grid item xs={12}>
 					{`Name:  ${paymentDetails.name}`}
@@ -143,29 +166,6 @@ const Payment = () => {
 				>
 					{`${paymentDetails.cost}zł`}
 				</Grid>
-				{isPaymentMethod ? (
-					<>
-						<Grid item xs={12} sx={{ mt: 3 }}>
-							Pament Method:
-							<Paper sx={{ padding: 4, mt: 1, borderRadius: 4 }}>
-								<div>
-									<b>Name:</b> {payment.name}
-								</div>
-								<div>
-									<b>Surname:</b> {payment.surname}
-								</div>
-								<div>
-									<b>Number:</b> {payment.number}
-								</div>
-								<div>
-									<b>Expiration time: </b>
-									{payment.expiration_date as string}
-								</div>
-								<div>
-									<b>CCV:</b> {payment.CCV}
-								</div>
-							</Paper>
-						</Grid>
 						<Button
 							variant="contained"
 							sx={{ fontWeight: 600, mt: 3 }}
@@ -181,16 +181,10 @@ const Payment = () => {
 								ml: 2,
 								color: theme.palette.mode === 'dark' ? '#fff' : '#000',
 							}}
-							onClick={handleRejectPayment}
+							onClick={() => setOpenDialog({ open: true})}
 						>
 							Reject the order
 						</Button>
-					</>
-				) : (
-					<div style={{ color: 'red', marginTop: 10 }}>
-						To pay for this order, please add a payment method
-					</div>
-				)}
 			</Grid>
 		</AppContainer>
 	);
