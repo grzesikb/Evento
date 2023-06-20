@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogTitle, Grid, Paper, useTheme } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,13 +16,14 @@ import {
 	statusGetter,
 	statuses,
 } from '../../../tools/StatusFormatter';
+import UserContext from '../../../contexts/context/UserContext';
 const stripePromise = loadStripe(
 	'pk_test_51NGhtFCx3j1gch1GW7UZ1fU5YAc9Cw1hvRPmehqnNmIeqlECsQxft8xdNnTRUzH5LjfdRqNVZLNptk23VCY8GgV200Ll4DxgVl'
 );
 
 const Payment = () => {
 	const theme = useTheme();
-
+	const { state } = useContext(UserContext);
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
 
@@ -125,6 +126,7 @@ const Payment = () => {
 			back="/app/dashboard"
 			label={`Payment order: ${typeParam}`}
 			navbar
+			permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
 		>
 			<Dialog open={openDialog.open} onClose={handleClose}>
 				<DialogTitle>
