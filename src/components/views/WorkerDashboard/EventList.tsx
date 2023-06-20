@@ -83,12 +83,7 @@ const EventList = () => {
 			}),
 		onMutate: () => {},
 		onSuccess(data, variables, context) {
-			console.log(context);
-			console.log(variables);
 			const eventData = data.data.payload[0];
-
-			console.log(variables);
-
 			eventData.status = statusGetter(variables.option);
 
 			updateMutate({
@@ -105,8 +100,6 @@ const EventList = () => {
 		}
 	}, [updateSuccess]);
 
-	console.log(events);
-
 	const handleCreateGuestList = async (id: string) => {
 		await setOrderId(id);
 		await guestListMutate({
@@ -116,7 +109,6 @@ const EventList = () => {
 	};
 
 	useEffect(() => {
-		console.log(invoiceForOrderData, 'Test');
 		const order_id = invoiceForOrderData?.data.payload.order_id;
 		const invoice_id = invoiceForOrderData?.data.payload.id;
 		if (isInvoiceSuccess)
@@ -200,7 +192,7 @@ const EventList = () => {
 							<EditIcon />
 						</IconButton>
 					}
-					{events.find((item) => item.id === params.id).status!=='Rejected' &&
+					{events.find((item) => item.id === params.id).status!=='Rejected' && events.find((item) => item.id === params.id).type !== 1 &&
 						<IconButton
 						onClick={() => handleCreateGuestList(params.id as string)}
 						title="Guest list"
@@ -287,7 +279,8 @@ const EventList = () => {
 					startDate: event.start_date,
 					finishDate: event.start_date,
 					status: statusFormatter(event.status),
-					payment_token: event.payment_token
+					payment_token: event.payment_token,
+					type: event.type,
 				});
 			});
 			setEvents(formattedEvents);
