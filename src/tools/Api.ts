@@ -59,7 +59,6 @@ export class Api {
 	}
 
 	static async createEvent(access_token: string, data: any) {
-		console.log(data);
 		return Api.axiosInstance.post('/order/', data, {
 			headers: {
 				'Access-Control-Allow-Origin': '*',
