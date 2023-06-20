@@ -40,14 +40,10 @@ const Success = () => {
 		cost: '',
 	});
 
-	const handleGetInvoice = async () => {
-		// po kliknieciu ma dawac fakturke
-	};
-
 	return (
 		<AppContainer
 			back="/app/dashboard"
-			label={`Transaction: ${paymentDetails.id}`}
+			label={`Transaction for order: ${paymentDetails.id}`}
 			navbar
 		>
 			<Grid container>
@@ -61,26 +57,16 @@ const Success = () => {
 				<Grid item xs={12} sx={{ mt: 2 }}>
 					Cost:
 				</Grid>
-				<Grid item xs={12} sx={{ fontSize: 25, fontWeight: 700 }}>
+				<Grid item xs={12} sx={{ fontSize: 25, fontWeight: 700, mb: 4}}>
 					{`${cost}zł`}
-				</Grid>
-				<Grid item xs={12} sx={{ mt: 4 }}>
-					Order:
 				</Grid>
 				<Grid item xs={5.5}>
 					Name: Płatność za zamówione wydarzenie
 				</Grid>
 				<Grid item xs={1}></Grid>
 				<Grid item xs={5.5}>
-					Date: {paymentDetails.startDate}
+					Order date: {paymentDetails.startDate}
 				</Grid>
-				<Button
-					variant="contained"
-					sx={{ fontWeight: 600, mt: 3 }}
-					onClick={handleGetInvoice}
-				>
-					GET INVOICE
-				</Button>
 			</Grid>
 		</AppContainer>
 	);
