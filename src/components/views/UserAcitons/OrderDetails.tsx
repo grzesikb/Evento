@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 
 import AppContainer from '../../common/AppContainer';
@@ -8,8 +8,10 @@ import { useMutation } from 'react-query';
 import { eventDetailService } from '../../../services/eventService';
 import { convertType } from '../../../tools/TypeConverter';
 import { statusFormatter } from '../../../tools/StatusFormatter';
+import UserContext from '../../../contexts/context/UserContext';
 
 const OrderDetails = () => {
+	const { state } = useContext(UserContext);
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const typeParam = urlParams.get('id');
@@ -79,6 +81,7 @@ const OrderDetails = () => {
 			back="/app/dashboard"
 			label={`Order details: ${typeParam}`}
 			navbar
+			permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
 		>
 			<Grid container>
 				{!isLoading ? (
