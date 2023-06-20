@@ -14,7 +14,6 @@ import SignIn from '../components/views/Auth/SignIn';
 import SignUp from '../components/views/Auth/SignUp';
 import EditPersonalData from '../components/views/EditPersonalData/EditPersonalData';
 import OrderEvent from '../components/views/OrderEvents/OrderEvents';
-import PaymentSettings from '../components/views/PaymentSettings/PaymentSettings';
 import EditOrder from '../components/views/UserAcitons/EditOrder';
 import GuestList from '../components/views/UserAcitons/GuestList';
 import OrderDetails from '../components/views/UserAcitons/OrderDetails';
@@ -33,12 +32,6 @@ const Router = () => {
 	const { state } = useContext(UserContext);
 
 	if (state?.user === null) return <></>;
-
-	// Auth Context
-	let role;
-	// tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
-	// eslint-disable-next-line prefer-const
-	role = 'User'; // 'Worker' | 'User' | 'Admin'
 
 	const router = createBrowserRouter([
 		{
@@ -73,10 +66,6 @@ const Router = () => {
 				{
 					path: 'edit-personal-data',
 					element: <EditPersonalData />,
-				},
-				{
-					path: 'payments-settings',
-					element: <PaymentSettings />,
 				},
 				{
 					path: 'account-settings',
