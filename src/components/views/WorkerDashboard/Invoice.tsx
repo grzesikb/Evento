@@ -24,6 +24,7 @@ import { statusFormatter } from '../../../tools/StatusFormatter';
 import { convertType } from '../../../tools/TypeConverter';
 import {InvoiceI} from "../../../shared/interfaces/invoice.interface";
 import UserContext from '../../../contexts/context/UserContext';
+import { Validator } from '../../../tools/Validator';
 
 const Invoice = () => {
     const { state } = useContext(UserContext);
@@ -38,6 +39,21 @@ const Invoice = () => {
         nip: '',
         created_at: '',
     })
+
+    const [errors, setErrors] = useState({
+		invoice_nr: '',
+		nip: '',
+	});
+
+    const validateForm = async () => {
+		const invoice_nrError = await Validator.checkRequiredString(invoiceData.invoice_nr);
+		const nipError = await Validator.checkNip(invoiceData.nip);
+		setErrors({
+			invoice_nr: invoice_nrError ?? '',
+			nip: nipError ?? '',
+		})
+		return !(invoice_nrError || nipError)
+	};
 
     const [data, setData] = useState<IOrder>({
         id: '',
@@ -116,15 +132,16 @@ const Invoice = () => {
     const navigate = useNavigate();
     const handleEditOrder = async () => {
         const now = new Date();
-
-        createInvoiceMutate({
-            access_token: localStorage.getItem('accessToken') as string,
-            invoiceData: {
-                ...invoiceData,
-                nip: parseFloat(invoiceData.nip),
-                created_at: `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`
-             },
-        });
+        if(await validateForm()){
+            createInvoiceMutate({
+                access_token: localStorage.getItem('accessToken') as string,
+                invoiceData: {
+                    ...invoiceData,
+                    nip: parseFloat(invoiceData.nip),
+                    created_at: `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`
+                 },
+            });
+        }
     };
 
     useEffect(() => {
@@ -155,6 +172,8 @@ const Invoice = () => {
                             name="name"
                             value={invoiceData.invoice_nr}
                             onChange={(e) => setInvoiceData({ ...invoiceData, invoice_nr: e.target.value })}
+                            error={!!errors.invoice_nr}
+					        helperText={errors.invoice_nr}
                         />
                     </Grid>
 
@@ -174,6 +193,8 @@ const Invoice = () => {
                                     multiline
                                     value={invoiceData.nip.replace(/\D/g, '')}
                                     onChange={(e) => setInvoiceData({ ...invoiceData, nip: e.target.value })}
+                                    error={!!errors.nip}
+					                helperText={errors.nip}
                                 />
                             </Grid>
 
@@ -203,8 +224,8 @@ const Invoice = () => {
                 </Button>
             </Box>
             {createInvoiceSuccess && (
-                <Alert severity="success">
-                    Za chwile nastąpi przekierowanie...
+                <Alert sx={{mt:2 }} severity="success">
+                    Invoice created! Page will be refreshed soon..
                 </Alert>
             )}
         </AppContainer>
