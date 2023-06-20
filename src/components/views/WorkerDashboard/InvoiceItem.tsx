@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
     Alert,
@@ -27,6 +27,8 @@ import {InvoiceI} from "../../../shared/interfaces/invoice.interface";
 import invoice from "./Invoice";
 import {InvoiceItemCreateI, InvoiceItemI} from "../../../shared/interfaces/invoiceItem.interface";
 import PrintIcon from '@mui/icons-material/Print';
+import UserContext from '../../../contexts/context/UserContext';
+import { Validator } from '../../../tools/Validator';
 
 function Textera() {
     return null;
@@ -37,6 +39,7 @@ const InvoiceItem = () => {
     const urlParams = new URLSearchParams(queryString);
     const invoiceId = urlParams.get('invoice_id');
     const orderId = urlParams.get('order_id');
+    const { state } = useContext(UserContext);
 
     const [invoiceData, setInvoiceData] = useState<InvoiceI>({
         order_id: '',
@@ -52,6 +55,24 @@ const InvoiceItem = () => {
         count:'',
         price_per_item:'',
     })
+
+    const [errors, setErrors] = useState({
+		invoiceItemName: '',
+		count: '',
+        price: ''
+	});
+
+	const validateForm = async () => {
+		const invoiceItemNameError = await Validator.checkRequiredString(invoiceItems.name);
+		const countError = await Validator.checkCount(invoiceItems.count);
+        const priceError = await Validator.checkPrice(invoiceItems.price_per_item);
+		setErrors({
+			invoiceItemName: invoiceItemNameError ?? '',
+			count: countError ?? '',
+            price: priceError ?? ''
+		})
+		return !(invoiceItemNameError || countError || priceError)
+	};
 
     const navigate = useNavigate();
 
@@ -89,18 +110,24 @@ const InvoiceItem = () => {
                 setInvoiceItems(prevState => ({...prevState, invoice_id: responseData.data.payload.id}))
             }
     }, [isSuccess]);
-    console.log(responseData?.data.payload.items, 'items');
 
     const handleEditOrder = async () => {
-
-        createInvoiceItemMutate({
-            access_token: localStorage.getItem('accessToken') as string,
-            invoiceData: {
-                ...invoiceItems,
-                price_per_item: parseFloat(invoiceItems.price_per_item ?? ''),
-                count: parseFloat(invoiceItems.count ?? '')
-            },
-        });
+        if(await validateForm()){
+            createInvoiceItemMutate({
+                access_token: localStorage.getItem('accessToken') as string,
+                invoiceData: {
+                    ...invoiceItems,
+                    price_per_item: parseFloat(invoiceItems.price_per_item ?? ''),
+                    count: parseFloat(invoiceItems.count ?? '')
+                },
+            });
+            setInvoiceItems({
+                name:'',
+                invoice_id:'',
+                count:'',
+                price_per_item:'',
+            })
+        }
     };
     const handlePrintInvoice = async () => {
         setTimeout(() => {
@@ -122,6 +149,7 @@ const InvoiceItem = () => {
             label={`Adding Items To Invoice: ${invoiceData.invoice_nr}`}
             additionalLabel={`Date: ${invoiceData.created_at}`}
             navbar
+            permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
         >
             <Box component="form">
                 <Grid container>
@@ -142,6 +170,8 @@ const InvoiceItem = () => {
                             name="name"
                             value={invoiceItems.name}
                             onChange={(e) => setInvoiceItems(prevState => ({...prevState, name: e.target.value}))}
+                            error={!!errors.invoiceItemName}
+					        helperText={errors.invoiceItemName}
                         />
                     </Grid>
 
@@ -157,6 +187,8 @@ const InvoiceItem = () => {
                             multiline
                             value={invoiceItems.count?.replace(/\D/g, '')}
                             onChange={(e) => setInvoiceItems(prevState => ({...prevState, count: e.target.value}))}
+                            error={!!errors.count}
+					        helperText={errors.count}
                         />
                     </Grid>
                     <Grid item sm={12}>
@@ -171,6 +203,8 @@ const InvoiceItem = () => {
                             multiline
                             value={invoiceItems.price_per_item?.replace(/\D/g, '')}
                             onChange={(e) => setInvoiceItems(prevState => ({...prevState, price_per_item: e.target.value}))}
+                            error={!!errors.price}
+					        helperText={errors.price}
                         />
                     </Grid>
 
@@ -199,15 +233,16 @@ const InvoiceItem = () => {
                 <Button
                     variant="contained"
                     endIcon={<PrintIcon />}
-                    sx={{ fontWeight: 600 }}
+                    sx={{ fontWeight: 600, ml: 5 }}
                     onClick={handlePrintInvoice}
+                    disabled={responseData?.data.payload.items.length===0}
                 >
                     Print Invoice
                 </Button>
             </Box>
             {createInvoiceItemSuccess && (
-                <Alert severity="success">
-                    Dodano! Za chwile nastąpi przekierowanie...
+                <Alert sx={{mt: 2}} severity="success">
+                    Added item to invoice!
                 </Alert>
             )}
         </AppContainer>
