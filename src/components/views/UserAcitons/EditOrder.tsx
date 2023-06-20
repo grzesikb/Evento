@@ -142,6 +142,7 @@ const EditOrder = () => {
 			label={`Edit order: ${typeParam}`}
 			additionalLabel={`Type: ${data.type} | Date: ${data.startDate}`}
 			navbar
+			permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
 		>
 			<Box component="form">
 				<Grid container>
