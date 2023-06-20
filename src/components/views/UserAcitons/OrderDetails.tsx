@@ -116,9 +116,6 @@ const OrderDetails = () => {
 							</Typography>
 						</Grid>
 						<Grid item xs={1}></Grid>
-						<Grid item xs={5.5} sx={{ mt: 2 }}>
-
-						</Grid>
 
 						<Grid item xs={5.5} sx={{ mt: 2 }}>
 							<Typography variant="h6" sx={{ fontSize: 16, color: 'grey' }}>
@@ -126,7 +123,7 @@ const OrderDetails = () => {
 							</Typography>
 							<StatusChip type={data.status} />
 						</Grid>
-						<Grid item xs={1}></Grid>
+						
 
 						{/* ---------------- Detailed data ---------------- */}
 
