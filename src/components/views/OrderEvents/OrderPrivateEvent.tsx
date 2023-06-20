@@ -238,10 +238,6 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 						<Typography component="h5" variant="body2" sx={{ mt: 2, mb: 2 }}>
 							* require
 						</Typography>
-						<Typography component="h5" variant="body2" sx={{ mt: 2, mb: 2 }}>
-							Ability to create a guest list only after verification of the
-							event
-						</Typography>
 					</Grid>
 					<Grid item sm={5.5}></Grid>
 				</Grid>
@@ -250,6 +246,7 @@ const OrderPrivateEvent = (props: IOrderDatesProps) => {
 					endIcon={<SendIcon />}
 					sx={{ fontWeight: 600 }}
 					onClick={handleOrderEvent}
+					disabled={isSuccess}
 				>
 					Order private event
 				</Button>
