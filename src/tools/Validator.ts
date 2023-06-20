@@ -146,4 +146,31 @@ export class Validator {
         }
         return message;
     }
+
+    static async checkCount(count: any): Promise<string | null>{
+        let message: string | null = null;
+        if(!validator.isNumeric(count)){
+            message = 'Count must be a number';
+            return message;
+        } else if(count < 1){
+            message = 'Count is too low';
+            return message;
+        } else if(!validator.isInt(count)){
+            message = 'Integers only';
+            return message;
+        }
+        return message;
+    }
+
+    static async checkNip(nip: any): Promise<string | null>{
+        let message: string | null = null;
+        if(!validator.isNumeric(nip)){
+            message = 'Nip must be a number';
+            return message;
+        } else if(!validator.isInt(nip)){
+            message = 'Integers only';
+            return message;
+        }
+        return message;
+    }
 }
