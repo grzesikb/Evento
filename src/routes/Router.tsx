@@ -27,6 +27,7 @@ import Invoice from "../components/views/WorkerDashboard/Invoice";
 import InvoiceItem from "../components/views/WorkerDashboard/InvoiceItem";
 import { userActions } from '../contexts/actions/user.actions';
 import PrintingInvoice from "../components/views/WorkerDashboard/PrintingInvoice";
+import Emails from '../components/common/Emails';
 
 const Router = () => {
 	const { state } = useContext(UserContext);
@@ -118,6 +119,10 @@ const Router = () => {
 				{
 					path: 'add-user-data',
 					element: state?.user?.personal_data! ? <Navigate to="/" replace /> : <AddUserData isCreateAccount={false}/>,
+				},
+				{
+					path: 'emails',
+					element: <Emails />,
 				},
 			],
 		},
