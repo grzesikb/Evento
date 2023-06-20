@@ -98,7 +98,6 @@ const SignIn = () => {
 
 	useEffect(() => {
 		if (googleSuccess && googleSuccess) {
-			console.log(googleResponse.data);
 			if(googleResponse) refreshMutate(googleResponse.data.refresh_token);
 		}
 	}, [googleSuccess, googleResponse]);
@@ -176,18 +175,17 @@ const SignIn = () => {
 						value={data.password}
 						onChange={(e) => setData({ ...data, password: e.target.value })}
 					/>
-          {errors.password && (
-            <FormHelperText error>{errors.password}</FormHelperText>
-          )}
+			{errors.password && (
+				<FormHelperText error>{errors.password}</FormHelperText>
+			)}
 				</FormControl>
-        {isError && (
-          <Alert sx={{ minWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
-        )}
+			{isError && (
+			<Alert sx={{ minWidth: '350px', mt: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
+			)}
 				<Box sx={{minWidth: '350px', mt: 2, display: 'flex', justifyContent: 'center'}}>
 					<GoogleOAuthProvider clientId="643015372662-hkj0n07rm68jit3cfs95tg37f65a775d.apps.googleusercontent.com">
 						<GoogleLogin
 							onSuccess={(credentialResponse : any)=> {
-								console.log(credentialResponse);
 								googleMutate(credentialResponse.credential)
 							}}
 							onError={() => {
