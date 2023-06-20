@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
 	Alert,
@@ -23,11 +23,12 @@ import {
 import { statusFormatter } from '../../../tools/StatusFormatter';
 import { convertType } from '../../../tools/TypeConverter';
 import { Validator } from '../../../tools/Validator';
+import UserContext from '../../../contexts/context/UserContext';
 
 // eslint-disable react/prop-types
 const Pricing = () => {
 	const theme = useTheme();
-
+	const { state } = useContext(UserContext);
 	const urlParams = new URLSearchParams(window.location.search);
 	const typeParam = urlParams.get('id');
 
@@ -161,6 +162,7 @@ const Pricing = () => {
 			back="/app/dashboard"
 			label={`Pricing order: ${typeParam}`}
 			navbar
+			permission={state?.user?.role===1 ? 'User' : (state?.user?.role===2 ? 'Worker' : 'Admin')}
 		>
 			<Box component="form">
 				<Grid container>
