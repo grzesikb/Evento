@@ -16,6 +16,7 @@ import WorkerList from './WorkerList';
 import { IWorkersList } from '../../../shared/interfaces/admin.interface';
 import { useMutation } from 'react-query';
 import { createWorkerService } from '../../../services/workerService';
+import { Validator } from '../../../tools/Validator';
 
 const AdminDashboard = () => {
 	const theme = useTheme();
@@ -29,6 +30,24 @@ const AdminDashboard = () => {
 		repeatPassword: '',
 	});
 
+	const [errors, setErrors] = useState({
+		email: '',
+		password: '',
+		repeatPassword: '',
+	});
+
+	const validateForm = async () => {
+		const emailError = await Validator.checkEmail(worker.email);
+		const passwordError = await Validator.checkPassword(worker.password, true);
+		const repeatPassword = await Validator.checkRepeatPassword(worker.password, worker.repeatPassword)
+		setErrors({
+			email: emailError ?? '',
+			password: passwordError ?? '',
+			repeatPassword: repeatPassword ?? '',
+		})
+		return !(emailError || passwordError || repeatPassword)
+	};
+
 	const handleCloseDialog = async () => {
 		setOpenDialog(false);
 	};
@@ -37,6 +56,8 @@ const AdminDashboard = () => {
 		mutate: addMutate,
 		isSuccess: addSuccess,
 		data: addData,
+		isError,
+		error
 	} = useMutation(createWorkerService);
 
 	const handleAddWorker = async () => {
@@ -45,10 +66,12 @@ const AdminDashboard = () => {
 			password: worker.password,
 			role: 2,
 		};
-		addMutate({
-			accessToken: localStorage.getItem('accessToken') as string,
-			data: datatoSend,
-		});
+		if(await validateForm()){
+			addMutate({
+				accessToken: localStorage.getItem('accessToken') as string,
+				data: datatoSend,
+			});
+		}
 	};
 
 	useEffect(() => {
@@ -59,7 +82,7 @@ const AdminDashboard = () => {
 
 	return (
 		<Box>
-			<Navbar email="admin@gmail.com" permission="Admin" />
+			<Navbar permission="Admin" />
 			<Paper
 				variant="outlined"
 				sx={{ padding: 3, marginTop: 10, borderRadius: 4 }}
@@ -83,6 +106,8 @@ const AdminDashboard = () => {
 							required
 							value={worker.email}
 							onChange={(e) => setWorker({ ...worker, email: e.target.value })}
+							error={!!errors.email}
+							helperText={errors.email}
 						/>
 
 						<TextField
@@ -96,6 +121,8 @@ const AdminDashboard = () => {
 							onChange={(e) =>
 								setWorker({ ...worker, password: e.target.value })
 							}
+							error={!!errors.password}
+							helperText={errors.password}
 						/>
 
 						<TextField
@@ -109,6 +136,8 @@ const AdminDashboard = () => {
 							onChange={(e) =>
 								setWorker({ ...worker, repeatPassword: e.target.value })
 							}
+							error={!!errors.repeatPassword}
+							helperText={errors.repeatPassword}
 						/>
 					</DialogContent>
 					<DialogActions>
@@ -124,14 +153,19 @@ const AdminDashboard = () => {
 						>
 							Add
 						</Button>
+						
 					</DialogActions>
 					{addSuccess && (
-						<Alert severity="success">
+						<Alert  severity="success">
 							Worker created! Page will be refreshed in a moment....
 						</Alert>
-					)}
+						)}
+						{isError && (
+						<Alert severity="error">{(error as any).response.data.detail}</Alert>
+						)}
 				</Dialog>
 				<WorkerList />
+				
 			</Paper>
 		</Box>
 	);
