@@ -1,79 +1,66 @@
-/* eslint-disable react/jsx-props-no-spreading */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEvent} from 'react';
 import {
   Alert,
   Box,
   Button,
-  Collapse,
   Grid,
   TextField,
   Typography,
 } from '@mui/material';
-import { DateTimePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
-/* ATTENTION. Older version of @mui/x-date-pickers-pro used because 
-it has a better time picker and the new one doesn't have. Don't upgrade */
-
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers-pro';
+import { useMutation } from 'react-query';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-
 import OrderPublicEvent from './OrderPublicEvent';
 import OrderPrivateEvent from './OrderPrivateEvent';
 import OrderCelebrationEvent from './OrderCelebrationEvent';
 import AppContainer from '../../common/AppContainer';
 import { IOrderDatesProps } from '../../../shared/interfaces/order.interface';
+import { checkDateService, getDatesService } from '../../../services/eventService';
+import { Validator } from '../../../tools/Validator';
 
 interface IProps {
   type: string;
-  isReady: boolean;
 }
 
 const OrderEvent = () => {
   const [propsEvent, setPropsEvent] = useState<IProps>({
     type: '',
-    isReady: false,
   });
 
-  const [eventDates, setEventDates] = useState<IOrderDatesProps>({
-    startDate: null,
-    finishDate: null,
+  const [data, setData] = useState<IOrderDatesProps>({
+    startDate: ''
   });
 
-  const [openAlert, setOpenAlert] = useState<{
-    success: boolean;
-    error: boolean;
-  }>({
-    success: false,
-    error: false,
-  });
+  const [date, setDate] = useState<string>('')
+  const [blockedDates, setBlockedDates] = useState<string[]>([]);
 
-  const checkDateAvailability = async () => {
-    try {
-      //
-      // tu sprawdzanie czy data jest dostępna
-      //
-      // rand tylko do testów ale ma zwracać true lub false
-      const randomBoolean: boolean = Math.random() < 0.5;
-      return randomBoolean;
-    } catch (error) {
-      return Promise.reject(error);
-    }
-  };
-
-  const checkAvailability = async () => {
-    let availability;
-    if (eventDates.startDate && eventDates.finishDate) {
-      availability = checkDateAvailability();
-      if (await availability) {
-        setOpenAlert({ success: true, error: false });
-      } else {
-        setOpenAlert({ success: false, error: true });
+  useEffect(()=>{
+    const fetchBlockedDates = async ()=>{
+      try{
+        const response = await getDatesService();
+        setBlockedDates(response.data.payload);  
+      } catch (error){
+        console.log(error)
       }
-    } else {
-      setOpenAlert({ success: false, error: false });
     }
-  };
+    fetchBlockedDates();
+  },[])
 
-  const handleSelectDate = async () => {
+  const [errors, setErrors] = useState({
+		date: '',
+	});
+
+  const {
+		mutate,
+		isSuccess,
+		data: responseData,
+		isError,
+		error,
+	} = useMutation(checkDateService);
+
+
+  const checkType = async () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const typeParam = urlParams.get('type');
@@ -82,32 +69,62 @@ const OrderEvent = () => {
       typeParam === 'private' ||
       typeParam === 'celebration'
     ) {
-      setPropsEvent({ type: typeParam, isReady: true });
+      await setPropsEvent({type: typeParam});
     }
   };
+
+  const validateDate = async () => {
+		const dateError = await Validator.checkDate(date);
+		setErrors({
+			date: dateError ?? '',
+		})
+		return !(dateError)
+	};
+
+  const onSubmit = async (e: MouseEvent) => {
+		e.preventDefault();
+    if (await validateDate()) {
+        mutate(date);
+    }
+	};
+
   useEffect(() => {
-    checkAvailability();
-  }, [eventDates]);
+		if (isSuccess) {
+			checkType()
+		}
+	}, [isSuccess]);
+
+  useEffect(()=>{
+    if(data.startDate){
+      setDate(new Date(data.startDate).toLocaleDateString())
+    }
+  },[data.startDate])
+
+  const shouldDisableDate = (date: string) => {
+    for (const blockedDate of blockedDates){
+      if(blockedDate === new Date(date).toLocaleDateString()){
+        return true
+      }
+    }
+    return false
+  };
 
   return (
     <Box>
-      {propsEvent.isReady ? (
+      {isSuccess ? (
         (propsEvent.type === 'public' && (
           <OrderPublicEvent
-            startDate={eventDates.startDate}
-            finishDate={eventDates.finishDate}
+            startDate={date}
           />
         )) ||
         (propsEvent.type === 'private' && (
           <OrderPrivateEvent
-            startDate={eventDates.startDate}
-            finishDate={eventDates.finishDate}
+            startDate={date}
           />
         )) ||
         (propsEvent.type === 'celebration' && (
           <OrderCelebrationEvent
-            startDate={eventDates.startDate}
-            finishDate={eventDates.finishDate}
+            startDate={date}
           />
         ))
       ) : (
@@ -121,21 +138,24 @@ const OrderEvent = () => {
             <Grid container>
               <Grid item sm={5}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    inputFormat="DD-MM-YYYY HH:mm"
-                    renderInput={(propsTextField) => (
-                      <TextField {...propsTextField} />
+                  <DatePicker
+                    inputFormat="DD.MM.YYYY"
+                    renderInput={(params) => (
+                      <TextField {...params}
+                        inputProps={{...params.inputProps, readOnly: true}}
+                        error={!!errors.date}
+                        helperText={errors.date}/>
                     )}
-                    label="Start date and time*"
-                    value={eventDates.startDate}
+                    label="Date of event*"
+                    value={data.startDate}
                     onChange={(value) =>
-                      setEventDates({
-                        ...eventDates,
+                      setData({
+                        ...data,
                         startDate: value,
                       })
                     }
-                    ampm={false}
                     disablePast
+                    shouldDisableDate={shouldDisableDate}
                   />
                 </LocalizationProvider>
               </Grid>
@@ -149,28 +169,9 @@ const OrderEvent = () => {
                     color: 'grey',
                   }}
                 >
-                  -
                 </Typography>
               </Grid>
               <Grid item sm={5}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DateTimePicker
-                    inputFormat="DD-MM-YYYY HH:mm"
-                    renderInput={(propsTextField) => (
-                      <TextField {...propsTextField} />
-                    )}
-                    label="Finish date and time*"
-                    value={eventDates.finishDate}
-                    onChange={(value) =>
-                      setEventDates({
-                        ...eventDates,
-                        finishDate: value,
-                      })
-                    }
-                    ampm={false}
-                    disablePast
-                  />
-                </LocalizationProvider>
               </Grid>
 
               <Grid item sm={6.5}>
@@ -184,29 +185,19 @@ const OrderEvent = () => {
               </Grid>
               <Grid item sm={5.5}></Grid>
             </Grid>
-            <Collapse in={openAlert.success}>
-              <Alert severity="success" sx={{ m: 2 }}>
-                Selected dates are free
-              </Alert>
-            </Collapse>
-            <Collapse in={openAlert.error}>
-              <Alert severity="info" color="error" sx={{ m: 2 }}>
-                The selected date is already taken. Please select a different
-                date
-              </Alert>
-            </Collapse>
+            {isError && (
+              <Alert sx={{ minWidth: '350px', mt: 1, mb: 1 }} severity="error">{(error as any).response.data.detail}</Alert>
+            )}
 
-            {openAlert.success && (
               <Button
                 variant="contained"
                 endIcon={<CalendarTodayIcon />}
                 sx={{ fontWeight: 600 }}
                 fullWidth
-                onClick={handleSelectDate}
+                onClick={(e)=> onSubmit(e)}
               >
-                Select Dates
+                Select Date
               </Button>
-            )}
           </Box>
         </AppContainer>
       )}

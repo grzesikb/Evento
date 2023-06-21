@@ -1,132 +1,61 @@
-import React, { useContext, useState } from 'react';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-  useNavigate,
-} from 'react-router-dom';
+import React, { useContext, useEffect} from 'react';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { Container } from '@mui/material';
-import dayjs from 'dayjs';
-
-import UserDashboard from './components/views/UserDashboard/UserDashboard';
 import { SettingsContext } from './contexts/context/SettingsContext';
-import SignIn from './components/views/Auth/SignIn';
-import SignUp from './components/views/Auth/SignUp';
-import AddUserData from './components/views/Auth/AddUserData';
-import EditPersonalData from './components/views/EditPersonalData/EditPersonalData';
-import PaymentSettings from './components/views/PaymentSettings/PaymentSettings';
-import AccountSettings from './components/views/AccountSettings/AccountSettings';
-import OrderEvent from './components/views/OrderEvents/OrderEvents';
-import OrderDetails from './components/views/UserAcitons/OrderDetails';
-import EditOrder from './components/views/UserAcitons/EditOrder';
-import WorkerDashboard from './components/views/WorkerDashboard/WorkerDashboard';
-import GuestList from './components/views/UserAcitons/GuestList';
-import Payment from './components/views/UserAcitons/Payment';
-import Pricing from './components/views/WorkerDashboard/Pricing';
-import AdminDashboard from './components/views/AdminDashboard/AdminDashboard';
-import EditAppEmails from './components/views/AdminDashboard/EditAppEmails';
+import { Api } from './tools/Api';
+import Router from './routes/Router';
+import { useMutation } from 'react-query';
+import { identifyService } from './services/authService';
+import UserContext from './contexts/context/UserContext';
+import { UserActions } from './shared/interfaces/user.interface';
+import { PaymentActions } from './shared/interfaces/payment.interface';
+import PaymentContext from './contexts/context/PaymentContext';
 
 const App = () => {
-  const { theme } = useContext(SettingsContext);
+	const { theme } = useContext(SettingsContext);
+	const { state, dispatch } = useContext(UserContext);
+	const { dispatch: paymentDispatch } = useContext(PaymentContext);
 
-  const Theme = createTheme({
-    palette: {
-      mode: theme,
-      primary: {
-        main: theme === 'light' ? '#081a2d' : '#272727',
-      },
-    },
-  });
+	const { mutate, data, isSuccess, isError } = useMutation(identifyService);
 
-  // Auth Context
-  let role;
-  // tu powinien byc const ale eslint jest tak zjebany że nawet tymczasowo nie można consta ustawić bo kurwa jakis overlaps wyskakuje pierdolony eslint
-  // eslint-disable-next-line prefer-const
-  role = 'User'; // 'Worker' | 'User' | 'Admin'
+	useEffect(() => {
+		if (!localStorage.getItem('accessToken')) {
+			dispatch({ type: UserActions.LOAD_USER, payload: undefined });
+		} else {
+			mutate(localStorage.getItem('accessToken') as string);
+		}
+	}, []);
 
-  const router = createBrowserRouter([
-    {
-      path: '/auth',
-      children: [
-        {
-          path: 'signin',
-          element: <SignIn />,
-        },
-        {
-          path: 'signup',
-          element: <SignUp />,
-        },
-        {
-          path: 'add-user-data',
-          element: <AddUserData />,
-        },
-      ],
-    },
-    {
-      path: '/app',
-      children: [
-        {
-          path: 'dashboard',
-          element:
-            (role === 'User' && <UserDashboard />) ||
-            (role === 'Worker' && <WorkerDashboard />) ||
-            (role === 'Admin' && <AdminDashboard />),
-        },
-        {
-          path: 'edit-personal-data',
-          element: <EditPersonalData />,
-        },
-        {
-          path: 'payments-settings',
-          element: <PaymentSettings />,
-        },
-        {
-          path: 'account-settings',
-          element: <AccountSettings />,
-        },
-        {
-          path: 'order-event',
-          element: <OrderEvent />,
-        },
-        {
-          path: 'order-details',
-          element: <OrderDetails />,
-        },
-        {
-          path: 'edit-order',
-          element: <EditOrder />,
-        },
-        {
-          path: 'guest-list',
-          element: <GuestList />,
-        },
-        {
-          path: 'payment',
-          element: <Payment />,
-        },
-        {
-          path: 'pricing',
-          element: <Pricing />,
-        },
-        {
-          path: 'edit-app-emails',
-          element: <EditAppEmails />,
-        },
-      ],
-    },
-    { path: '/', element: <Navigate to="/auth/signin" /> },
-  ]);
+	useEffect(() => {
+		if (isSuccess)
+			dispatch({ type: UserActions.LOAD_USER, payload: data.data });
+		if (isError) dispatch({ type: UserActions.LOAD_USER, payload: undefined });
+	}, [isSuccess, isError]);
 
-  return (
-    <ThemeProvider theme={Theme}>
-      <CssBaseline />
-      <Container fixed maxWidth="lg">
-        <RouterProvider router={router} />
-      </Container>
-    </ThemeProvider>
-  );
+	const Theme = createTheme({
+		palette: {
+			mode: theme,
+			primary: {
+				main: theme === 'light' ? '#081a2d' : '#272727',
+			},
+		},
+	});
+
+	useEffect(() => {
+		(async () => {
+			await Api.initAxios();
+		})();
+	}, []);
+
+	return (
+		<ThemeProvider theme={Theme}>
+			<CssBaseline />
+			<Container fixed maxWidth="lg">
+				<Router />
+			</Container>
+		</ThemeProvider>
+	);
 };
 
 export default App;
